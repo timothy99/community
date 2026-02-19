@@ -1,0 +1,21 @@
+app.baseURL = "도메인 주소를 입력해주세요(https:// 포함)"
+
+session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
+
+app.appTimezone = "Asia/Seoul"
+
+logger.threshold = 4
+
+encryption.key = "32자리의 암호화 키를 입력해주세요"
+encryption.iv = "32자리의 암호화 iv를 입력해주세요"
+encryption.way = "aes-256-cbc"
+
+database.default.hostname = "호스트"
+database.default.database = "DB명"
+database.default.username = "아이디"
+database.default.password = "암호"
+database.default.DBDriver = "MySQLi"
+database.default.DBPrefix = "mng_"
+database.default.port = 3306
+
+development.ip = "회사 IP , 이 IP일 경우 CI_ENVIRONMENT를 devlopment로 변경한다. 구분은 파이프2개(||)로 합니다."
