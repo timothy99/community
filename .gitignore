@@ -1,0 +1,8 @@
+.vscode/
+.env*
+
+# 사용자 추가
+/results/
+/phpunit*.xml
+tests/
+public/html/
