@@ -56,4 +56,22 @@ $paths = new Paths();
 // LOAD THE FRAMEWORK BOOTSTRAP FILE
 require $paths->systemDirectory . '/Boot.php';
 
+// Load .env first
+$env_directory = $paths->envDirectory ?? $paths->appDirectory . '/../';
+require $paths->systemDirectory . '/Config/DotEnv.php';
+(new CodeIgniter\Config\DotEnv($env_directory))->load();
+
+// 현재 서버 IP 확인
+$ip_addr = $_SERVER['REMOTE_ADDR'];
+
+// .env의 development.ip 확인
+$development_ip_addr = explode("||", $_ENV['development.ip']);
+
+// IP 매칭 여부로 ENVIRONMENT 결정
+if (in_array($ip_addr, $development_ip_addr, true)) {
+    define('ENVIRONMENT', 'development');
+} else {
+    define('ENVIRONMENT', 'production');
+}
+
 exit(Boot::bootWeb($paths));

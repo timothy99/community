@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Usr;
+namespace App\Controllers\User;
 
 use App\Controllers\BaseController;
 
@@ -13,7 +13,9 @@ class Home extends BaseController
 
     public function main()
     {
-        return uview('user/home/main');
+        log_message('error', 'Home::main() called');
+        logMessage("ddd");
+        return view('user/home/main');
     }
 
 }

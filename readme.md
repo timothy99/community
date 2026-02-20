@@ -4,22 +4,6 @@
 # 기본설정
 
 ## composer 를 이용한 설치
-### PHP 7.4 버전용
-- composer 설치할때 버전을 적용
-```
-// 7.4에서 구동이 가능한 최대 버전 설치
-composer create-project codeigniter4/appstarter 프로젝트 --no-install '4.2.11'
-
-// 디렉토리 이동
-cd 프로젝트
-
-// php환경을 7.4.25으로 변경
-composer config platform.php 7.4.25
-
-composer require codeigniter4/framework:4.2.11
-composer require phpoffice/phpspreadsheet:1.29.0
-```
-
 ### PHP 8.3+ 최신버전 설치
 ```
 composer create-project codeigniter4/appstarter 프로젝트명
@@ -53,6 +37,7 @@ if (!class_exists('Locale')) {
     }
 }
 ```
+
 ### 웹루트를 public 으로 잡지 못할 경우
 - 일부 호스팅의 경우 루트 아래 public 을 웹 루트로 잡지 못하는 경우가 있다.
 - 루트에 .htaccess 파일을 작성한다. /public/.htaccess 외에 추가로 작성
@@ -68,14 +53,16 @@ if (!class_exists('Locale')) {
 </FilesMatch>
 ```
 
-# 초기 파일 설정
-
-## 공통설정
-
 ### App.php 설정
 * index.php가 주소줄에 보이는것을 방지하기 위해 40번 라인의 public $indexPage 를 널로 변경
 ```
 public $indexPage = 'index.php'     ->      public $indexPage = ''
+```
+
+### BaseController.php 헬퍼 추가
+- 헬퍼는 initController함수 아래에 추가.
+```
+$this->helpers = ['alert', 'array', 'board', 'curl', 'logging', 'privacy', 'session', 'text', 'view'];
 ```
 
 ### Constants.php 설정
@@ -163,15 +150,30 @@ Events::on("post_controller_constructor", function () {
 - 초기 welcome_message 는 삭제 하였으므로 초기 route를 아래로 설정한다.
 ```
 $routes->get('/', 'User\Home::index');
+$routes->get('/home', 'User\Home::index');
+$routes->get('/home/main', 'User\Home::main');
 ```
 
-## PHP 7.4 설정
-### Routes.php 설정
-- 40번 라인부터의 Additional Routing 항목 삭제
-- 아래 내용을 삭제 안해도 되지만 기본 컨트롤러를 위에서 삭제 했으므로 변경
+### index.php 설정
+- public/index.php
 ```
-$routes->setDefaultController('Home');  -> $routes->setDefaultController('User\Home');
-$routes->get('/', 'Home::index');       -> $routes->get("/", "User\Home::index");
+// Load .env first
+$env_directory = $paths->envDirectory ?? $paths->appDirectory . '/../';
+require $paths->systemDirectory . '/Config/DotEnv.php';
+(new CodeIgniter\Config\DotEnv($env_directory))->load();
+
+// 현재 서버 IP 확인
+$ip_addr = $_SERVER['REMOTE_ADDR'];
+
+// .env의 development.ip 확인
+$development_ip_addr = explode("||", $_ENV['development.ip']);
+
+// IP 매칭 여부로 ENVIRONMENT 결정
+if (in_array($ip_addr, $development_ip_addr, true)) {
+    define('ENVIRONMENT', 'development');
+} else {
+    define('ENVIRONMENT', 'production');
+}
 ```
 
 ## 디렉토리 구성 및 일부 필수 수정해야할 파일 목록
