@@ -1,3 +1,33 @@
+drop table if exists mng_member;
+create table mng_member (
+    member_idx int not null auto_increment comment '인덱스',
+    member_id varchar(64) not null comment '사용자 아이디',
+    member_password varchar(1000) not null comment '암호',
+    member_name varchar(60) not null comment '이름',
+    member_nickname varchar(60) not null comment '별명',
+    email_yn enum('Y', 'N') default 'Y' null comment '뉴스레터 수신 동의 여부',
+    sms_yn enum('Y', 'N') default 'Y' null comment 'SMS 수신 동의 여부',
+    email varchar(100) default null comment '이메일',
+    phone varchar(13) default null comment '휴대전화 번호',
+    post_code varchar(5) default null comment '우편번호',
+    addr1 varchar(200) default null comment '주소1',
+    addr2 varchar(200) default null comment '주소2',
+    auth_group varchar(20) not null comment '권한 그룹',
+    last_login_date varchar(14) not null comment '최종 로그인 시간',
+    last_login_ip varchar(15) default null comment '마지막 로그인 ip',
+    member_status varchar(20) not null comment '회원 상태(승인요청, 승인, 반려 등)',
+    join_path varchar(200) not null comment '가입 경로(웹, 모바일 등)',
+    recommender varchar(64) default null comment '추천인',
+    member_point int not null default 0 comment '회원 포인트',
+    del_yn enum('Y', 'N') not null comment '삭제 여부',
+    ins_id varchar(70) default null comment '등록자',
+    ins_date varchar(14) not null comment '등록일',
+    upd_id varchar(70) default null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    unique key member_index1 (member_id, del_yn),
+    primary key (member_idx)
+) comment='회원정보' collate='utf8mb4_unicode_ci';
+
 create table mng_admin (
     admin_idx int not null auto_increment comment '관리자 번호',
     member_id int not null comment '회원 번호',
@@ -10,6 +40,48 @@ create table mng_admin (
     primary key (admin_idx),
     unique key admin_index1 (member_id)
 ) comment='관리자 권한 부여' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_menu;
+create table mng_menu (
+    menu_idx int not null auto_increment comment '인덱스',
+    upper_idx int not null default 0 comment '상위 인덱스',
+    language varchar(20) default null comment '언어',
+    idx1 int not null default 0 comment '인덱스1',
+    idx2 int not null default 0 comment '인덱스2',
+    order_no int not null default 0 comment '정렬순서',
+    menu_position int not null default 0 comment '메뉴 위치',
+    menu_name varchar(500) null comment '메뉴명',
+    http_link varchar(500) null comment '링크',
+    del_yn enum('Y', 'N') not null comment '삭제 여부',
+    ins_id varchar(70) default null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) default null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    primary key (menu_idx),
+    key menu_idx1 (idx1, idx2)
+) comment='메뉴' collate='utf8mb4_unicode_ci';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 create table mng_board (
     board_idx int not null auto_increment comment '게시물 번호',
@@ -51,9 +123,9 @@ create table mng_board_comment (
     primary key (board_comment_idx)
 ) comment='게시판 댓글' collate='utf8mb4_unicode_ci';
 
-drop table if exists gst_board_file;
-create table gst_board_file (
-    board_file_idx int auto_increment comment '인덱스',
+drop table if exists mng_board_file;
+create table mng_board_file (
+    board_file_idx int not null auto_increment comment '인덱스',
     board_idx int not null comment '게시물 번호',
     file_id varchar(32) default null comment '파일 불러오기를 위한 id',
     key board_file_index1 (board_idx),
@@ -99,57 +171,29 @@ create table mng_file (
     mime_type varchar(200) not null comment '파일 mime type',
     category varchar(100) not null comment '사용자가 지정한 파일 형식',
     del_yn enum('Y', 'N') not null comment '삭제 여부',
-    ins_id varchar(70) not null comment '입력자 [mng_member.m_idx]',
+    ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
-    upd_id varchar(70) not null comment '수정자 [mng_member.m_idx]',
+    upd_id varchar(70) not null comment '수정자',
     upd_date varchar(14) not null comment '수정일',
     unique key file_index1 (file_id),
     primary key (file_idx)
 ) comment='파일 정보' collate='utf8mb4_unicode_ci';
 
-drop table if exists gst_member;
-create table gst_member (
-    member_idx int not null auto_increment comment '인덱스',
-    member_id varchar(64) not null comment '사용자 아이디',
-    member_password varchar(1000) not null comment '암호',
-    member_name varchar(60) not null comment '이름',
-    member_nickname varchar(60) not null comment '별명',
-    email_yn enum('Y', 'N') default 'Y' null comment '뉴스레터 수신 동의 여부',
-    sms_yn enum('Y', 'N') default 'Y' null comment 'SMS 수신 동의 여부',
-    email varchar(100) default null comment '이메일',
-    phone varchar(13) default null comment '휴대전화 번호',
-    post_code varchar(5) default null comment '우편번호',
-    addr1 varchar(200) default null comment '주소1',
-    addr2 varchar(200) default null comment '주소2',
-    auth_group varchar(20) not null comment '권한 그룹',
-    last_login_date varchar(14) not null comment '최종 로그인 시간',
-    last_login_ip varchar(15) default null comment '마지막 로그인 ip',
-    member_status varchar(20) not null comment '회원 상태(승인요청, 승인, 반려 등)',
-    join_path varchar(200) not null comment '가입 경로(웹, 모바일 등)',
-    recommender varchar(64) default null comment '추천인',
-    member_point int not null default 0 comment '회원 포인트',
-    del_yn enum('Y', 'N') not null comment '삭제 여부',
-    ins_id varchar(70) default null comment '등록자',
-    ins_date varchar(14) not null comment '등록일',
-    upd_id varchar(70) default null comment '수정자',
-    upd_date varchar(14) not null comment '수정일',
-    unique key member_index1 (member_id, del_yn),
-    primary key (member_idx)
-) comment='회원정보' collate='utf8mb4_unicode_ci';
+
 
 drop table if exists mng_member_reset;
 create table mng_member_reset (
-    mr_idx int not null auto_increment comment '인덱스',
+    member_reset_idx int not null auto_increment comment '인덱스',
     member_id varchar(64) not null comment '사용자 아이디',
     email varchar(100) default null comment '이메일',
     reset_key varchar(32) default null comment '리셋키',
     expire_date varchar(14) not null comment '암호화 변경 만료 시간(현재 시간으로부터 15분)',
-    primary key (mr_idx),
-    key mng_member_reset_reset_key (reset_key)
+    key mng_member_reset_reset_key (reset_key),
+    primary key (member_reset_idx)
 ) comment='암호를 초기화 하기 위한 정보' collate='utf8mb4_unicode_ci';
 
-drop table if exists gst_contents;
-create table gst_contents (
+drop table if exists mng_contents;
+create table mng_contents (
     contents_idx int auto_increment comment '콘텐츠 인덱스',
     contents_id varchar(50) null comment '콘텐츠 아이디',
     meta_title varchar(500) null comment '메타 제목',
@@ -164,25 +208,7 @@ create table gst_contents (
     primary key (contents_idx)
 ) comment '콘텐츠' collate='utf8mb4_unicode_ci';
 
-drop table if exists mng_menu;
-create table mng_menu (
-    menu_idx int not null auto_increment comment '인덱스',
-    upper_idx int not null default 0 comment '상위 인덱스',
-    idx1 int not null default 0 comment '인덱스1',
-    idx2 int not null default 0 comment '인덱스2',
-    idx3 int not null default 0 comment '인덱스3',
-    order_no int not null default 0 comment '정렬순서',
-    menu_position int not null default 0 comment '메뉴 위치',
-    menu_name varchar(500) null comment '메뉴명',
-    http_link varchar(500) null comment '외부 링크',
-    del_yn enum('Y', 'N') not null comment '삭제 여부',
-    ins_id varchar(70) default null comment '입력자',
-    ins_date varchar(14) not null comment '입력일',
-    upd_id varchar(70) default null comment '수정자',
-    upd_date varchar(14) not null comment '수정일',
-    primary key (menu_idx),
-    key idx1 (idx1, idx2, idx3)
-) comment='메뉴' collate='utf8mb4_unicode_ci';
+
 
 create table mng_slide (
     slide_idx int auto_increment comment '슬라이드 인덱스',

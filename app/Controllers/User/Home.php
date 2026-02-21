@@ -13,9 +13,9 @@ class Home extends BaseController
 
     public function main()
     {
-        log_message('error', 'Home::main() called');
-        logMessage("ddd");
-        return view('user/home/main');
+        $proc_result = array();
+
+        return uview('/user/home/main', $proc_result);
     }
 
 }

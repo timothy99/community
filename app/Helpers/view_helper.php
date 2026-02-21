@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Usr\MenuModel;
+use App\Models\User\MenuModel;
 
 // 사용자 뷰 (메뉴바가 상단에 있음)
 function uview($view_file, $proc_result = array())
@@ -8,16 +8,21 @@ function uview($view_file, $proc_result = array())
     $menu_model = new MenuModel();
 
     $model_result = $menu_model->getMenuList();
-    $menu_list = $model_result["list"];
-    $proc_result["menu_list"] = $menu_list;
+    $menu_list = $model_result['list'];
+    $proc_result['menu_list'] = $menu_list;
+
+    $language = service('request')->getCookie('language') ?? 'kor';
+    $proc_result['language'] = $language;
 
     $view_result = null;
 
-    $view_result .= view("/usr/include/header", $proc_result);
-    $view_result .= view("/usr/include/top", $proc_result);
-    $view_result .= view("/usr/include/menu", $proc_result);
+    $view_file = str_replace('/user/', '/user/'.$language.'/', $view_file);
+
+    $view_result .= view('/user/'.$language.'/include/header', $proc_result);
+    $view_result .= view('/user/'.$language.'/include/top', $proc_result);
+    $view_result .= view('/user/'.$language.'/include/menu', $proc_result);
     $view_result .= view($view_file, $proc_result);
-    $view_result .= view("/usr/include/footer", $proc_result);
+    $view_result .= view('/user/'.$language.'/include/footer', $proc_result);
 
     return $view_result;
 }
@@ -27,23 +32,11 @@ function aview($view_file, $proc_result = array())
 {
     $view_result = null;
 
-    $view_result .= view("/csl/include/header", $proc_result);
-    $view_result .= view("/csl/include/top", $proc_result);
-    $view_result .= view("/csl/include/menu", $proc_result);
+    $view_result .= view('/console/include/header', $proc_result);
+    $view_result .= view('/console/include/top', $proc_result);
+    $view_result .= view('/console/include/menu', $proc_result);
     $view_result .= view($view_file, $proc_result);
-    $view_result .= view("/csl/include/footer", $proc_result);
-
-    return $view_result;
-}
-
-// 회원가입용 뷰
-function mview($view_file, $proc_result = array())
-{
-    $view_result = null;
-
-    $view_result .= view("/lgn/include/header", $proc_result);
-    $view_result .= view($view_file, $proc_result);
-    $view_result .= view("/lgn/include/footer", $proc_result);
+    $view_result .= view('/console/include/footer', $proc_result);
 
     return $view_result;
 }

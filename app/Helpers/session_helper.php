@@ -52,12 +52,15 @@ function setBaseSession()
 {
     // 세션이 비어 있으면 언어설정만 한국어로
     $session_info = (object)array(); // 기본 만들기
-    $session_info->m_idx = null; // 인덱스
-    $session_info->member_id = null; // 아이디
-    $session_info->member_nickname = "로그인 안함"; // 별명
-    $session_info->auth_group = "guest"; // 별명
+    $session_info->member_idx = 0; // 인덱스
+    $session_info->member_id = "guest"; // 아이디
+    $session_info->member_nickname = "손님"; // 별명
+    $session_info->auth_group = "guest"; // 권한 그룹
     $session_info->layer_closed = array(); // 레이어 닫은거 먼저 빈 정보 생성
     setUserSession($session_info); // 세션 넣기
+
+    // 쿠키에 기본 언어 설정을 한국어로 넣기
+    setcookie("language", "kor", time() + (86400 * 30), "/"); // 30일 동안 유지
 
     return true; // 세션정보 반환
 }
