@@ -53,3 +53,13 @@ Events::on('pre_system', static function (): void {
         }
     }
 });
+
+// CI에서 기본적 DB이벤트(select등 모두 포함)가 발생되었을때의 로깅
+Events::on('DBQuery', function () {
+    logModifyQuery(); // 쿼리 로깅
+});
+
+Events::on('post_controller_constructor', function () {
+    getUserSession() ?? setBaseSession(); // 사용자 세션이 없다면 기본 세션 생성
+    checkAuthority(service('request')->getUri()->getSegments()); // 권한 체크
+});
