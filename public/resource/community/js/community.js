@@ -1,20 +1,56 @@
 // 입력받은 form 데이터로 처리
-function ajax1(ajax_url, form_id) {
+function ajax1(ajax_url, form_data, callback) {
     var progress_html = $("<div id='progress' style='display:none;'><div id='progress_loading'><img id='loading_img' src='/resource/community/image/loading.gif'/></div></div>").appendTo(document.body).show();
+
+    // form_data 처리 로직
+    var ajaxData;
+    var processData = true;
+    var contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+
+    if (typeof form_data === 'string') {
+        // 문자열인 경우 jQuery 선택자로 시도해보기
+        var $formElement = $("#" + form_data);
+        if ($formElement.length > 0 && $formElement.is('form')) {
+            // jQuery 폼 객체인 경우 serialize 처리
+            ajaxData = $formElement.serialize();
+        } else {
+            // 일반 문자열 데이터인 경우
+            ajaxData = form_data;
+        }
+    } else if (form_data instanceof FormData) {
+        // FormData 객체인 경우
+        ajaxData = form_data;
+        processData = false;
+        contentType = false;
+    } else if (form_data instanceof jQuery) {
+        // jQuery 객체인 경우 serialize 처리
+        ajaxData = form_data.serialize();
+    } else {
+        // 일반 객체인 경우
+        ajaxData = form_data;
+    }
+
     $.ajax({
         url: ajax_url,
         type: "POST",
         dataType: "json",
-        async: false,
-        data: $("#"+form_id).serialize(),
+        data: ajaxData,
+        processData: processData,
+        contentType: contentType,
         success: function(proc_result) {
             var result = proc_result.result;
             var message = proc_result.message;
-            var return_url = proc_result.return_url;
-            if(result == true) {
-                location.href = return_url;
-            } else {
-                alert(message);
+            // callback이 존재하는 경우에만 실행
+            if(callback) {
+                if(typeof callback === "string") {
+                    if(typeof window[callback] === "function") {
+                        window[callback](proc_result);
+                    } else {
+                        console.error("함수 " + callback + "이 존재하지 않습니다.");
+                    }
+                } else if(typeof callback === "function") {
+                    callback(proc_result);
+                }
             }
             $("#progress").remove();
         }
@@ -38,7 +74,7 @@ function upload(file_id, method) {
             if (proc_result.result == false) {
                 alert(proc_result.message);
             } else {
-                upload_after(proc_result);
+                uploadAfter(proc_result);
             }
             $("#progress").remove();
         }
@@ -46,58 +82,9 @@ function upload(file_id, method) {
 }
 
 // 첨부파일 삭제(화면에서만)
-function file_delete(file_id) {
+function fileDelete(file_id) {
     $("#"+file_id).remove();
     $("input[value='"+file_id+"']").val("");
     $("#visible_"+file_id).val("");
-    delete_after(file_id);
+    deleteAfter(file_id);
 }
-
-// 캐러셀과 드롭다운 초기화
-document.addEventListener('DOMContentLoaded', function() {
-    // 캐러셀 애니메이션 설정
-    var carousel = document.querySelector('#heroCarousel');
-    if (carousel) {
-        var bsCarousel = new bootstrap.Carousel(carousel, {
-            interval: 3000,
-            ride: 'carousel'
-        });
-    }
-    
-    // 3단계 드롭다운 클릭 이벤트 처리 (모바일용)
-    document.querySelectorAll('.dropdown-submenu > .dropdown-toggle').forEach(function(element) {
-        element.addEventListener('click', function(e) {
-            // 데스크톱에서는 호버로 처리하므로 클릭 이벤트 무시
-            if (window.innerWidth >= 768) {
-                return;
-            }
-            
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // 다른 서브메뉴들 모두 닫기
-            document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(function(menu) {
-                if (menu !== element.nextElementSibling) {
-                    menu.style.display = 'none';
-                }
-            });
-            
-            // 현재 서브메뉴 토글
-            var submenu = this.nextElementSibling;
-            if (submenu) {
-                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
-            }
-        });
-    });
-    
-    // 드롭다운 외부 클릭시 모든 서브메뉴 닫기
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.dropdown')) {
-            document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(function(menu) {
-                menu.style.display = 'none';
-            });
-        }
-    });
-});
-
-

@@ -1,9 +1,15 @@
-function postcode_close() {
-    document.getElementById("post_div").style.display = "none";
+function postcodeShow(postcode_div, postcode_wrap) {
+    document.getElementById(postcode_div).style.display = "flex";
+    document.getElementById(postcode_wrap).style.display = "block";
+    postcodeOpen(postcode_wrap, postcode_div);
 }
 
-function postcode_open() {
-    var element_wrap = document.getElementById("wrap"); // 우편번호 찾기 찾기 화면을 넣을 element
+function postcodeClose(postcode_div) {
+    document.getElementById(postcode_div).style.display = "none";
+}
+
+function postcodeOpen(postcode_wrap, postcode_div) {
+    var element_wrap = document.getElementById(postcode_wrap); // 우편번호 찾기 찾기 화면을 넣을 element
     // 현재 scroll 위치를 저장해놓는다.
     var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
     new daum.Postcode({
@@ -45,11 +51,11 @@ function postcode_open() {
                 data.addr2 = "";
             }
 
-            postcode_after(data); // 해당페이지의 우편번호 결과값 반영 함수를 호출한다.
+            postcodeAfter(data); // 해당페이지의 우편번호 결과값 반영 함수를 호출한다.
 
             // iframe을 넣은 element를 안보이게 한다.
             // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
-            postcode_close();
+            postcodeClose(postcode_div);
 
             // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
             document.body.scrollTop = currentScroll;
@@ -61,8 +67,4 @@ function postcode_open() {
         width : "100%",
         height : "100%"
     }).embed(element_wrap);
-
-    // iframe을 넣은 element를 보이게 한다.
-    document.getElementById("post_div").style.display = "flex";
-    document.getElementById("wrap").style.display = "block";
 }

@@ -10,7 +10,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/jquery.inputmask.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.9/dist/jquery.inputmask.min.js"></script>
 
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet"><!-- 썸머노트 CSS -->
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script><!-- 썸머노트 라이트 -->
@@ -23,11 +23,3 @@
         <script src="/resource/community/js/community.js?ver=<?=env("app.program.version") ?>"></script>
         <link rel="stylesheet" href="/resource/community/css/community.css?ver=<?=env("app.program.version") ?>">
     </head>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YHY605LGJ"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-1YHY605LGJ');
-    </script>
