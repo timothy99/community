@@ -9,4 +9,6 @@ $routes->get('/', 'User\Home::index');
 $routes->get('/home', 'User\Home::index');
 $routes->get('/home/main', 'User\Home::main');
 
-$routes->get("/csl", "Console\Slide::index");
+$routes->get('/csl', 'Console\Slide::index');
+$routes->get('/csl/slide', 'Console\Slide::index');
+$routes->get('/csl/slide/list', 'Console\Slide::list');
