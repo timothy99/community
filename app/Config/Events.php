@@ -61,5 +61,6 @@ Events::on('DBQuery', function () {
 
 Events::on('post_controller_constructor', function () {
     getUserSession() ?? setBaseSession(); // 사용자 세션이 없다면 기본 세션 생성
+    setPreviousUrl(); // 이전 url 세션에 저장
     checkAuthority(service('request')->getUri()->getSegments()); // 권한 체크
 });

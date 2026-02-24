@@ -1,3 +1,5 @@
+<form id="frm" name="frm">
+
 <div class="container">
     <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
         <div class="col-12 col-md-6 col-lg-4">
@@ -43,3 +45,23 @@
         </div>
     </div>
 </div>
+
+</form>
+
+<script>
+    function login() {
+        ajax1("/member/signin", "frm", "loginAfter");
+    }
+
+    function loginAfter(proc_result) {
+        var result = proc_result.result;
+        var message = proc_result.message;
+        var return_url = proc_result.return_url;
+
+        if (result == true) {
+            location.href = return_url;
+        } else {
+            alert(message);
+        }
+    }
+</script>

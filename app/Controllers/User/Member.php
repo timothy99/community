@@ -24,6 +24,72 @@ class Member extends BaseController
         return uview('/user/member/login');
     }
 
+    public function signin()
+    {
+        $member_model = new MemberModel();
+
+        $result = true;
+        $message = '정상처리';
+
+        $member_id = $this->request->getPost('member_id', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_password = $this->request->getPost('member_password', FILTER_SANITIZE_SPECIAL_CHARS);
+        $ip_address = $this->request->getIPAddress();
+        $return_url = getUserSessionInfo('previous_url');
+
+        if ($member_id == null) {
+            $result = false;
+            $message = '아이디를 입력해주세요';
+        }
+
+        if ($member_password == null) {
+            $result = false;
+            $message = '암호를 입력해주세요';
+        }
+
+        if ($result == true) {
+            $data = array();
+            $data['member_id'] = $member_id;
+            $data['member_password'] = $member_password;
+            $data['ip_address'] = $ip_address;
+
+            $model_result = $member_model->getMemberLoginInfo($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+            $member_info = $model_result['member_info'];
+
+            if (isset($member_info->member_idx) == false) {
+                $result = false;
+                $message = '회원정보가 없거나 아이디 또는 암호가 틀립니다. 회원정보를 확인하세요.';
+                $member_info = (object)array();
+                $auth_group = 'guest';
+            } else {
+                setUserSessionInfo('member_idx', $member_info->member_idx);
+                setUserSessionInfo('member_id', $member_info->member_id);
+                setUserSessionInfo('member_nickname', $member_info->member_nickname);
+                setUserSessionInfo('auth_group', $member_info->auth_group);
+
+                $auth_group = $member_info->auth_group;
+            }
+
+            $auth_group = getUserSessionInfo('auth_group');
+            if (in_array($auth_group, ['관리자', '최고관리자']) == true) {
+                $return_url = '/csl';
+            }
+        } else {
+            $result = false;
+            $message = '회원정보가 없습니다. 회원정보를 확인하세요.';
+            $member_info = (object)array();
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = $return_url;
+        $proc_result['member_info'] = $member_info;
+
+        return $this->response->setJSON($proc_result);
+    }
+
     public function register()
     {
         // 이미 로그인을 한 상태라면 메인으로 보낸다.

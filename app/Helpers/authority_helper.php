@@ -38,3 +38,46 @@ function checkAuthority($segments)
         exit;
     }
 }
+
+/*
+    이전 url을 세션에 저장한다.
+    1. ajax로 들어온 경우 저장하지 않는다.
+    2. 이전 url과 현재 url이 같으면 저장하지 않는다.
+    3. 이전페이지가 로그인 페이지면 입력하지 않는다.
+*/
+function setPreviousUrl()
+{
+    $previous_url = previous_url();
+    $current_url = current_url();
+    $url_save_yn = true;
+
+    $request = \Config\Services::request();
+    $is_ajax = $request->isAJAX(); // ajax 확인
+    $is_post = $request->getMethod() == "post"; // post 확인
+
+    // 이전페이지가 로그인 페이지면 입력하지 않는다.
+    if (strpos($previous_url, "/member/login") > 0) {
+        $url_save_yn = false;
+    }
+
+    // ajax로 들어온 호출일 경우 이전 url을 저장하지 않는다.
+    if ($is_ajax == true) {
+        $url_save_yn = false;
+    }
+
+    // post로 들어온 호출일 경우 이전 url을 저장하지 않는다.
+    if ($is_post == true) {
+        $url_save_yn = false;
+    }
+
+    // 이전 url과 현재 url이 같을 경우 이전 url을 저장하지 않는다.
+    if ($previous_url == $current_url) {
+        $url_save_yn = false;
+    }
+
+    if ($url_save_yn == true) {
+        setUserSessionInfo("previous_url", $previous_url); // 이전 url
+    }
+
+    setUserSessionInfo("current_url", $current_url); // 현재 사용자가 보고 있는 화면 url
+}

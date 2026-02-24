@@ -193,4 +193,50 @@ class MemberModel extends Model
         return $proc_result;
     }
 
+    // 회원 로그인 결과
+    public function getMemberLoginInfo($data)
+    {
+        $result = true;
+        $message = "정상처리";
+
+        $today = date("YmdHis");
+
+        $member_id = $data["member_id"];
+        $member_password = $data["member_password"];
+        $ip_address = $data["ip_address"];
+
+        $member_password_enc = getPasswordEncrypt($member_password);
+
+        $db = $this->db;
+        $db->transStart();
+
+        $builder = $db->table("member");
+        $builder->where("del_yn", "N");
+        $builder->where("member_id", $member_id);
+        $builder->where("member_password", $member_password_enc);
+        $list = $builder->get()->getResult();
+        $cnt = count($list);
+
+        if ($cnt == 1) {
+            $member_info = $list[0];
+
+            $builder = $db->table("member");
+            $builder->set("last_login_date", $today);
+            $builder->set("last_login_ip", $ip_address);
+            $builder->where("member_id", $member_id);
+            $result = $builder->update();
+        } else {
+            $result = false;
+            $message = "회원정보가 다릅니다. 다시 확인해주세요.";
+            $member_info = (object)array();
+        }
+
+        $proc_result = array();
+        $proc_result["result"] = $result;
+        $proc_result["message"] = $message;
+        $proc_result["member_info"] = $member_info;
+
+        return $proc_result;
+    }
+
 }
