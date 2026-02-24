@@ -195,7 +195,7 @@
 
 /* Header Styles */
 .app-header {
-    height: 56px;
+    height: 63px;
     z-index: 1050;
     margin-left: 280px;
     transition: margin-left 0.3s ease-in-out;
@@ -224,10 +224,6 @@
     align-items: center;
     margin: -0.75rem -0.75rem 0 -0.75rem;
     padding: 0 1rem;
-}
-
-#sidebar hr {
-    margin: 0.5rem -0.75rem;
 }
 
 /* Main Content Styles */

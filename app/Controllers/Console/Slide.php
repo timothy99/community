@@ -13,6 +13,7 @@ class Slide extends BaseController
 
     public function list()
     {
+        return aview('/console/slide/list');
     }
 
 }
