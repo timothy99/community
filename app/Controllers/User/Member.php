@@ -5,6 +5,7 @@ namespace App\Controllers\User;
 use App\Controllers\BaseController;
 
 use App\Models\User\MemberModel;
+use App\Models\User\MailModel;
 
 class Member extends BaseController
 {
@@ -154,6 +155,20 @@ class Member extends BaseController
         $db = db_connect();
         $db->transStart();
 
+        // 아이디 중복여부 확인 
+        if ($result == true) {
+            $model_result = $member_model->getMemberIdDuplicate($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        // 이메일 중복여부 확인
+        if ($result == true && $email != null) {
+            $model_result = $member_model->getEmailDuplicate($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
         if ($result == true) {
             $model_result = $member_model->procMemberUpdate($data, $db);
             $result = $model_result['result'];
@@ -166,12 +181,71 @@ class Member extends BaseController
             $message = 'DB 처리 중 오류가 발생했습니다.';
         }
 
-        $return_url = '/member/login';
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/member/login';
+
+        return $this->response->setJSON($proc_result);
+    }
+
+    // 로그아웃
+    public function logout()
+    {
+        session_destroy();
+
+        return redirect()->to('/');
+    }
+
+    // 아이디 찾기
+    public function findId()
+    {
+        return uview('/user/member/findId');
+    }
+
+    // 아이디 찾기 결과 이메일 발송 처리
+    public function sendId()
+    {
+        $member_model = new MemberModel();
+        $mail_model = new MailModel();
+
+        $result = true;
+        $message = '해당 메일이 있는 경우 아이디 정보를 이메일로 보냅니다. 메일함을 확인해주세요.';
+
+        $member_name = $this->request->getPost('member_name', FILTER_SANITIZE_SPECIAL_CHARS);
+        $email = $this->request->getPost('email', FILTER_SANITIZE_EMAIL);
+
+        $data = array();
+        $data['member_name'] = $member_name;
+        $data['email'] = $email;
+
+        $model_result = $member_model->getMemberInfoByNameAndEmail($data);
+        $result = $model_result['result'];
+        $info = $model_result['info'];
+
+        if ($result == true) {
+            $email = $info->email;
+            $member_name = $info->member_name;
+            $member_id = $info->member_id;
+
+            $title = env('app.sitename').'에서 요청하신 아이디 정보입니다'; // 제목
+            $contents = '요청하신 아이디 정보는 '.$member_id.' 입니다. <br> <a href="'.env('app.baseURL').'/member/login">로그인하러가기</a>'; // 내용
+
+            $email_data = array();
+            $email_data['receive_email'] = $email;
+            $email_data['title'] = $title;
+            $email_data['contents'] = $contents;
+
+            $model_result = $mail_model->getMailConfig();
+            $mail_config = $model_result['mail_config'];
+
+            $model_result = $mail_model->procMailSend($email_data, $mail_config);
+        }
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = $return_url;
+        $proc_result['return_url'] = '/member/login';
 
         return $this->response->setJSON($proc_result);
     }

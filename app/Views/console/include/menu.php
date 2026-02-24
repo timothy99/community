@@ -192,7 +192,7 @@
         <ul class="dropdown-menu text-small shadow">
             <li><a class="dropdown-item" href="#">관리</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">로그아웃</a></li>
+            <li><a class="dropdown-item" href="/member/logout">로그아웃</a></li>
         </ul>
     </div>
 </div>

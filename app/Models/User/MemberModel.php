@@ -137,6 +137,34 @@ class MemberModel extends Model
         return $proc_result;
     }
 
+    // 이메일 중복여부 확인
+    public function getEmailDuplicate($data)
+    {
+        $result = true;
+        $message = '중복된 이메일이 없습니다.';
+
+        $email = $data['email'];
+
+        $db = $this->db;
+        $builder = $db->table('member');
+        $builder->select('count(*) as cnt');
+        $builder->where('del_yn', 'N');
+        $builder->where('email', $email);
+        $info = $builder->get()->getFirstRow();
+
+        $cnt = $info->cnt;
+        if ($cnt > 0) {
+            $result = false;
+            $message = '이메일이 중복되었습니다. 다른 이메일을 선택해주세요.';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+
+        return $proc_result;
+    }
+
     // 회원정보 입력
     public function procMemberUpdate($data, $db = null)
     {
@@ -176,6 +204,9 @@ class MemberModel extends Model
         $builder->set('addr1', $addr1);
         $builder->set('addr2', $addr2);
         $builder->set('auth_group', $auth_group);
+        $builder->set('member_status', '승인');
+        $builder->set('join_path', '없음');
+        $builder->set('recommender', '없음');
         $builder->set('last_login_date', $today);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $member_id);
@@ -197,44 +228,77 @@ class MemberModel extends Model
     public function getMemberLoginInfo($data)
     {
         $result = true;
-        $message = "정상처리";
+        $message = '정상처리';
 
-        $today = date("YmdHis");
+        $today = date('YmdHis');
 
-        $member_id = $data["member_id"];
-        $member_password = $data["member_password"];
-        $ip_address = $data["ip_address"];
+        $member_id = $data['member_id'];
+        $member_password = $data['member_password'];
+        $ip_address = $data['ip_address'];
 
         $member_password_enc = getPasswordEncrypt($member_password);
 
         $db = $this->db;
         $db->transStart();
 
-        $builder = $db->table("member");
-        $builder->where("del_yn", "N");
-        $builder->where("member_id", $member_id);
-        $builder->where("member_password", $member_password_enc);
+        $builder = $db->table('member');
+        $builder->where('del_yn', 'N');
+        $builder->where('member_id', $member_id);
+        $builder->where('member_password', $member_password_enc);
         $list = $builder->get()->getResult();
         $cnt = count($list);
 
         if ($cnt == 1) {
             $member_info = $list[0];
 
-            $builder = $db->table("member");
-            $builder->set("last_login_date", $today);
-            $builder->set("last_login_ip", $ip_address);
-            $builder->where("member_id", $member_id);
+            $builder = $db->table('member');
+            $builder->set('last_login_date', $today);
+            $builder->set('last_login_ip', $ip_address);
+            $builder->where('member_id', $member_id);
             $result = $builder->update();
         } else {
             $result = false;
-            $message = "회원정보가 다릅니다. 다시 확인해주세요.";
+            $message = '회원정보가 다릅니다. 다시 확인해주세요.';
             $member_info = (object)array();
         }
 
         $proc_result = array();
-        $proc_result["result"] = $result;
-        $proc_result["message"] = $message;
-        $proc_result["member_info"] = $member_info;
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['member_info'] = $member_info;
+
+        return $proc_result;
+    }
+
+    // 이름과 이메일을 기준으로 회원 테이블에서 회원 정보찾기
+    public function getMemberInfoByNameAndEmail($data)
+    {
+        $result = true;
+        $message = '정상처리';
+
+        $member_name = $data['member_name'];
+        $email = $data['email'];
+
+        $db = $this->db;
+        $builder = $db->table('member');
+        $builder->where('del_yn', 'N');
+        $builder->where('member_name', $member_name);
+        $builder->where('email', $email);
+        $list = $builder->get()->getResult();
+        $cnt = count($list);
+
+        if ($cnt == 1) {
+            $info = $list[0];
+        } else {
+            $result = false;
+            $message = '회원정보가 다릅니다. 다시 확인해주세요.';
+            $info = (object)array();
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['info'] = $info;
 
         return $proc_result;
     }

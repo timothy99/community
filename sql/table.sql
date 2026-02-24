@@ -303,3 +303,27 @@ create table mng_youtube (
     key youtube_index1 (play_id),
     primary key (youtube_idx)
 ) comment='유튜브 재생 목록' collate='utf8mb4_unicode_ci';
+
+create table gst_config (
+    config_idx int auto_increment comment '인덱스' primary key,
+    title varchar(300) null comment '회사명',
+    phone varchar(13) null comment '전화',
+    fax varchar(13) null comment '팩스',
+    email varchar(200) null comment '이메일',
+    work_hour varchar(300) null comment '업무시간',
+    post_code varchar(5) null comment '우편번호',
+    addr1 varchar(200) null comment '주소1',
+    addr2 varchar(200) null comment '주소2',
+    biz_no varchar(12) null comment '사업자등록번호',
+    company_logo varchar(32) null comment '회사로고',
+    program_ver varchar(32) null comment '프로그램 버젼',
+    smtp_yn varchar(1) default 'N' not null comment '메일발송기능 사용여부',
+    smtp_host varchar(200) null comment 'SMTP 호스트',
+    smtp_user varchar(200) null comment 'SMTP 사용자아이디',
+    smtp_pass varchar(200) null comment 'SMTP 암호',
+    smtp_port varchar(200) null comment 'SMTP 포트',
+    smtp_name varchar(200) null comment 'SMTP 발송자 이름',
+    smtp_mail varchar(200) null comment 'SMTP 발송자 메일'
+) comment '설정 관리';
+
+INSERT INTO gst_config (title, phone, fax, email, work_hour, post_code, addr1, addr2, biz_no, company_logo, program_ver, smtp_yn, smtp_host, smtp_user, smtp_pass, smtp_port, smtp_name, smtp_mail) VALUES ('회사', '000-111-2222', '', 'email@test.com', '평일 9:00 ~ 18:00 토요일/공휴일 휴무', '00000', '서울 중구 세종로', '', '123-45-67890', '', '1', 'Y', 'smtp.mail.nate.com', 'bjm1175', 'Nate4728!', '587', '회사', 'bjm1175@nate.com');

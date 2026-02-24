@@ -19,4 +19,7 @@ $routes->post('/member/signin', 'User\Member::signin');
 $routes->get('/member/register', 'User\Member::register');
 $routes->post('/member/register/duplicate', 'User\Member::registerDuplicate');
 $routes->post('/member/register/process', 'User\Member::registerProcess');
+$routes->get('/member/logout', 'User\Member::logout');
+$routes->get('/member/find/id', 'User\Member::findId');
+$routes->post('/member/send/id', 'User\Member::sendId');
 
