@@ -29,7 +29,7 @@
                         <div class="d-flex justify-content-center gap-3 mb-3">
                             <a href="/member/find/id" class="text-decoration-none">아이디 찾기</a>
                             <span class="text-muted">|</span>
-                            <a href="/member/find/pwd" class="text-decoration-none">암호 찾기</a>
+                            <a href="/member/find/password" class="text-decoration-none">암호 찾기</a>
                         </div>
 
                         <!-- 구분선 -->

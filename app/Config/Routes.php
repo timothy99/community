@@ -22,4 +22,7 @@ $routes->post('/member/register/process', 'User\Member::registerProcess');
 $routes->get('/member/logout', 'User\Member::logout');
 $routes->get('/member/find/id', 'User\Member::findId');
 $routes->post('/member/send/id', 'User\Member::sendId');
-
+$routes->get('/member/find/password', 'User\Member::findPassword');
+$routes->post('/member/send/password', 'User\Member::sendPassword');
+$routes->get('/member/reset/password/(:any)', 'User\Member::resetPassword/$1');
+$routes->post('/member/update/password', 'User\Member::updatePassword');

@@ -166,7 +166,7 @@ class MemberModel extends Model
     }
 
     // 회원정보 입력
-    public function procMemberUpdate($data, $db = null)
+    public function procMemberUpdate($data, $db)
     {
         $result = true;
         $message = '정상처리';
@@ -299,6 +299,137 @@ class MemberModel extends Model
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+
+        return $proc_result;
+    }
+
+    // 아이디와 이메일을 기준으로 회원 테이블에서 회원 정보찾기
+    public function getPasswordInfo($data)
+    {
+        $result = true;
+        $message = '정상처리';
+
+        $email = $data['email'];
+        $member_id = $data['member_id'];
+
+        $db = $this->db;
+        $builder = $db->table('member');
+        $builder->where('del_yn', 'N');
+        $builder->where('email', $email);
+        $builder->where('member_id', $member_id);
+        $info = $builder->get()->getRow();
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['info'] = $info;
+
+        return $proc_result;
+    }
+
+    // 기존 리셋정보 삭제
+    public function procResetDelete($data, $db)
+    {
+        $result = true;
+        $message = '정상처리';
+
+        $email = $data['email'];
+        $member_id = $data['member_id'];
+
+        $builder = $db->table('member_reset');
+        $builder->where('email', $email);
+        $builder->where('member_id', $member_id);
+        $result = $builder->delete();
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+
+        return $proc_result;
+    }
+
+    // 리셋정보 등록
+    public function procResetInsert($data, $db)
+    {
+        $result = true;
+        $message = '정상처리';
+
+        $email = $data['email'];
+        $member_id = $data['member_id'];
+
+        $reset_key = getRandomString(4, 32); // 보안을 위한 랜덤문자 생성
+        $expire_date = date('YmdHis', strtotime('+15 minutes'));
+
+        $builder = $db->table('member_reset');
+        $builder->set('member_id', $member_id);
+        $builder->set('email', $email);
+        $builder->set('reset_key', $reset_key);
+        $builder->set('expire_date', $expire_date);
+        $result = $builder->insert();
+        $insert_id = $db->insertID();
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['insert_id'] = $insert_id;
+        $proc_result['reset_key'] = $reset_key;
+
+        return $proc_result;
+    }
+
+    // 리셋키로 리셋정보 찾기
+    public function getResetInfo($data)
+    {
+        $result = true;
+        $message = "정상처리";
+
+        $reset_key = $data["reset_key"];
+
+        $db = $this->db;
+        $builder = $db->table("member_reset");
+        $builder->where("reset_key", $reset_key);
+        $info = $builder->get()->getRow();
+
+        $proc_result = array();
+        $proc_result["result"] = $result;
+        $proc_result["message"] = $message;
+        $proc_result["info"] = $info;
+
+        return $proc_result;
+    }
+
+    public function procPasswordReset($data)
+    {
+        $result = true;
+        $message = "암호초기화가 완료되었습니다. 다시 로그인해주세요.";
+
+        $model_result = $this->getResetInfo($data);
+        $info = $model_result["info"];
+        $member_id = $info->member_id;
+        $email = $info->email;
+
+        $member_password = $data["member_password"];
+        $member_password_enc = getPasswordEncrypt($member_password);
+
+        $db = $this->db;
+        $db->transStart();
+        $builder = $db->table("member");
+        $builder->set("member_password", $member_password_enc);
+        $builder->where("email", $email);
+        $builder->where("member_id", $member_id);
+        $result = $builder->update();
+
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = "입력에 오류가 발생했습니다.";
+            $db->transRollback();
+        } else {
+            $db->transCommit();
+        }
+
+        $proc_result = array();
+        $proc_result["result"] = $result;
+        $proc_result["message"] = $message;
 
         return $proc_result;
     }

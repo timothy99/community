@@ -250,4 +250,161 @@ class Member extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
+    // 암호 찾기
+    public function findPassword()
+    {
+        return uview('/user/member/findPassword');
+    }
+
+    // 암호 초기화 메일 보내기
+    public function sendPassword()
+    {
+        $member_model = new MemberModel();
+        $mail_model = new MailModel();
+
+        $result = true;
+        $message = '해당 메일이 있는 경우 아이디 정보를 이메일로 보냅니다. 메일함을 확인해주세요.';
+
+        $email = $this->request->getPost('email');
+        $member_id = $this->request->getPost('member_id');
+
+        $data = array();
+        $data['email'] = $email;
+        $data['member_id'] = $member_id;
+
+        $model_result = $member_model->getPasswordInfo($data);
+        $info = $model_result['info'];
+
+        $db = db_connect();
+        $db->transStart();
+
+        // 정보가 있는 경우 패스워드 초기화 정보를 등록한다.
+        if ($info != null) {
+            $model_result = $member_model->procResetDelete($data, $db);
+            $model_result = $member_model->procResetInsert($data, $db);
+            $reset_key = $model_result['reset_key'];
+        }
+
+        // 회원정보가 있는 경우 메일을 보낸다.
+        if ($info != null) {
+            $email = $info->email; // 받는사람
+            $title = env('app.sitename').'에서 요청하신 초기화 정보입니다'; // 제목
+            $contents = '초기화를 요청하셨습니다.<br><a href="'.env('app.baseURL').'/member/reset/password/'.$reset_key.'" target="_blank">여기</a>를 눌러 초기화를 진행하세요.'; // 내용
+
+            $email_data = array();
+            $email_data['receive_email'] = $email;
+            $email_data['title'] = $title;
+            $email_data['contents'] = $contents;
+
+            $model_result = $mail_model->getMailConfig();
+            $mail_config = $model_result['mail_config'];
+
+            $model_result = $mail_model->procMailSend($email_data, $mail_config);
+        } else {
+            // 검색해서 나오는 이메일 정보가 없는 경우 이메일을 보내지 않는다.
+        }
+
+        $db->transComplete();
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = 'DB 처리 중 오류가 발생했습니다.';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/member/login';
+
+        return json_encode($proc_result);
+    }
+
+    public function resetPassword($reset_key)
+    {
+        $member_model = new MemberModel();
+
+        $data = array();
+        $data['reset_key'] = $reset_key;
+
+        $model_result = $member_model->getResetInfo($data);
+        $info = $model_result['info'];
+
+        if ($info == null) {
+            redirect_alert('초기화 정보가 없습니다. 메일 요청을 여러번 하셨다면 가장 최근의 링크를 선택해주세요.', '/');
+            exit;
+        }
+
+        $today = date('YmdHis');
+        if ($info->expire_date < $today) {
+            redirect_alert('유효기간이 만료되었습니다. 다시 요청해주세요.', '/');
+        }
+
+        return uview('/user/member/resetPassword', $data);
+    }
+
+    public function updatePassword()
+    {
+        $member_model = new MemberModel();
+
+        $result = true;
+        $message = '정상처리';
+
+        $reset_key = $this->request->getPost('reset_key', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_id = $this->request->getPost('member_id', FILTER_SANITIZE_SPECIAL_CHARS);
+        $email = $this->request->getPost('email', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_password = (string)$this->request->getPost('member_password', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_password_confirm = $this->request->getPost('member_password_confirm', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($member_id == null) {
+            $result = false;
+            $message = '아이디를 입력해주세요.';
+        }
+
+        if ($email == null) {
+            $result = false;
+            $message = '이메일을 입력해주세요.';
+        }
+
+        if ($member_password != $member_password_confirm) {
+            $result = false;
+            $message = '입력된 비밀번호가 다릅니다.';
+        }
+
+        if (strlen($member_password) < 8) {
+            $result = false;
+            $message = '입력된 비밀번호는 8자리 이상이어야 합니다.';
+        }
+
+        $data = array();
+        $data['reset_key'] = $reset_key;
+        $data['member_password'] = $member_password;
+
+        $model_result = $member_model->getResetInfo($data);
+        $info = $model_result['info'];
+
+        if ($info === null) {
+            $result = false;
+            $message = '초기화 정보가 없습니다';
+        }
+
+        $today = date('YmdHis');
+        if ($info->expire_date < $today) {
+            $result = false;
+            $message = '유효기간이 만료되었습니다. 다시 요청해주세요.';
+        }
+
+        if ($result == true) {
+            $model_result = $member_model->procPasswordReset($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/member/login';
+
+        return json_encode($proc_result);
+    }
+
+
 }
