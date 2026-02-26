@@ -14,6 +14,7 @@ class Home extends BaseController
     public function main()
     {
         $proc_result = array();
+        $proc_result["html_meta"] = create_meta("홈 > 메인");
 
         return uview('/user/home/main', $proc_result);
     }

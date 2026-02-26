@@ -1,11 +1,17 @@
 <?php
 
 use App\Models\User\MenuModel;
+use App\Models\User\ConfigModel;
 
 // 사용자 뷰 (메뉴바가 상단에 있음)
 function uview($view_file, $proc_result = array())
 {
     $menu_model = new MenuModel();
+    $config_model = new ConfigModel();
+
+    $model_result = $config_model->getConfigInfo();
+    $config_info = $model_result['info'];
+    $proc_result['config_info'] = $config_info;
 
     $model_result = $menu_model->getMenuList();
     $menu_list = $model_result['list'];
@@ -30,6 +36,12 @@ function uview($view_file, $proc_result = array())
 // 관리자(admin) 뷰 - 메뉴바가 좌측에 있음
 function aview($view_file, $proc_result = array())
 {
+    $config_model = new ConfigModel();
+
+    $model_result = $config_model->getConfigInfo();
+    $config_info = $model_result['info'];
+    $proc_result['config_info'] = $config_info;
+
     $view_result = null;
 
     $view_result .= view('/console/include/header', $proc_result);

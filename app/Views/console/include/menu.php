@@ -1,7 +1,7 @@
 <div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3">
-    <div class="sidebar-header">
+    <div class="sidebar-header justify-content-center">
         <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
-            <span class="fs-5">회사이름을 넣어</span>
+            <span class="fs-5"><?= $config_info->title ?></span>
         </a>
     </div>
     <hr>
@@ -51,7 +51,7 @@
     </ul>
     <hr>
     <div class="dropdown">
-        <a href="/member/logout" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+        <a href="/member/logout" class="d-flex align-items-center link-body-emphasis text-decoration-none justify-content-center">
             <strong>로그아웃</strong>
         </a>
     </div>

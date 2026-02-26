@@ -2,7 +2,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>커뮤니티4</title>
+        <title><?= $config_info->title ?></title>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"><!-- Noto Sans KR -->
