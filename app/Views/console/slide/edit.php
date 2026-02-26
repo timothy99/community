@@ -32,7 +32,7 @@
                 <!-- 내용 (alt) -->
                 <div class="mb-3">
                     <label for="contents" class="form-label">내용 <span class="text-muted small">(이미지 alt 텍스트)</span></label>
-                    <textarea class="form-control" id="contents" name="contents" rows="3" placeholder="슬라이드 이미지의 대체 텍스트를 입력하세요"><?= $info->contents ?></textarea>
+                    <input type="text" class="form-control" id="contents" name="contents" placeholder="슬라이드 이미지의 대체 텍스트를 입력하세요" value="<?= $info->contents ?>">
                 </div>
 
                 <!-- URL 링크 -->

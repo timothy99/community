@@ -12,8 +12,8 @@
             <div class="card-body">
                 <!-- 회사명 -->
                 <div class="mb-3">
-                    <label class="form-label">회사명</label>
-                    <input type="text" class="form-control bg-light" value="<?= $info->title ?>">
+                    <label for="title" class="form-label">회사명</label>
+                    <input type="text" class="form-control" id="title" name="title" value="<?= $info->title ?>">
                 </div>
 
                 <!-- 회사로고 -->
@@ -52,38 +52,38 @@
                 <!-- 프로그램 버전 -->
                 <div class="mb-3">
                     <label for="program_ver" class="form-label">프로그램 버전</label>
-                    <input type="text" id="program_ver" class="form-control bg-light" value="<?= $info->program_ver ?>">
+                    <input type="text" id="program_ver" class="form-control" value="<?= $info->program_ver ?>">
                 </div>
 
                 <!-- 전화번호 -->
                 <div class="mb-3">
                     <label for="phone" class="form-label">전화번호</label>
-                    <input type="text" class="form-control bg-light" id="phone" name="phone" value="<?= $info->phone ?>">
+                    <input type="text" class="form-control" id="phone" name="phone" value="<?= $info->phone ?>">
                 </div>
 
                 <!-- 팩스번호 -->
                 <div class="mb-3">
                     <label for="fax" class="form-label">팩스번호</label>
-                    <input type="text" class="form-control bg-light" id="fax" name="fax" value="<?= $info->fax ?>">
+                    <input type="text" class="form-control" id="fax" name="fax" value="<?= $info->fax ?>">
                 </div>
 
                 <!-- 이메일 -->
                 <div class="mb-3">
                     <label for="email" class="form-label">이메일</label>
-                    <input type="text" class="form-control bg-light" id="email" name="email" value="<?= $info->email ?>">
+                    <input type="text" class="form-control" id="email" name="email" value="<?= $info->email ?>">
                 </div>
 
                 <!-- 업무시간 -->
                 <div class="mb-3">
                     <label for="work_hour" class="form-label">업무시간</label>
-                    <input type="text" class="form-control bg-light" id="work_hour" name="work_hour" value="<?= $info->work_hour ?>">
+                    <input type="text" class="form-control" id="work_hour" name="work_hour" value="<?= $info->work_hour ?>">
                 </div>
 
                 <!-- 우편번호 -->
                 <div class="mb-3">
                     <label for="post_code" class="form-label">우편번호</label>
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light" id="post_code" name="post_code" placeholder="우편번호" maxlength="5" readonly>
+                        <input type="text" class="form-control bg-gray" id="post_code" name="post_code" placeholder="우편번호" maxlength="5" value="<?= $info->post_code ?>" readonly>
                         <button class="btn btn-secondary" type="button" onclick="postcodeShow('postcode_div', 'postcode_wrap')">우편번호 찾기</button>
                     </div>
                 </div>
@@ -98,61 +98,61 @@
                 <!-- 주소1 -->
                 <div class="mb-3">
                     <label for="addr1" class="form-label">주소1</label>
-                    <input type="text" class="form-control bg-light" id="addr1" name="addr1" value="<?= $info->addr1 ?>">
+                    <input type="text" class="form-control bg-gray" id="addr1" name="addr1" value="<?= $info->addr1 ?>">
                 </div>
 
                 <!-- 주소2 -->
                 <div class="mb-3">
                     <label for="addr2" class="form-label">주소2</label>
-                    <input type="text" class="form-control bg-light" id="addr2" name="addr2" value="<?= $info->addr2 ?>">
+                    <input type="text" class="form-control" id="addr2" name="addr2" value="<?= $info->addr2 ?>">
                 </div>
 
                 <!-- 사업자등록번호 -->
                 <div class="mb-3">
                     <label for="biz_no" class="form-label">사업자등록번호</label>
-                    <input type="text" class="form-control bg-light" id="biz_no" name="biz_no" value="<?= $info->biz_no ?>">
+                    <input type="text" class="form-control" id="biz_no" name="biz_no" value="<?= $info->biz_no ?>">
                 </div>
 
                 <!-- 메일발송기능 사용여부 -->
                 <div class="mb-3">
                     <label for="smtp_yn" class="form-label">메일발송기능 사용여부</label>
-                    <input type="text" class="form-control bg-light" id="smtp_yn" name="smtp_yn" value="<?= $info->smtp_yn ?>">
+                    <input type="text" class="form-control" id="smtp_yn" name="smtp_yn" value="<?= $info->smtp_yn ?>">
                 </div>
 
                 <!-- SMTP 호스트 -->
                 <div class="mb-3">
                     <label for="smtp_host" class="form-label">SMTP 호스트</label>
-                    <input type="text" class="form-control bg-light" id="smtp_host" name="smtp_host" value="<?= $info->smtp_host ?>">
+                    <input type="text" class="form-control" id="smtp_host" name="smtp_host" value="<?= $info->smtp_host ?>">
                 </div>
 
                 <!-- SMTP 이메일 주소 -->
                 <div class="mb-3">
                     <label for="smtp_mail" class="form-label">SMTP 이메일 주소</label>
-                    <input type="text" class="form-control bg-light" id="smtp_mail" name="smtp_mail" value="<?= $info->smtp_mail ?>">
+                    <input type="text" class="form-control" id="smtp_mail" name="smtp_mail" value="<?= $info->smtp_mail ?>">
                 </div>
 
                 <!-- SMTP 사용자아이디 -->
                 <div class="mb-3">
                     <label for="smtp_user" class="form-label">SMTP 사용자아이디</label>
-                    <input type="text" class="form-control bg-light" id="smtp_user" name="smtp_user" value="<?= $info->smtp_user ?>">
+                    <input type="text" class="form-control" id="smtp_user" name="smtp_user" value="<?= $info->smtp_user ?>">
                 </div>
 
                 <!-- SMTP 암호 -->
                 <div class="mb-3">
                     <label for="smtp_pass" class="form-label">SMTP 비밀번호</label>
-                    <input type="text" class="form-control bg-light" id="smtp_pass" name="smtp_pass" value="<?= $info->smtp_pass ?>">
+                    <input type="text" class="form-control" id="smtp_pass" name="smtp_pass" value="<?= $info->smtp_pass ?>">
                 </div>
 
                 <!-- SMTP 포트 -->
                 <div class="mb-3">
                     <label for="smtp_port" class="form-label">SMTP 포트</label>
-                    <input type="text" class="form-control bg-light" id="smtp_port" name="smtp_port" value="<?= $info->smtp_port ?>">
+                    <input type="text" class="form-control" id="smtp_port" name="smtp_port" value="<?= $info->smtp_port ?>">
                 </div>
 
                 <!-- SMTP 발송자명 -->
                 <div class="mb-3">
                     <label for="smtp_name" class="form-label">SMTP 발송자명</label>
-                    <input type="text" class="form-control bg-light" id="smtp_name" name="smtp_name" value="<?= $info->smtp_name ?>">
+                    <input type="text" class="form-control" id="smtp_name" name="smtp_name" value="<?= $info->smtp_name ?>">
                 </div>
 
             </div>

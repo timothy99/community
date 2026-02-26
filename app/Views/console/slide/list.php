@@ -48,7 +48,7 @@
         <div class="card">
             <div class="card-body p-3">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover bg-white align-middle text-center mb-0">
+                    <table class="table table-bordered table-hover bg-white align-middle text-center mb-0 text-nowrap">
                         <thead class="table-primary">
                             <tr>
                                 <th>번호</th>

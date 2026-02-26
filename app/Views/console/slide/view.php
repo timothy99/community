@@ -10,92 +10,80 @@
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
             <div class="card-body">
-                <!-- 정렬순서 -->
-                <div class="mb-3">
-                    <label class="form-label">정렬순서</label>
-                    <input type="text" class="form-control bg-light" value="<?= $info->order_no ?>" readonly>
-                </div>
-
-                <!-- 제목 -->
-                <div class="mb-3">
-                    <label class="form-label">제목</label>
-                    <input type="text" class="form-control bg-light" value="<?= $info->title ?>" readonly>
-                </div>
-
-                <!-- 소제목 -->
-                <div class="mb-3">
-                    <label class="form-label">소제목</label>
-                    <input type="text" class="form-control bg-light" value="<?= $info->sub_title ?>" readonly>
-                </div>
-
-                <!-- 내용 (alt) -->
-                <div class="mb-3">
-                    <label class="form-label">내용 <span class="text-muted small">(이미지 alt 텍스트)</span></label>
-                    <textarea class="form-control bg-light" rows="3" readonly><?= $info->contents ?></textarea>
-                </div>
-
-                <!-- URL 링크 -->
-                <div class="mb-3">
-                    <label class="form-label">링크 URL</label>
-                    <input type="text" class="form-control bg-light" value="<?= $info->url_link ?>" readonly>
-                </div>
-
-                <!-- 게시기간 -->
-                <div class="mb-3">
-                    <label class="form-label">게시기간</label>
-                    <div class="row g-2 align-items-center">
-                        <div class="col-auto">
-                            <input type="text" class="form-control bg-light" value="<?= $info->start_date_txt ?>" readonly>
-                        </div>
-                        <div class="col-auto text-muted">~</div>
-                        <div class="col-auto">
-                            <input type="text" class="form-control bg-light" value="<?= $info->end_date_txt ?>" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 노출여부 -->
-                <div class="mb-3">
-                    <label class="form-label">노출여부</label>
-                    <div>
-                        <span class="badge <?= $info->display_yn_badge ?>">
-                            <?= code_replace('display_yn', $info->display_yn) ?>
-                        </span>
-                    </div>
-                </div>
-
-                <!-- 슬라이드 이미지 -->
-                <div class="mb-3">
-                    <label class="form-label">슬라이드 이미지</label>
-                    <div class="mt-2">
-<?php   if ($info->slide_file_info != null) { ?>
-                        <div class="row g-2 align-items-center">
-                            <div class="col">
-                                <img src="/csl/file/view/<?= $info->slide_file ?>" class="img-thumbnail" style="width: 300px; height: auto;">
-                            </div>
-                            <div class="col">
-                                <small class="text-muted">원본파일명</small><br>
-                                <?= $info->slide_file_info->file_name_org ?>
-                            </div>
-                            <div class="col">
-                                <small class="text-muted">가로해상도</small><br>
-                                <?= $info->slide_file_info->image_width_txt ?>px
-                            </div>
-                            <div class="col">
-                                <small class="text-muted">세로해상도</small><br>
-                                <?= $info->slide_file_info->image_height_txt ?>px
-                            </div>
-                            <div class="col">
-                                <small class="text-muted">사이즈</small><br>
-                                <?= $info->slide_file_info->file_size_kb ?> KB
-                            </div>
-                        </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-nowrap">
+                        <colgroup>
+                            <col style="width: 15%;">
+                            <col style="width: 80%;">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th class="align-middle bg-light">정렬순서</th>
+                                <td><?= $info->order_no ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">제목</th>
+                                <td><?= $info->title ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">소제목</th>
+                                <td><?= $info->sub_title ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">내용</th>
+                                <td><?= nl2br($info->contents) ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">링크 URL</th>
+                                <td>
+<?php   if (!empty($info->url_link)) { ?>
+                                    <a href="<?= $info->url_link ?>" target="_blank"><?= $info->url_link ?></a>
 <?php   } else { ?>
-                        <p class="text-muted">등록된 이미지가 없습니다.</p>
+                                    <span class="text-muted">-</span>
 <?php   } ?>
-                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">게시기간</th>
+                                <td><?= $info->start_date_txt ?> ~ <?= $info->end_date_txt ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">노출여부</th>
+                                <td>
+                                    <span class="badge <?= $info->display_yn_badge ?>">
+                                        <?= code_replace('display_yn', $info->display_yn) ?>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">슬라이드 이미지</th>
+                                <td>
+<?php   if ($info->slide_file_info != null) { ?>
+                                    <div class="mb-3">
+                                        <img src="/csl/file/view/<?= $info->slide_file ?>" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-auto">
+                                            <small class="text-muted d-block">원본파일명</small>
+                                            <strong><?= $info->slide_file_info->file_name_org ?></strong>
+                                        </div>
+                                        <div class="col-auto">
+                                            <small class="text-muted d-block">해상도</small>
+                                            <strong><?= $info->slide_file_info->image_width_txt ?> × <?= $info->slide_file_info->image_height_txt ?> px</strong>
+                                        </div>
+                                        <div class="col-auto">
+                                            <small class="text-muted d-block">파일 크기</small>
+                                            <strong><?= $info->slide_file_info->file_size_kb ?> KB</strong>
+                                        </div>
+                                    </div>
+<?php   } else { ?>
+                                    <p class="text-muted mb-0">등록된 이미지가 없습니다.</p>
+<?php   } ?>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
@@ -105,7 +93,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </main>
 

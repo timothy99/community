@@ -35,6 +35,8 @@ class ConfigModel extends Model
         $result = true;
         $message = '입력이 잘 되었습니다';
 
+        $title = $data['title'];
+        $company_logo = $data['company_logo'];
         $phone = $data['phone'];
         $fax = $data['fax'];
         $email = $data['email'];
@@ -54,6 +56,8 @@ class ConfigModel extends Model
         $db->transStart();
 
         $builder = $db->table('config');
+        $builder->set('title', $title);
+        $builder->set('company_logo', $company_logo);
         $builder->set('phone', $phone);
         $builder->set('fax', $fax);
         $builder->set('email', $email);

@@ -62,6 +62,8 @@ class Config extends BaseController
         $result = true;
         $message = '정상처리 되었습니다.';
 
+        $title = $this->request->getPost('title', FILTER_SANITIZE_SPECIAL_CHARS);
+        $company_logo = $this->request->getPost('company_logo_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
         $phone = $this->request->getPost('phone', FILTER_SANITIZE_SPECIAL_CHARS);
         $fax = $this->request->getPost('fax', FILTER_SANITIZE_SPECIAL_CHARS);
         $email = $this->request->getPost('email', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -77,6 +79,7 @@ class Config extends BaseController
         $smtp_port = $this->request->getPost('smtp_port', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_name = $this->request->getPost('smtp_name', FILTER_SANITIZE_SPECIAL_CHARS);
 
+        if ($title == null) { $result = false; $message = '회사명을 입력해주세요.'; }
         if ($phone == null) { $result = false; $message = '전화번호를 입력해주세요.'; }
         if ($email == null) { $result = false; $message = '이메일을 입력해주세요.'; }
         if ($work_hour == null) { $result = false; $message = '업무시간을 입력해주세요.'; }
@@ -85,6 +88,8 @@ class Config extends BaseController
         if ($smtp_yn == null) { $result = false; $message = '메일발송기능 사용여부를 입력해주세요.'; }
 
         $data = array();
+        $data['title'] = $title;
+        $data['company_logo'] = $company_logo;
         $data['phone'] = $phone;
         $data['fax'] = $fax;
         $data['email'] = $email;

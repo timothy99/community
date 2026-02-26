@@ -153,6 +153,33 @@ body {
     background-color: #e0e0e0 !important;
 }
 
+/* 상세보기 dt/dd 스타일 */
+dl.row dt {
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 0;
+}
+
+dl.row dd {
+    color: #212529;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 0;
+}
+
+/* 모바일에서 dd가 dt 바로 아래 올 때 상단 border 제거 */
+@media (max-width: 575.98px) {
+    dl.row dd {
+        border-top: none;
+        padding-top: 0.5rem;
+    }
+}
+
 /* ========================================
    커스텀 색상표 (Custom Color Palette)
    ======================================== */
@@ -175,6 +202,8 @@ body {
     --custom-light-rgb: 248, 249, 250;
     --custom-dark: #212529;
     --custom-dark-rgb: 33, 37, 41;
+    --custom-gray: #dfdfdf;
+    --custom-gray-rgb: 223, 223, 223;
 }
 
 /* 배경 색상 클래스 */
@@ -184,6 +213,10 @@ body {
 
 .bg-secondary {
     background-color: var(--custom-secondary) !important;
+}
+
+.bg-gray {
+    background-color: var(--custom-gray) !important;
 }
 
 .bg-success {

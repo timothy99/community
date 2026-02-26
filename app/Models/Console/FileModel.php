@@ -727,6 +727,9 @@ class FileModel extends Model
             // do nothing
         } else {
             $db_info->file_path = UPLOADPATH.$db_info->file_directory."/".$db_info->file_name_uploaded;
+            $db_info->file_size_kb = number_format($db_info->file_size / 1024, 2);
+            $db_info->image_width_txt = number_format($db_info->image_width);
+            $db_info->image_height_txt = number_format($db_info->image_height);
         }
 
         return $db_info;
