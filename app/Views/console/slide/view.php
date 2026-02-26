@@ -99,9 +99,9 @@
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
+                    <button type="button" class="btn btn-danger" onclick="slideDelete()">삭제</button>
                     <a href="/csl/slide/list" class="btn btn-secondary">목록</a>
                     <a href="/csl/slide/edit/<?= $info->slide_idx ?>" class="btn btn-primary">수정</a>
-                    <button type="button" class="btn btn-danger" onclick="slideDelete()">삭제</button>
                 </div>
             </div>
         </div>

@@ -45,44 +45,48 @@
             </div>
         </div>
         <!-- 목록 -->
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle text-center">
-                <thead class="table-info">
-                    <tr>
-                        <th>번호</th>
-                        <th>정렬순서</th>
-                        <th>제목</th>
-                        <th>게시기간</th>
-                        <th>노출여부</th>
-                        <th>입력자</th>
-                        <th>입력일</th>
-                    </tr>
-                </thead>
-                <tbody id="list-body">
+        <div class="card">
+            <div class="card-body p-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover bg-white align-middle text-center mb-0">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>번호</th>
+                                <th>정렬순서</th>
+                                <th>제목</th>
+                                <th>게시기간</th>
+                                <th>노출여부</th>
+                                <th>입력자</th>
+                                <th>입력일</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-body">
 <?php   foreach($list as $no => $val) { ?>
-                    <tr>
-                        <td><?=$val->list_no ?></td>
-                        <td><?=$val->order_no ?></td>
-                        <td><a href="/csl/slide/view/<?=$val->slide_idx ?>"><?=$val->title ?></a></td>
-                        <td><?=$val->start_date_txt ?> ~ <?=$val->end_date_txt ?></td>
-                        <td><?=$val->display_yn ?></td>
-                        <td><?=$val->ins_id ?></td>
-                        <td><?=$val->ins_date_txt ?></td>
-                    </tr>
+                            <tr>
+                                <td><?=$val->list_no ?></td>
+                                <td><?=$val->order_no ?></td>
+                                <td><a href="/csl/slide/view/<?=$val->slide_idx ?>"><?=$val->title ?></a></td>
+                                <td><?=$val->start_date_txt ?> ~ <?=$val->end_date_txt ?></td>
+                                <td><?=$val->display_yn ?></td>
+                                <td><?=$val->ins_id ?></td>
+                                <td><?=$val->ins_date_txt ?></td>
+                            </tr>
 <?php   } ?>
 <?php   if (count($list) == 0) { ?>
-                    <tr>
-                        <td colspan="7" class="text-center">데이터가 없습니다.</td>
-                    </tr>
+                            <tr>
+                                <td colspan="7" class="text-center">데이터가 없습니다.</td>
+                            </tr>
 <?php   } ?>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 페이징 & 등록 버튼 -->
-        <div class="d-flex justify-content-between align-items-center mt-3">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
 <?= $paging_info['paging_view'] ?>
-            <a href="/csl/slide/write" type="button" class="btn btn-primary">등록</a>
+                    <a href="/csl/slide/write" type="button" class="btn btn-primary">등록</a>
+                </div>
+            </div>
         </div>
     </div>
 </main>

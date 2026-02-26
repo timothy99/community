@@ -104,8 +104,8 @@
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
+                    <a href="/csl/slide/view/<?= $info->slide_idx ?>" class="btn btn-secondary">취소</a>
                     <button type="button" class="btn btn-primary" onclick="slideUpdate()">저장</button>
-                    <a href="/csl/slide/list" class="btn btn-secondary">목록</a>
                 </div>
             </div>
         </div>
@@ -133,8 +133,9 @@
     function slideUpdateAfter(proc_result) {
         var result = proc_result.result;
         var message = proc_result.message;
+        var return_url = proc_result.return_url;
         if (result == true) {
-            location.href = '/csl/slide/list';
+            location.href = return_url;
         } else {
             alert(message);
         }

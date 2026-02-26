@@ -117,6 +117,7 @@ class SlideModel extends Model
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
         $result = $builder->insert();
+        $insert_id = $db->insertID();
 
         $db->transComplete();
 

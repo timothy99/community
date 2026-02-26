@@ -1,6 +1,6 @@
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex bg-gray-100 flex-column min-vh-100">
     <!-- Header -->
-    <header class="navbar navbar-light bg-white border-bottom fixed-top app-header">
+    <header class="navbar navbar-light border-bottom fixed-top app-header">
         <div class="container-fluid">
             <div class="flex-grow-1">
                 <!-- 여기에 상단 메뉴 추가 가능 -->

@@ -1,0 +1,496 @@
+/* 기본 폰트 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* Loading Screen */
+#progress_loading {
+    height: 100%;
+    left: 0px;
+    position: fixed;
+    _position: absolute;
+    background-color: white;
+    top: 0px;
+    width: 100%;
+    filter: alpha(opacity = 0);
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+}
+
+#loading_img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 200px;
+    margin-top: -75px; 
+    margin-left: -75px; 
+    z-index: 999999;
+}
+
+/* Multi-level dropdown styles */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    display: none;
+}
+
+/* Only show submenu when directly hovering over the parent item */
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu > .dropdown-toggle:after {
+    transform: rotate(-90deg);
+    float: right;
+    margin-top: 8px;
+}
+
+/* Sidebar Menu Styles */
+.nav-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    border-radius: 0.375rem;
+}
+
+.nav-arrow {
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.nav-link[aria-expanded="true"] .nav-arrow {
+    transform: rotate(90deg);
+}
+
+.submenu {
+    padding-left: 0;
+    margin-top: 4px;
+}
+
+.submenu .nav-link {
+    padding-left: 2rem;
+}
+
+.submenu .submenu {
+    margin-top: 4px;
+}
+
+.submenu .submenu .nav-link {
+    padding-left: 3rem;
+}
+
+/* 메뉴 단계별 강조 색상 */
+.nav-link.active-level-1 {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.nav-link.active-level-2 {
+    background-color: #6ea8fe !important;
+    color: white !important;
+}
+
+.nav-link.active-level-3 {
+    background-color: #cfe2ff !important;
+    color: #084298 !important;
+}
+
+/* Header Styles */
+.app-header {
+    height: 63px;
+    z-index: 1050;
+    margin-left: 280px;
+    transition: margin-left 0.3s ease-in-out;
+    background-color: #eeeeee;
+}
+
+.app-header .header-menu-width {
+    width: 280px;
+}
+
+/* Sidebar Styles */
+#sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    overflow-y: auto;
+    background-color: #efefef;
+    border-left: 1px solid #b8b8b8;
+    top: 0;
+    right: 0;
+    transition: transform 0.3s ease-in-out;
+}
+
+#sidebar .sidebar-header {
+    height: 43px;
+    display: flex;
+    align-items: center;
+    margin: -0.75rem -0.75rem 0 -0.75rem;
+    padding: 0 1rem;
+}
+
+/* Main Content Styles */
+#main-content {
+    margin-left: 280px;
+    margin-top: 56px;
+    flex: 1;
+    transition: margin-left 0.3s ease-in-out;
+    background-color: #eeeeee;
+}
+
+body {
+    background-color: #eeeeee;
+}
+
+.bg-body-tertiary {
+    --bs-bg-opacity: 1;
+    background-color: #e0e0e0 !important;
+}
+
+/* ========================================
+   커스텀 색상표 (Custom Color Palette)
+   ======================================== */
+
+/* CSS 변수로 색상 정의 */
+:root {
+    --custom-primary: #0d6efd;
+    --custom-primary-rgb: 13, 110, 253;
+    --custom-secondary: #6c757d;
+    --custom-secondary-rgb: 108, 117, 125;
+    --custom-success: #198754;
+    --custom-success-rgb: 25, 135, 84;
+    --custom-info: #47daff;
+    --custom-info-rgb: 71, 218, 255;
+    --custom-warning: #ffc107;
+    --custom-warning-rgb: 255, 193, 7;
+    --custom-danger: #dc3545;
+    --custom-danger-rgb: 220, 53, 69;
+    --custom-light: #f8f9fa;
+    --custom-light-rgb: 248, 249, 250;
+    --custom-dark: #212529;
+    --custom-dark-rgb: 33, 37, 41;
+}
+
+/* 배경 색상 클래스 */
+.bg-primary {
+    background-color: var(--custom-primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--custom-secondary) !important;
+}
+
+.bg-success {
+    background-color: var(--custom-success) !important;
+}
+
+.bg-info {
+    background-color: var(--custom-info) !important;
+}
+
+.bg-warning {
+    background-color: var(--custom-warning) !important;
+}
+
+.bg-danger {
+    background-color: var(--custom-danger) !important;
+}
+
+.bg-light {
+    background-color: var(--custom-light) !important;
+}
+
+.bg-dark {
+    background-color: var(--custom-dark) !important;
+}
+
+/* 투명도 적용 배경 색상 */
+.bg-primary.bg-opacity-75 {
+    background-color: rgba(var(--custom-primary-rgb), 0.75) !important;
+}
+
+.bg-secondary.bg-opacity-75 {
+    background-color: rgba(var(--custom-secondary-rgb), 0.75) !important;
+}
+
+.bg-success.bg-opacity-75 {
+    background-color: rgba(var(--custom-success-rgb), 0.75) !important;
+}
+
+.bg-info.bg-opacity-75 {
+    background-color: rgba(var(--custom-info-rgb), 0.75) !important;
+}
+
+.bg-warning.bg-opacity-75 {
+    background-color: rgba(var(--custom-warning-rgb), 0.75) !important;
+}
+
+.bg-danger.bg-opacity-75 {
+    background-color: rgba(var(--custom-danger-rgb), 0.75) !important;
+}
+
+/* 텍스트 색상 클래스 */
+.text-primary {
+    color: var(--custom-primary) !important;
+}
+
+.text-secondary {
+    color: var(--custom-secondary) !important;
+}
+
+.text-success {
+    color: var(--custom-success) !important;
+}
+
+.text-info {
+    color: var(--custom-info) !important;
+}
+
+.text-warning {
+    color: var(--custom-warning) !important;
+}
+
+.text-danger {
+    color: var(--custom-danger) !important;
+}
+
+.text-light {
+    color: var(--custom-light) !important;
+}
+
+.text-dark {
+    color: var(--custom-dark) !important;
+}
+
+/* 버튼 색상 클래스 */
+.btn-primary {
+    --bs-btn-bg: var(--custom-primary);
+    --bs-btn-border-color: var(--custom-primary);
+    --bs-btn-hover-bg: rgba(var(--custom-primary-rgb), 0.9);
+    --bs-btn-hover-border-color: rgba(var(--custom-primary-rgb), 0.9);
+    --bs-btn-color: #fff;
+    background-color: var(--custom-primary) !important;
+    border-color: var(--custom-primary) !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover {
+    background-color: rgba(var(--custom-primary-rgb), 0.9) !important;
+    border-color: rgba(var(--custom-primary-rgb), 0.9) !important;
+}
+
+.btn-secondary {
+    --bs-btn-bg: var(--custom-secondary);
+    --bs-btn-border-color: var(--custom-secondary);
+    --bs-btn-hover-bg: rgba(var(--custom-secondary-rgb), 0.9);
+    --bs-btn-hover-border-color: rgba(var(--custom-secondary-rgb), 0.9);
+    --bs-btn-color: #fff;
+    background-color: var(--custom-secondary) !important;
+    border-color: var(--custom-secondary) !important;
+    color: #fff !important;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(var(--custom-secondary-rgb), 0.9) !important;
+    border-color: rgba(var(--custom-secondary-rgb), 0.9) !important;
+}
+
+.btn-success {
+    --bs-btn-bg: var(--custom-success);
+    --bs-btn-border-color: var(--custom-success);
+    --bs-btn-hover-bg: rgba(var(--custom-success-rgb), 0.9);
+    --bs-btn-hover-border-color: rgba(var(--custom-success-rgb), 0.9);
+    --bs-btn-color: #fff;
+    background-color: var(--custom-success) !important;
+    border-color: var(--custom-success) !important;
+    color: #fff !important;
+}
+
+.btn-success:hover {
+    background-color: rgba(var(--custom-success-rgb), 0.9) !important;
+    border-color: rgba(var(--custom-success-rgb), 0.9) !important;
+}
+
+.btn-info {
+    --bs-btn-bg: var(--custom-info);
+    --bs-btn-border-color: var(--custom-info);
+    --bs-btn-hover-bg: rgba(var(--custom-info-rgb), 0.9);
+    --bs-btn-hover-border-color: rgba(var(--custom-info-rgb), 0.9);
+    --bs-btn-color: #fff;
+    background-color: var(--custom-info) !important;
+    border-color: var(--custom-info) !important;
+    color: #fff !important;
+}
+
+.btn-info:hover {
+    background-color: rgba(var(--custom-info-rgb), 0.9) !important;
+    border-color: rgba(var(--custom-info-rgb), 0.9) !important;
+}
+
+.btn-warning {
+    --bs-btn-bg: var(--custom-warning);
+    --bs-btn-border-color: var(--custom-warning);
+    --bs-btn-hover-bg: rgba(var(--custom-warning-rgb), 0.9);
+    --bs-btn-hover-border-color: rgba(var(--custom-warning-rgb), 0.9);
+    --bs-btn-color: #000;
+    background-color: var(--custom-warning) !important;
+    border-color: var(--custom-warning) !important;
+    color: #000 !important;
+}
+
+.btn-warning:hover {
+    background-color: rgba(var(--custom-warning-rgb), 0.9) !important;
+    border-color: rgba(var(--custom-warning-rgb), 0.9) !important;
+}
+
+.btn-danger {
+    --bs-btn-bg: var(--custom-danger);
+    --bs-btn-border-color: var(--custom-danger);
+    --bs-btn-hover-bg: rgba(var(--custom-danger-rgb), 0.9);
+    --bs-btn-hover-border-color: rgba(var(--custom-danger-rgb), 0.9);
+    --bs-btn-color: #fff;
+    background-color: var(--custom-danger) !important;
+    border-color: var(--custom-danger) !important;
+    color: #fff !important;
+}
+
+.btn-danger:hover {
+    background-color: rgba(var(--custom-danger-rgb), 0.9) !important;
+    border-color: rgba(var(--custom-danger-rgb), 0.9) !important;
+}
+
+/* 테이블 헤더 색상 클래스 */
+.table-primary {
+    --bs-table-bg: rgba(var(--custom-primary-rgb), 0.7);
+    --bs-table-color: #ffffff;
+    background-color: rgba(var(--custom-primary-rgb), 0.7) !important;
+}
+
+.table-secondary {
+    --bs-table-bg: rgba(var(--custom-secondary-rgb), 0.1);
+    --bs-table-color: #000;
+    background-color: rgba(var(--custom-secondary-rgb), 0.1) !important;
+}
+
+.table-success {
+    --bs-table-bg: rgba(var(--custom-success-rgb), 0.1);
+    --bs-table-color: #000;
+    background-color: rgba(var(--custom-success-rgb), 0.1) !important;
+}
+
+.table-info {
+    --bs-table-bg: rgba(var(--custom-info-rgb), 0.1);
+    --bs-table-color: #000;
+    background-color: rgba(var(--custom-info-rgb), 0.1) !important;
+}
+
+.table-warning {
+    --bs-table-bg: rgba(var(--custom-warning-rgb), 0.1);
+    --bs-table-color: #000;
+    background-color: rgba(var(--custom-warning-rgb), 0.1) !important;
+}
+
+.table-danger {
+    --bs-table-bg: rgba(var(--custom-danger-rgb), 0.1);
+    --bs-table-color: #000;
+    background-color: rgba(var(--custom-danger-rgb), 0.1) !important;
+}
+
+/* 테두리 색상 클래스 */
+.border-primary {
+    border-color: var(--custom-primary) !important;
+}
+
+.border-secondary {
+    border-color: var(--custom-secondary) !important;
+}
+
+.border-success {
+    border-color: var(--custom-success) !important;
+}
+
+.border-info {
+    border-color: var(--custom-info) !important;
+}
+
+.border-warning {
+    border-color: var(--custom-warning) !important;
+}
+
+.border-danger {
+    border-color: var(--custom-danger) !important;
+}
+
+/* ========================================
+    색상 커스터마이징 가이드
+    ========================================
+
+    색상을 변경하려면 위의 :root 섹션에서 CSS 변수 값을 수정하세요.
+
+    예시:
+    --custom-primary: #007bff;  <- 원하는 색상 코드로 변경
+    --custom-primary-rgb: 0, 123, 255;  <- RGB 값도 동일하게 변경
+
+    RGB 값은 투명도(opacity) 적용을 위해 사용됩니다.
+    HEX를 RGB로 변환: https://www.rapidtables.com/convert/color/hex-to-rgb.html
+
+======================================== */
+
+
+
+/* 모바일 반응형 사이드바 */
+@media (max-width: 991.98px) {
+    .app-header {
+        margin-left: 0 !important;
+    }
+    
+    #sidebar {
+        transform: translateX(100%);
+        z-index: 1040;
+        border-left: 1px solid #b8b8b8;
+        border-right: none;
+    }
+    
+    #sidebar.show-mobile {
+        transform: translateX(0);
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    #main-content {
+        margin-left: 0 !important;
+    }
+}
+
+@media (min-width: 992px) {
+    #sidebar {
+        transform: translateX(0);
+        right: auto;
+        left: 0;
+        border-right: 1px solid #b8b8b8;
+        border-left: none;
+    }
+}
+
+/* Show main dropdown on hover for desktop */
+@media (min-width: 768px) {
+    .nav-item.dropdown:hover > .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+    
+    /* Hide all submenus by default */
+    .dropdown-submenu .dropdown-menu {
+        display: none !important;
+    }
+    
+    /* Only show submenu when hovering directly over the submenu parent */
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+    }
+}

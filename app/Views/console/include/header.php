@@ -14,12 +14,12 @@
 
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet"><!-- 썸머노트 CSS -->
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script><!-- 썸머노트 라이트 -->
-        <script src="/resource/community/js/summernote-ko-KR.js?ver=1.0.0"></script><!-- 썸머노트 한국어 -->
-        <script src="/resource/community/js/summernote_setting.js?ver=1.0.0"></script><!-- 썸머노트 설정 -->
+        <script src="/resource/console/js/summernote-ko-KR.js?ver=1.0.0"></script><!-- 썸머노트 한국어 -->
+        <script src="/resource/console/js/summernote_setting.js?ver=1.0.0"></script><!-- 썸머노트 설정 -->
 
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-        <script src="/resource/community/js/postcode.js?ver=1.0.0"></script>
+        <script src="/resource/console/js/postcode.js?ver=1.0.0"></script>
 
-        <script src="/resource/community/js/community.js?ver=1.0.0"></script>
-        <link rel="stylesheet" href="/resource/community/css/community.css?ver=1.0.0">
+        <script src="/resource/console/js/console.js?ver=1.0.0"></script>
+        <link rel="stylesheet" href="/resource/console/css/console.css?ver=1.0.0">
     </head>

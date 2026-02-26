@@ -16,12 +16,12 @@
 
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet"><!-- 썸머노트 CSS -->
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script><!-- 썸머노트 라이트 -->
-        <script src="/resource/community/js/summernote-ko-KR.js?ver=<?=env("app.program.version") ?>"></script><!-- 썸머노트 한국어 -->
-        <script src="/resource/community/js/summernote_setting.js?ver=<?=env("app.program.version") ?>"></script><!-- 썸머노트 설정 -->
+        <script src="/resource/user/js/summernote-ko-KR.js?ver=<?=env("app.program.version") ?>"></script><!-- 썸머노트 한국어 -->
+        <script src="/resource/user/js/summernote_setting.js?ver=<?=env("app.program.version") ?>"></script><!-- 썸머노트 설정 -->
 
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-        <script src="/resource/community/js/postcode.js?ver=<?=env("app.program.version") ?>"></script>
+        <script src="/resource/user/js/postcode.js?ver=<?=env("app.program.version") ?>"></script>
 
-        <script src="/resource/community/js/community.js?ver=<?=env("app.program.version") ?>"></script>
-        <link rel="stylesheet" href="/resource/community/css/community.css?ver=<?=env("app.program.version") ?>">
+        <script src="/resource/user/js/user.js?ver=<?=env("app.program.version") ?>"></script>
+        <link rel="stylesheet" href="/resource/user/css/user.css?ver=<?=env("app.program.version") ?>">
     </head>

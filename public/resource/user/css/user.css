@@ -204,6 +204,7 @@ body {
     z-index: 1050;
     margin-left: 280px;
     transition: margin-left 0.3s ease-in-out;
+    background-color: #eeeeee;
 }
 
 .app-header .header-menu-width {
@@ -216,8 +217,8 @@ body {
     height: 100vh;
     position: fixed;
     overflow-y: auto;
-    background-color: #eeeeee;
-    border-left: 1px solid #dee2e6;
+    background-color: #efefef;
+    border-left: 1px solid #b8b8b8;
     top: 0;
     right: 0;
     transition: transform 0.3s ease-in-out;
@@ -237,12 +238,16 @@ body {
     margin-top: 56px;
     flex: 1;
     transition: margin-left 0.3s ease-in-out;
+    background-color: #eeeeee;
 }
 
+body {
+    background-color: #eeeeee;
+}
 
 .bg-body-tertiary {
     --bs-bg-opacity: 1;
-    background-color: #eeeeee !important;
+    background-color: #e0e0e0 !important;
 }
 
 /* 모바일 반응형 사이드바 */
@@ -254,7 +259,7 @@ body {
     #sidebar {
         transform: translateX(100%);
         z-index: 1040;
-        border-left: 1px solid #dee2e6;
+        border-left: 1px solid #b8b8b8;
         border-right: none;
     }
     
@@ -273,7 +278,7 @@ body {
         transform: translateX(0);
         right: auto;
         left: 0;
-        border-right: 1px solid #dee2e6;
+        border-right: 1px solid #b8b8b8;
         border-left: none;
     }
 }

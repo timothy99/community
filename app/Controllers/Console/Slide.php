@@ -134,6 +134,7 @@ class Slide extends BaseController
         if ($result == true) {
             if ($slide_idx == 0) {
                 $model_result = $slide_model->procSlideInsert($data);
+                $slide_idx = $model_result['insert_id'];
             } else {
                 $model_result = $slide_model->procSlideUpdate($data);
             }
@@ -145,7 +146,8 @@ class Slide extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/slide/list';
+        $proc_result['return_url'] = '/csl/slide/view/'.$slide_idx;
+        $proc_result['slide_idx'] = $slide_idx;
 
         return json_encode($proc_result);
     }
