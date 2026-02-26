@@ -51,7 +51,7 @@ create table mng_menu (
     order_no int not null default 0 comment '정렬순서',
     menu_position int not null default 0 comment '메뉴 위치',
     menu_name varchar(500) null comment '메뉴명',
-    http_link varchar(500) null comment '링크',
+    url_link varchar(500) null comment '링크',
     del_yn enum('Y', 'N') not null comment '삭제 여부',
     ins_id varchar(70) default null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
@@ -91,7 +91,7 @@ create table mng_board (
     title varchar(1000) not null comment '제목',
     contents longtext not null comment '내용',
     main_file_id varchar(32) default null comment '대표파일 id',
-    http_link varchar(500) default null comment '인터넷 링크',
+    url_link varchar(500) default null comment '인터넷 링크',
     comment_cnt int not null default 0 comment '댓글 등록수',
     heart_cnt int not null default 0 comment '공감수',
     hit_cnt int not null default 0 comment '조회수',
@@ -179,8 +179,6 @@ create table mng_file (
     primary key (file_idx)
 ) comment='파일 정보' collate='utf8mb4_unicode_ci';
 
-
-
 drop table if exists mng_member_reset;
 create table mng_member_reset (
     member_reset_idx int not null auto_increment comment '인덱스',
@@ -208,13 +206,13 @@ create table mng_contents (
     primary key (contents_idx)
 ) comment '콘텐츠' collate='utf8mb4_unicode_ci';
 
-
-
+drop table if exists mng_slide;
 create table mng_slide (
     slide_idx int auto_increment comment '슬라이드 인덱스',
     title varchar(1000) not null comment '제목',
+    sub_title varchar(1000) null comment '부제목',
     contents varchar(4000) not null comment '내용-슬라이드에선 실제 내용 출력되지 않으므로 alt내용을 의미함',
-    http_link varchar(1000) not null comment 'http 링크',
+    url_link varchar(1000) not null comment 'http 링크',
     order_no int null comment '순서',
     slide_file varchar(32) null comment '슬라이드 이미지',
     start_date varchar(14) default '20000101000000' not null comment '게시 시작시간',
@@ -233,7 +231,7 @@ create table mng_popup (
     popup_idx int auto_increment comment '팝업 인덱스' primary key,
     title varchar(1000) not null comment '제목',
     popup_file varchar(32) null comment '레이어 팝업 이미지',
-    http_link varchar(1000) not null comment 'http 링크',
+    url_link varchar(1000) not null comment 'http 링크',
     position_left int null comment '좌측 위치',
     position_top int null comment '상단 위치',
     popup_width int null comment '너비',
@@ -264,7 +262,7 @@ drop table if exists mng_shortlink;
 create table mng_shortlink (
     short_link_idx int not null auto_increment comment '단축url 인덱스',
     title varchar(1000) not null comment '제목',
-    http_link varchar(1000) not null comment '이동할 링크',
+    url_link varchar(1000) not null comment '이동할 링크',
     del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
     ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
@@ -276,7 +274,7 @@ create table mng_shortlink (
 drop table if exists mng_privacy;
 create table mng_privacy (
     privacy_idx int auto_increment comment '인덱스',
-    http_link varchar(1000) not null comment '링크',
+    url_link varchar(1000) not null comment '링크',
     memo varchar(2000) not null comment '상담메모',
     ip_addr varchar(15) not null comment 'IP주소',
     del_yn enum ('Y', 'N') default 'N' not null comment '삭제 여부',
