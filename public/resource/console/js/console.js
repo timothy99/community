@@ -1,6 +1,6 @@
 // 입력받은 form 데이터로 처리
 function ajax1(ajax_url, form_data, callback) {
-    $('<div id="progress" style="display:none;"><div id="progress_loading"><img id="loading_img" src="/resource/community/image/loading.gif"/></div></div>').appendTo(document.body).show();
+    $('<div id="progress" style="display:none;"><div id="progress_loading"><img id="loading_img" src="/resource/console/image/loading.gif"/></div></div>').appendTo(document.body).show();
 
     // form_data 처리 로직
     var ajaxData;
@@ -58,7 +58,7 @@ function ajax1(ajax_url, form_data, callback) {
 
 // 파일첨부 로직
 function uploadFile(file_id, method, callback) {
-    $('<div id="progress" style="display:none;"><div id="progress_loading"><img id="loading_img" src="/resource/community/image/loading.gif"/></div></div>').appendTo(document.body).show();
+    $('<div id="progress" style="display:none;"><div id="progress_loading"><img id="loading_img" src="/resource/console/image/loading.gif"/></div></div>').appendTo(document.body).show();
     var form_data = new FormData($('#frm')[0]);
     form_data.append('file_id', file_id);
     $.ajax({

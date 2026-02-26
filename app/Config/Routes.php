@@ -38,3 +38,7 @@ $routes->post('/csl/file/upload/image', 'Console\File::uploadImage');
 $routes->post('/csl/file/upload/original', 'Console\File::uploadOriginal');
 $routes->post('/csl/file/upload/dropzone', 'Console\File::uploadDropzone');
 $routes->get('/csl/file/view/(:any)', 'Console\File::view/$1');
+
+$routes->get('/csl/config/view', 'Console\Config::view');
+$routes->get('/csl/config/edit', 'Console\Config::edit');
+$routes->post('/csl/config/update', 'Console\Config::update');
