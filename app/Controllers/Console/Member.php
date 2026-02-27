@@ -105,14 +105,12 @@ class Member extends BaseController
         return json_encode($proc_result);
     }
 
-    public function view()
+    public function view($member_id)
     {
         $member_model = new MemberModel();
 
         $result = true;
         $message = '정상';
-
-        $member_id = $this->request->getUri()->getSegment(4);
 
         $data = array();
         $data['member_id'] = $member_id;
@@ -130,14 +128,12 @@ class Member extends BaseController
         return aview('console/member/view', $proc_result);
     }
 
-    public function edit()
+    public function edit($member_id)
     {
         $member_model = new MemberModel();
 
         $result = true;
         $message = '정상';
-
-        $member_id = $this->request->getUri()->getSegment(4);
 
         $data = array();
         $data['member_id'] = $member_id;

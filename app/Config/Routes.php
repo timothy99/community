@@ -45,8 +45,8 @@ $routes->post('/csl/config/update', 'Console\Config::update');
 
 $routes->get('/csl/member', 'Console\Member::index');
 $routes->get('/csl/member/list', 'Console\Member::list');
-$routes->get('/csl/member/view/(:any)', 'Console\Member::view');
-$routes->get('/csl/member/edit/(:any)', 'Console\Member::edit');
+$routes->get('/csl/member/view/(:any)', 'Console\Member::view/$1');
+$routes->get('/csl/member/edit/(:any)', 'Console\Member::edit/$1');
 $routes->post('/csl/member/update', 'Console\Member::update');
 $routes->post('/csl/member/delete', 'Console\Member::delete');
 $routes->get('/csl/member/excel', 'Console\Member::excel');
@@ -57,3 +57,12 @@ $routes->post('/file/upload/image', 'User\File::uploadImage');
 $routes->post('/file/upload/original', 'User\File::uploadOriginal');
 $routes->post('/file/upload/dropzone', 'User\File::uploadDropzone');
 $routes->get('/file/view/(:any)', 'User\File::view/$1');
+
+$routes->get("/contents/(:any)", "User\Contents::view/$1");
+
+$routes->get("/csl/contents/list", "Console\Contents::list");
+$routes->get("/csl/contents/write", "Console\Contents::write");
+$routes->get("/csl/contents/edit/(:num)", "Console\Contents::edit/$1");
+$routes->post("/csl/contents/update", "Console\Contents::update");
+$routes->get("/csl/contents/view/(:num)", "Console\Contents::view/$1");
+$routes->post("/csl/contents/delete", "Console\Contents::delete");
