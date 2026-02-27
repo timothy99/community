@@ -91,6 +91,10 @@ function code_replace($category, $text)
     $replace = array();
     $replace["display_yn"]["Y"] = "노출";
     $replace["display_yn"]["N"] = "미노출";
+    $replace["email_yn"]["Y"] = "수신";
+    $replace["email_yn"]["N"] = "미수신";
+    $replace["sms_yn"]["Y"] = "수신";
+    $replace["sms_yn"]["N"] = "미수신";
 
     return isset($replace[$category][$text]) ? $replace[$category][$text] : $text;
 }

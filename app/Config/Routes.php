@@ -42,3 +42,18 @@ $routes->get('/csl/file/view/(:any)', 'Console\File::view/$1');
 $routes->get('/csl/config/view', 'Console\Config::view');
 $routes->get('/csl/config/edit', 'Console\Config::edit');
 $routes->post('/csl/config/update', 'Console\Config::update');
+
+$routes->get('/csl/member', 'Console\Member::index');
+$routes->get('/csl/member/list', 'Console\Member::list');
+$routes->get('/csl/member/view/(:any)', 'Console\Member::view');
+$routes->get('/csl/member/edit/(:any)', 'Console\Member::edit');
+$routes->post('/csl/member/update', 'Console\Member::update');
+$routes->post('/csl/member/delete', 'Console\Member::delete');
+$routes->get('/csl/member/excel', 'Console\Member::excel');
+
+$routes->post('/file/upload/general', 'User\File::uploadGeneral');
+$routes->post('/file/upload/board', 'User\File::uploadBoard');
+$routes->post('/file/upload/image', 'User\File::uploadImage');
+$routes->post('/file/upload/original', 'User\File::uploadOriginal');
+$routes->post('/file/upload/dropzone', 'User\File::uploadDropzone');
+$routes->get('/file/view/(:any)', 'User\File::view/$1');

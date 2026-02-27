@@ -46,8 +46,8 @@ function postcodeOpen(postcode_wrap, postcode_div) {
                 // 조합된 참고항목을 해당 필드에 넣는다.
                 data.addr1 = addr;
                 data.addr2 = extraAddr;
-            
             } else {
+                data.addr1 = addr;
                 data.addr2 = "";
             }
 

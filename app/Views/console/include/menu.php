@@ -13,11 +13,11 @@
 
 <?php   if (in_array(getUserSessionInfo("auth_group"), ["최고관리자"])) { ?>
         <hr class="my-2">
-        <li class="nav-item"><a href="#" class="nav-link link-body-emphasis" id="li-member">회원관리</a></li>
+        <li class="nav-item"><a href="/csl/member/list" class="nav-link link-body-emphasis" id="li-member">회원관리</a></li>
         <li class="nav-item"><a href="/csl/config/view" class="nav-link link-body-emphasis" id="li-config">환경설정</a></li>
-        <li class="nav-item"><a href="#" class="nav-link link-body-emphasis" id="li-menu">메뉴구성</a></li>
-        <li class="nav-item"><a href="#" class="nav-link link-body-emphasis" id="li-content">콘텐츠</a></li>
-        <li class="nav-item"><a href="#" class="nav-link link-body-emphasis" id="li-board-config">게시판 설정</a></li>
+        <li class="nav-item"><a href="/csl/menu/list" class="nav-link link-body-emphasis" id="li-menu">메뉴구성</a></li>
+        <li class="nav-item"><a href="/csl/content/list" class="nav-link link-body-emphasis" id="li-content">콘텐츠</a></li>
+        <li class="nav-item"><a href="/csl/settings/board/list" class="nav-link link-body-emphasis" id="li-board-config">게시판 설정</a></li>
 <?php   } ?>
 
 

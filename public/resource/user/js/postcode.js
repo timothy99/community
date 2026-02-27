@@ -48,6 +48,7 @@ function postcodeOpen(postcode_wrap, postcode_div) {
                 data.addr2 = extraAddr;
             
             } else {
+                data.addr1 = addr;
                 data.addr2 = "";
             }
 

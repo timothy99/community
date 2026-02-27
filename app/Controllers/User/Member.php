@@ -22,7 +22,10 @@ class Member extends BaseController
             return redirect()->to('/');
         }
 
-        return uview('/user/member/login');
+        $proc_result = array();
+        $proc_result['html_meta'] = create_meta('홈 > 로그인');
+
+        return uview('/user/member/login', $proc_result);
     }
 
     public function signin()
@@ -99,7 +102,10 @@ class Member extends BaseController
             return redirect()->to('/');
         }
 
-        return uview('/user/member/register');
+        $proc_result = array();
+        $proc_result['html_meta'] = create_meta('홈 > 회원가입');
+
+        return uview('/user/member/register', $proc_result);
     }
 
     public function registerDuplicate()

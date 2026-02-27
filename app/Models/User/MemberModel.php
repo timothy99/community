@@ -204,9 +204,6 @@ class MemberModel extends Model
         $builder->set('addr1', $addr1);
         $builder->set('addr2', $addr2);
         $builder->set('auth_group', $auth_group);
-        $builder->set('member_status', '승인');
-        $builder->set('join_path', '없음');
-        $builder->set('recommender', '없음');
         $builder->set('last_login_date', $today);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $member_id);
