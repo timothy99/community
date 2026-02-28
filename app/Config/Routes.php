@@ -88,3 +88,7 @@ $routes->post('/csl/popup/update', 'Console\Popup::update');
 $routes->get('/csl/popup/view/(:num)', 'Console\Popup::view/$1');
 $routes->get('/csl/popup/edit/(:num)', 'Console\Popup::edit/$1');
 $routes->post('/csl/popup/delete', 'Console\Popup::delete');
+
+$routes->get('/csl/inquiry', 'Console\Inquiry::index');
+$routes->get('/csl/inquiry/list', 'Console\Inquiry::list');
+$routes->get('/csl/inquiry/view/(:num)', 'Console\Inquiry::view/$1');

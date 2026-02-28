@@ -251,15 +251,17 @@ create table mng_popup (
     upd_date varchar(14) not null comment '수정일'
 ) comment '레이어 팝업' collate='utf8mb4_unicode_ci';
 
-drop table if exists mng_ask;
-create table mng_ask (
-    a_idx int auto_increment comment '문의 인덱스' primary key,
+drop table if exists mng_inquiry;
+create table mng_inquiry (
+    inquiry_idx int auto_increment comment '문의 인덱스',
     name varchar(200) not null comment '이름',
     contents varchar(4000) default null comment '내용',
     phone varchar(32) not null comment '전화',
+    email varchar(200) not null comment '이메일',
     del_yn enum ('Y', 'N') default 'N' not null comment '삭제 여부',
     ins_date varchar(14) not null comment '입력일',
-    upd_date varchar(14) not null comment '수정일'
+    upd_date varchar(14) not null comment '수정일',
+    primary key (inquiry_idx)
 ) comment '단순문의' collate='utf8mb4_unicode_ci';
 
 drop table if exists mng_shortlink;
