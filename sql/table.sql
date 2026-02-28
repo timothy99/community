@@ -58,28 +58,6 @@ create table mng_menu (
     key menu_idx1 (idx1, idx2)
 ) comment='메뉴' collate='utf8mb4_unicode_ci';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 create table mng_board (
     board_idx int not null auto_increment comment '게시물 번호',
     board_idx_desc int not null default 0 comment '게시물 번호 역순',
@@ -152,6 +130,8 @@ create table mng_board_config (
     hit_edit_yn enum('Y', 'N') default 'Y' not null comment '조회수 수정 기능 사용 여부',
     hit_yn enum('Y', 'N') default 'Y' not null comment '조회수 사용 여부',
     heart_yn enum('Y', 'N') default 'Y' not null comment '공감 기능 사용 여부',
+    pdf_yn enum('Y', 'N') default 'N' not null comment 'PDF 보기 기능 사용 여부',
+    youtube_yn enum('Y', 'N') default 'N' not null comment '유튜브 기능 사용 여부',
     del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
     ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',

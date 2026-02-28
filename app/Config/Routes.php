@@ -92,3 +92,11 @@ $routes->post('/csl/popup/delete', 'Console\Popup::delete');
 $routes->get('/csl/inquiry', 'Console\Inquiry::index');
 $routes->get('/csl/inquiry/list', 'Console\Inquiry::list');
 $routes->get('/csl/inquiry/view/(:num)', 'Console\Inquiry::view/$1');
+
+$routes->get('/csl/board', 'Console\Board::index');
+$routes->get('/csl/board/(:alphanum)/list', 'Console\Board::list/$1');
+$routes->get('/csl/board/(:alphanum)/write', 'Console\Board::write/$1');
+$routes->post('/csl/board/(:alphanum)/update', 'Console\Board::update/$1');
+$routes->get('/csl/board/(:alphanum)/view/(:num)', 'Console\Board::view/$1/$2');
+$routes->get('/csl/board/(:alphanum)/edit/(:num)', 'Console\Board::edit/$1/$2');
+$routes->post('/csl/board/(:alphanum)/delete', 'Console\Board::delete/$1');

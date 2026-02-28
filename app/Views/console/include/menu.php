@@ -8,7 +8,26 @@
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item"><a href="/csl/slide/list" class="nav-link link-body-emphasis" id="li-slide">슬라이드</a></li>
         <li class="nav-item"><a href="/csl/popup/list" class="nav-link link-body-emphasis" id="li-popup">팝업</a></li>
-        <li class="nav-item"><a href="/csl/board/list" class="nav-link link-body-emphasis" id="li-board">게시판</a></li>
+<?php    if (count($board_list) > 0) { ?>
+        <!-- 1단계: 대시보드 (하위 메뉴 있음) 샘플을 위한것. 예시용이라 감춤-->
+        <li class="nav-item">
+            <a href="/csl/board/<?= $board_list[0]->board_id ?>/list" class="nav-link link-body-emphasis" id="a-board-top">
+                <span>게시판</span>
+                <span class="nav-arrow">›</span>
+            </a>
+            <div class="collapse" id="collapse-board-top">
+                <ul class="nav flex-column">
+<?php       foreach ($board_list as $no => $val) { ?>
+                    <li class="nav-item">
+                        <a id="a-board-<?= $val->board_id ?>" href="/csl/board/<?= $val->board_id ?>/list" class="nav-link link-body-emphasis">
+                            <?= $val->title ?>
+                        </a>
+                    </li>
+<?php       } ?>
+                </ul>
+            </div>
+        </li>
+<?php    } ?>
         <li class="nav-item"><a href="/csl/inquiry/list" class="nav-link link-body-emphasis" id="li-inquiry">문의</a></li>
 
 <?php   if (in_array(getUserSessionInfo("auth_group"), ["최고관리자"])) { ?>
@@ -19,35 +38,6 @@
         <li class="nav-item"><a href="/csl/contents/list" class="nav-link link-body-emphasis" id="li-contents">콘텐츠</a></li>
         <li class="nav-item"><a href="/csl/settings/board/list" class="nav-link link-body-emphasis" id="li-settings-board-list">게시판 설정</a></li>
 <?php   } ?>
-
-
-
-
-
-<?php /* 나중을 위한 메뉴 수정 샘플
-        <!-- 1단계: 홈 (하위 메뉴 없음) -->
-        <li class="nav-item" style="display: none;"><a href="#" class="nav-link link-body-emphasis">홈</a></li>
-        
-        <!-- 1단계: 대시보드 (하위 메뉴 있음) 샘플을 위한것. 예시용이라 감춤-->
-        <li class="nav-item" style="display: none;">
-            <a href="#dashboard-collapse" class="nav-link active-level-1" data-bs-toggle="collapse" aria-expanded="true"><span>대시보드</span><span class="nav-arrow">›</span></a>
-            <div class="collapse show submenu" id="dashboard-collapse">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a href="#" class="nav-link link-body-emphasis">개요</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link link-body-emphasis">통계</a></li>
-                    <li class="nav-item"><a href="#reports-collapse" class="nav-link active-level-2" data-bs-toggle="collapse" aria-expanded="true"><span>보고서</span><span class="nav-arrow">›</span></a>
-                        <div class="collapse show submenu" id="reports-collapse">
-                            <ul class="nav flex-column">
-                                <li class="nav-item"><a href="#" class="nav-link active-level-3">주간 보고서</a></li>
-                                <li class="nav-item"><a href="#" class="nav-link link-body-emphasis">월간 보고서</a></li>
-                                <li class="nav-item"><a href="#" class="nav-link link-body-emphasis">연간 보고서</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </li>
-*/ ?>
     </ul>
     <hr>
     <div class="dropdown">

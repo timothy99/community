@@ -2,6 +2,7 @@
 
 use App\Models\User\MenuModel;
 use App\Models\User\ConfigModel;
+use App\Models\Console\SettingsModel;
 
 // 사용자 뷰 (메뉴바가 상단에 있음)
 function uview($view_file, $proc_result = array())
@@ -37,10 +38,20 @@ function uview($view_file, $proc_result = array())
 function aview($view_file, $proc_result = array())
 {
     $config_model = new ConfigModel();
+    $settings_model = new SettingsModel();
 
     $model_result = $config_model->getConfigInfo();
     $config_info = $model_result['info'];
     $proc_result['config_info'] = $config_info;
+
+    $data = array();
+    $data['search_page'] = 1;
+    $data['search_rows'] = 9999;
+    $data['search_condition'] = '';
+    $data['search_text'] = '';
+    $model_result = $settings_model->getBoardList($data);
+    $board_list = $model_result['list'];
+    $proc_result['board_list'] = $board_list;
 
     $view_result = null;
 
