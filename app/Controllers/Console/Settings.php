@@ -83,6 +83,8 @@ class Settings extends BaseController
         $info->hit_edit_yn = 'N';
         $info->hit_yn = 'N';
         $info->heart_yn = 'N';
+        $info->pdf_yn = 'N';
+        $info->youtube_yn = 'N';
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -110,6 +112,8 @@ class Settings extends BaseController
         $comment_write = $this->request->getPost('comment_write', FILTER_SANITIZE_SPECIAL_CHARS);
         $hit_yn = $this->request->getPost('hit_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $heart_yn = $this->request->getPost('heart_yn', FILTER_SANITIZE_SPECIAL_CHARS);
+        $pdf_yn = $this->request->getPost('pdf_yn', FILTER_SANITIZE_SPECIAL_CHARS);
+        $youtube_yn = $this->request->getPost('youtube_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $reg_date_yn = $this->request->getPost('reg_date_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $hit_edit_yn = $this->request->getPost('hit_edit_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $file_cnt = $this->request->getPost('file_cnt', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -135,6 +139,8 @@ class Settings extends BaseController
         if ($result && ($hit_edit_yn == null || $hit_edit_yn == '')) { $result = false; $message = '조회수 수정 기능 사용 여부를 선택해주세요.'; }
         if ($result && ($hit_yn == null || $hit_yn == '')) { $result = false; $message = '조회수 노출 기능 사용 여부를 선택해주세요.'; }
         if ($result && ($heart_yn == null || $heart_yn == '')) { $result = false; $message = '공감 기능 사용 여부를 선택해주세요.'; }
+        if ($result && ($pdf_yn == null || $pdf_yn == '')) { $result = false; $message = 'PDF 보기 기능 사용 여부를 선택해주세요.'; }
+        if ($result && ($youtube_yn == null || $youtube_yn == '')) { $result = false; $message = '유튜브 기능 사용 여부를 선택해주세요.'; }
         if ($result && ($reg_date_yn == null || $reg_date_yn == '')) { $result = false; $message = '입력일 수정 기능 사용 여부를 선택해주세요.'; }
         if ($result && ($hit_edit_yn == null || $hit_edit_yn == '')) { $result = false; $message = '조회수 수정 기능 사용 여부를 선택해주세요.'; }
         if ($result && ($form_style_yn == null || $form_style_yn == '')) { $result = false; $message = '폼 스타일 사용 여부를 선택해주세요.'; }
@@ -152,6 +158,8 @@ class Settings extends BaseController
         $data['comment_write'] = $comment_write;
         $data['hit_yn'] = $hit_yn;
         $data['heart_yn'] = $heart_yn;
+        $data['pdf_yn'] = $pdf_yn;
+        $data['youtube_yn'] = $youtube_yn;
         $data['reg_date_yn'] = $reg_date_yn;
         $data['hit_edit_yn'] = $hit_edit_yn;
         $data['file_cnt'] = $file_cnt;

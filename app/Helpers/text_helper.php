@@ -3,7 +3,7 @@
 // html특수태그 의 줄바꿈 처리 함수 
 function nl2br_only($string)
 {
-    $convert = str_replace("&#13;&#10;", "<br>", $string);
+    $convert = str_replace('&#13;&#10;', '<br>', $string);
 
     return $convert;
 }
@@ -11,7 +11,7 @@ function nl2br_only($string)
 // html특수태그 의 줄바꿈 처리 함수 
 function nl2br_rn($string)
 {
-    $convert = str_replace("&#13;&#10;", "\r\n", $string);
+    $convert = str_replace('&#13;&#10;', '\r\n', $string);
 
     return $convert;
 }
@@ -19,36 +19,36 @@ function nl2br_rn($string)
 // html 헤드의 메타정보 데이터 생성
 function create_meta($title)
 {
-    $title_arr = explode(" > ", $title);
+    $title_arr = explode(' > ', $title);
     $nav_title = $title_arr[count($title_arr)-1];
 
     $html_meta = array();
-    $html_meta["nav_title"] = $nav_title;
-    $html_meta["meta"]["title"] = $title;
-    $html_meta["meta"]["keywords"] = str_replace(" > ", ",", $html_meta["meta"]["title"]);
-    $html_meta["meta"]["description"] = str_replace(" > ", "의 ", $html_meta["meta"]["title"]);
-    $html_meta["og"]["type"] = "website";
-    $html_meta["og"]["title"] = $html_meta["meta"]["title"];
-    $html_meta["og"]["description"] = $html_meta["meta"]["description"];
-    $html_meta["og"]["image"] = env("app.baseURL")."/resource/usr/image/logo.png";
-    $html_meta["og"]["url"] = current_url();
+    $html_meta['nav_title'] = $nav_title;
+    $html_meta['meta']['title'] = $title;
+    $html_meta['meta']['keywords'] = str_replace(' > ', ',', $html_meta['meta']['title']);
+    $html_meta['meta']['description'] = str_replace(' > ', '의 ', $html_meta['meta']['title']);
+    $html_meta['og']['type'] = 'website';
+    $html_meta['og']['title'] = $html_meta['meta']['title'];
+    $html_meta['og']['description'] = $html_meta['meta']['description'];
+    $html_meta['og']['image'] = env('app.baseURL').'/resource/usr/image/logo.png';
+    $html_meta['og']['url'] = current_url();
 
     // 빵조각을 생성하기 위한 텍스트 변경
-    $bread = "";
-    $title = $html_meta["meta"]["title"];
-    $title_arr = explode(" > ", $title);
+    $bread = '';
+    $title = $html_meta['meta']['title'];
+    $title_arr = explode(' > ', $title);
     foreach ($title_arr as $no => $val) {
-        if ($val == "홈") {
-            $bread_html = "<a href=\"/\" class=\"ico_home\">홈</a>";
+        if ($val == '홈') {
+            $bread_html = '<a href="/" class="ico_home">홈</a>';
         } else if ($no == count($title_arr)-1) {
-            $bread_html = "<em>$val</em>";
+            $bread_html = '<em>$val</em>';
         } else {
-            $bread_html = "<span>$val</span>";
+            $bread_html = '<span>$val</span>';
         }
         $bread .= $bread_html;
     }
 
-    $html_meta["bread"] = "<div class=\"lnb\"><div class=\"inner\">$bread</div></div>";
+    $html_meta['bread'] = '<div class="lnb"><div class="inner">$bread</div></div>';
 
     return $html_meta;
 }
@@ -56,12 +56,12 @@ function create_meta($title)
 // 1,000 이상의 숫자는 999로 처리하기
 function digit3number($number)
 {
-    $string = "";
+    $string = '';
 
     $convert = $number;
     if ($number >= 1000) {
         $convert = 999;
-        $string = "+".$convert;
+        $string = '+'.$convert;
     } else {
         $string = (string)$convert;
     }
@@ -74,9 +74,9 @@ function format_phone($phone) {
     $phone = preg_replace('/[^0-9]/', '', $phone);
 
     if (strlen($phone) == 11) {
-        $phone_string = preg_replace("/^(\d{3})(\d{4})(\d{4})$/", "$1-$2-$3", $phone);
+        $phone_string = preg_replace('/^(\d{3})(\d{4})(\d{4})$/', '$1-$2-$3', $phone);
     } elseif (strlen($phone) == 10) {
-        $phone_string = preg_replace("/^(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $phone);
+        $phone_string = preg_replace('/^(\d{3})(\d{3})(\d{4})$/', '$1-$2-$3', $phone);
     } else {
         $phone_string = $phone;
     }
@@ -89,28 +89,32 @@ function format_phone($phone) {
 function code_replace($category, $text)
 {
     $replace = array();
-    $replace["display_yn"]["Y"] = "노출";
-    $replace["display_yn"]["N"] = "미노출";
-    $replace["email_yn"]["Y"] = "수신";
-    $replace["email_yn"]["N"] = "미수신";
-    $replace["sms_yn"]["Y"] = "수신";
-    $replace["sms_yn"]["N"] = "미수신";
-    $replace["category_yn"]["Y"] = "사용";
-    $replace["category_yn"]["N"] = "미사용";
-    $replace["user_write"]["Y"] = "가능";
-    $replace["user_write"]["N"] = "불가능";
-    $replace["comment_write"]["Y"] = "가능";
-    $replace["comment_write"]["N"] = "불가능";
-    $replace["hit_yn"]["Y"] = "사용";
-    $replace["hit_yn"]["N"] = "미사용";
-    $replace["heart_yn"]["Y"] = "사용";
-    $replace["heart_yn"]["N"] = "미사용";
-    $replace["reg_date_yn"]["Y"] = "사용";
-    $replace["reg_date_yn"]["N"] = "미사용";
-    $replace["hit_edit_yn"]["Y"] = "사용";
-    $replace["hit_edit_yn"]["N"] = "미사용";
-    $replace["form_style_yn"]["Y"] = "사용";
-    $replace["form_style_yn"]["N"] = "미사용";
+    $replace['display_yn']['Y'] = '노출';
+    $replace['display_yn']['N'] = '미노출';
+    $replace['email_yn']['Y'] = '수신';
+    $replace['email_yn']['N'] = '미수신';
+    $replace['sms_yn']['Y'] = '수신';
+    $replace['sms_yn']['N'] = '미수신';
+    $replace['category_yn']['Y'] = '사용';
+    $replace['category_yn']['N'] = '미사용';
+    $replace['user_write']['Y'] = '가능';
+    $replace['user_write']['N'] = '불가능';
+    $replace['comment_write']['Y'] = '가능';
+    $replace['comment_write']['N'] = '불가능';
+    $replace['hit_yn']['Y'] = '사용';
+    $replace['hit_yn']['N'] = '미사용';
+    $replace['heart_yn']['Y'] = '사용';
+    $replace['heart_yn']['N'] = '미사용';
+    $replace['reg_date_yn']['Y'] = '사용';
+    $replace['reg_date_yn']['N'] = '미사용';
+    $replace['hit_edit_yn']['Y'] = '사용';
+    $replace['hit_edit_yn']['N'] = '미사용';
+    $replace['form_style_yn']['Y'] = '사용';
+    $replace['form_style_yn']['N'] = '미사용';
+    $replace['pdf_yn']['Y'] = '사용';
+    $replace['pdf_yn']['N'] = '미사용';
+    $replace['youtube_yn']['Y'] = '사용';
+    $replace['youtube_yn']['N'] = '미사용';
 
     return isset($replace[$category][$text]) ? $replace[$category][$text] : $text;
 }

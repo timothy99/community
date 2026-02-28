@@ -70,6 +70,14 @@
                                 <th class="align-middle bg-light">공감 기능 사용 여부</th>
                                 <td><?= code_replace('heart_yn', $info->heart_yn) ?></td>
                             </tr>
+                            <tr>
+                                <th class="align-middle bg-light">PDF 보기 기능 사용 여부</th>
+                                <td><?= code_replace('pdf_yn', $info->pdf_yn) ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">유튜브 기능 사용 여부</th>
+                                <td><?= code_replace('youtube_yn', $info->youtube_yn) ?></td>
+                            </tr>
 
                             <!-- 권한 설정 -->
                             <tr>

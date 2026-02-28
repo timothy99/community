@@ -81,6 +81,8 @@ class SettingsModel extends Model
         $comment_write = $data['comment_write'];
         $hit_yn = $data['hit_yn'];
         $heart_yn = $data['heart_yn'];
+        $pdf_yn = $data['pdf_yn'];
+        $youtube_yn = $data['youtube_yn'];
         $reg_date_yn = $data['reg_date_yn'];
         $hit_edit_yn = $data['hit_edit_yn'];
         $file_cnt = $data['file_cnt'];
@@ -105,6 +107,8 @@ class SettingsModel extends Model
         $builder->set('comment_write', $comment_write);
         $builder->set('hit_yn', $hit_yn);
         $builder->set('heart_yn', $heart_yn);
+        $builder->set('pdf_yn', $pdf_yn);
+        $builder->set('youtube_yn', $youtube_yn);
         $builder->set('reg_date_yn', $reg_date_yn);
         $builder->set('hit_edit_yn', $hit_edit_yn);
         $builder->set('file_cnt', $file_cnt);
@@ -156,6 +160,8 @@ class SettingsModel extends Model
         $comment_write = $data['comment_write'];
         $hit_yn = $data['hit_yn'];
         $heart_yn = $data['heart_yn'];
+        $pdf_yn = $data['pdf_yn'];
+        $youtube_yn = $data['youtube_yn'];
         $reg_date_yn = $data['reg_date_yn'];
         $hit_edit_yn = $data['hit_edit_yn'];
         $file_cnt = $data['file_cnt'];
@@ -180,6 +186,8 @@ class SettingsModel extends Model
         $builder->set('comment_write', $comment_write);
         $builder->set('hit_yn', $hit_yn);
         $builder->set('heart_yn', $heart_yn);
+        $builder->set('pdf_yn', $pdf_yn);
+        $builder->set('youtube_yn', $youtube_yn);
         $builder->set('reg_date_yn', $reg_date_yn);
         $builder->set('hit_edit_yn', $hit_edit_yn);
         $builder->set('file_cnt', $file_cnt);
