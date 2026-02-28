@@ -80,3 +80,11 @@ $routes->post("/csl/settings/board/update", "Console\Settings::boardUpdate");
 $routes->get("/csl/settings/board/view/(:alphanum)", "Console\Settings::boardView/$1");
 $routes->get("/csl/settings/board/edit/(:alphanum)", "Console\Settings::boardEdit/$1");
 $routes->post("/csl/settings/board/delete", "Console\Settings::boardDelete");
+
+$routes->get('/csl/popup', 'Console\Popup::index');
+$routes->get('/csl/popup/list', 'Console\Popup::list');
+$routes->get('/csl/popup/write', 'Console\Popup::write');
+$routes->post('/csl/popup/update', 'Console\Popup::update');
+$routes->get('/csl/popup/view/(:num)', 'Console\Popup::view/$1');
+$routes->get('/csl/popup/edit/(:num)', 'Console\Popup::edit/$1');
+$routes->post('/csl/popup/delete', 'Console\Popup::delete');
