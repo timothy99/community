@@ -60,7 +60,7 @@
                                 <th>입력일</th>
                             </tr>
                         </thead>
-                        <tbody id="list-body">
+                        <tbody>
 <?php   foreach($list as $no => $val) { ?>
                             <tr>
                                 <td><?=$val->list_no ?></td>

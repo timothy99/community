@@ -66,3 +66,10 @@ $routes->get("/csl/contents/edit/(:num)", "Console\Contents::edit/$1");
 $routes->post("/csl/contents/update", "Console\Contents::update");
 $routes->get("/csl/contents/view/(:num)", "Console\Contents::view/$1");
 $routes->post("/csl/contents/delete", "Console\Contents::delete");
+
+$routes->get("/csl/menu/list", "Console\Menu::list");
+$routes->get("/csl/menu/write/(:num)", "Console\Menu::write/$1");
+$routes->get("/csl/menu/edit/(:num)", "Console\Menu::edit/$1");
+$routes->post("/csl/menu/update", "Console\Menu::update");
+$routes->get("/csl/menu/view/(:num)", "Console\Menu::view/$1");
+$routes->post("/csl/menu/delete", "Console\Menu::delete");
