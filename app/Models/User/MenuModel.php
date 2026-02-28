@@ -31,6 +31,8 @@ class MenuModel extends Model
             $list[$no]->sub_list = $list2;
             $has_sub = count($list2);
             $list[$no]->has_sub = $has_sub > 0 ? 'has_sub' : '';
+            $list[$no]->dropdown = $has_sub > 0 ? 'dropdown' : '';
+            $list[$no]->dropdown_toggle = $has_sub > 0 ? 'dropdown-toggle' : '';
         }
 
         $proc_result = array();

@@ -6,22 +6,15 @@
     </a>
     <ul class="nav nav-pills">
 <?php   foreach ($menu_list as $no => $val) { ?>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Features
+        <li class="nav-item <?= $val->dropdown ?>">
+            <a class="nav-link <?= $val->dropdown_toggle ?>" href="<?= $val->url_link ?>" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <?= $val->menu_name ?>
             </a>
-<?php       if (count($val->list) > 0) { ?>
+<?php       if (count($val->sub_list) > 0) { ?>
             <ul class="dropdown-menu">
-<?php           foreach ($val->list as $no2 => $val2) { ?>
+<?php           foreach ($val->sub_list as $no2 => $val2) { ?>
                 <li class="dropdown-submenu">
-                    <a class="dropdown-item dropdown-toggle" href="#">Web Design</a>
-<?php               if (count($val2->list) > 0) { ?>
-                    <ul class="dropdown-menu">
-<?php                   foreach ($val2->list as $no3 => $val3) { ?>
-                        <li><a class="dropdown-item" href="#">Responsive Design</a></li>
-<?php                   } ?>
-                    </ul>
-<?php               } ?>
+                    <a class="dropdown-item" href="<?= $val2->url_link ?>"><?= $val2->menu_name ?></a>
                 </li>
 <?php           } ?>
             </ul>
