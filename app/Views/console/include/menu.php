@@ -1,6 +1,6 @@
 <div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3">
     <div class="sidebar-header justify-content-center">
-        <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+        <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none" target="_blank">
             <span class="fs-5"><?= $config_info->title ?></span>
         </a>
     </div>
@@ -17,7 +17,7 @@
         <li class="nav-item"><a href="/csl/config/view" class="nav-link link-body-emphasis" id="li-config">환경설정</a></li>
         <li class="nav-item"><a href="/csl/menu/list" class="nav-link link-body-emphasis" id="li-menu">메뉴구성</a></li>
         <li class="nav-item"><a href="/csl/contents/list" class="nav-link link-body-emphasis" id="li-contents">콘텐츠</a></li>
-        <li class="nav-item"><a href="/csl/settings/board/list" class="nav-link link-body-emphasis" id="li-board-config">게시판 설정</a></li>
+        <li class="nav-item"><a href="/csl/settings/board/list" class="nav-link link-body-emphasis" id="li-settings-board-list">게시판 설정</a></li>
 <?php   } ?>
 
 

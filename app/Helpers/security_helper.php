@@ -115,3 +115,71 @@ function getJwtTokenDecode($token)
 
     return $decode_object;
 }
+
+/**
+ * @author 배진모
+ * @see HTML 콘텐츠에서 위험한 태그 제거 (XSS 방지)
+ * @param string $html - 정화할 HTML 문자열
+ * @param array $allowed_tags - 허용할 태그 배열 (선택사항)
+ * @return string - 정화된 HTML 문자열
+ */
+function sanitizeHtml($html, $allowed_tags = null)
+{
+    // 기본 허용 태그 (썸머노트 에디터에서 사용 가능한 안전한 태그들)
+    if ($allowed_tags === null) {
+        $allowed_tags = [
+            'p', 'br', 'span', 'div', 'strong', 'em', 'u', 's', 'del', 'ins',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'ul', 'ol', 'li',
+            'a', 'img',
+            'table', 'thead', 'tbody', 'tr', 'td', 'th',
+            'blockquote', 'pre', 'code',
+            'sub', 'sup',
+            'hr',
+        ];
+    }
+
+    // 태그를 문자열 형식으로 변환
+    $allowed_tags_str = '<' . implode('><', $allowed_tags) . '>';
+
+    // 1단계: 위험한 태그 제거 (허용된 태그만 남김)
+    $html = strip_tags($html, $allowed_tags_str);
+
+    // 2단계: 위험한 이벤트 속성 제거 (on* 이벤트)
+    $html = preg_replace('/(<[^>]+)\s+on\w+\s*=\s*(["\'])[^"\']*\2/i', '$1', $html);
+
+    // 3단계: javascript: 프로토콜 제거
+    $html = preg_replace('/(<a[^>]+href\s*=\s*["\'])javascript:[^"\']*(["\'])/i', '$1#$2', $html);
+
+    // 4단계: data: 프로토콜 제거 (img 태그 제외)
+    $html = preg_replace('/(<(?!img)[^>]+\s+\w+\s*=\s*["\'])data:[^"\']*(["\'])/i', '$1#$2', $html);
+
+    return $html;
+}
+
+/**
+ * @author 배진모
+ * @see CSS 콘텐츠에서 위험한 코드 제거 (XSS 방지)
+ * @param string $css - 정화할 CSS 문자열
+ * @return string - 정화된 CSS 문자열
+ */
+function sanitizeCss($css)
+{
+    // CSS 코드에서 위험한 요소 제거
+    // 1. javascript: 프로토콜 제거
+    $css = preg_replace('/javascript:/i', '', $css);
+
+    // 2. expression 제거 (IE의 위험한 CSS 기능)
+    $css = preg_replace('/expression\s*\(/i', '', $css);
+
+    // 3. @import 제거 (외부 파일 임포트 차단)
+    $css = preg_replace('/@import/i', '', $css);
+
+    // 4. behavior 제거 (IE의 위험한 CSS 기능)
+    $css = preg_replace('/behavior\s*:/i', '', $css);
+
+    // 5. vbscript: 프로토콜 제거
+    $css = preg_replace('/vbscript:/i', '', $css);
+
+    return $css;
+}

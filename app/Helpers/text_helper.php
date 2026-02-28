@@ -95,6 +95,22 @@ function code_replace($category, $text)
     $replace["email_yn"]["N"] = "미수신";
     $replace["sms_yn"]["Y"] = "수신";
     $replace["sms_yn"]["N"] = "미수신";
+    $replace["category_yn"]["Y"] = "사용";
+    $replace["category_yn"]["N"] = "미사용";
+    $replace["user_write"]["Y"] = "가능";
+    $replace["user_write"]["N"] = "불가능";
+    $replace["comment_write"]["Y"] = "가능";
+    $replace["comment_write"]["N"] = "불가능";
+    $replace["hit_yn"]["Y"] = "사용";
+    $replace["hit_yn"]["N"] = "미사용";
+    $replace["heart_yn"]["Y"] = "사용";
+    $replace["heart_yn"]["N"] = "미사용";
+    $replace["reg_date_yn"]["Y"] = "사용";
+    $replace["reg_date_yn"]["N"] = "미사용";
+    $replace["hit_edit_yn"]["Y"] = "사용";
+    $replace["hit_edit_yn"]["N"] = "미사용";
+    $replace["form_style_yn"]["Y"] = "사용";
+    $replace["form_style_yn"]["N"] = "미사용";
 
     return isset($replace[$category][$text]) ? $replace[$category][$text] : $text;
 }

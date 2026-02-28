@@ -73,3 +73,10 @@ $routes->get("/csl/menu/edit/(:num)", "Console\Menu::edit/$1");
 $routes->post("/csl/menu/update", "Console\Menu::update");
 $routes->get("/csl/menu/view/(:num)", "Console\Menu::view/$1");
 $routes->post("/csl/menu/delete", "Console\Menu::delete");
+
+$routes->get("/csl/settings/board/list", "Console\Settings::boardList");
+$routes->get("/csl/settings/board/write", "Console\Settings::boardWrite");
+$routes->post("/csl/settings/board/update", "Console\Settings::boardUpdate");
+$routes->get("/csl/settings/board/view/(:alphanum)", "Console\Settings::boardView/$1");
+$routes->get("/csl/settings/board/edit/(:alphanum)", "Console\Settings::boardEdit/$1");
+$routes->post("/csl/settings/board/delete", "Console\Settings::boardDelete");
