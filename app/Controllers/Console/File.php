@@ -30,7 +30,7 @@ class File extends BaseController
 
         $proc_result = $file_model->uploadGeneralFile($data); // 파일을 올린다.
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     // 일반적인 파일 업로드에 게시판 설정을 읽어와서 파일의 갯수나 저장의 제한을 체크.
@@ -53,7 +53,7 @@ class File extends BaseController
 
         $proc_result = $file_model->uploadBoardFile($data); // 파일을 올린다.
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     // 원본파일 그대로 (이미지 압축이나 리사이징도 하지 않는다.)
@@ -71,7 +71,7 @@ class File extends BaseController
 
         $proc_result = $file_model->uploadOriginalFile($data); // 파일을 올린다.
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     // 이미지 파일만 올릴수 있음. (압축과 리사이징을 한다.)
@@ -92,7 +92,7 @@ class File extends BaseController
 
         $proc_result = $file_model->uploadImageFile($data); // 파일을 올린다.
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     // 이미지 파일만 올릴수 있음. (드롭존용)
@@ -113,7 +113,7 @@ class File extends BaseController
 
         $proc_result = $file_model->uploadOriginalFile($data); // 파일을 올린다.
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     // 파일 보기 모드

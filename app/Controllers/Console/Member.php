@@ -102,7 +102,7 @@ class Member extends BaseController
         $proc_result['return_url'] = '/csl/member/view/'.$member_id;
         $proc_result['member_id'] = $member_id;
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     public function view($member_id)
@@ -170,7 +170,7 @@ class Member extends BaseController
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/csl/member/list';
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
 }

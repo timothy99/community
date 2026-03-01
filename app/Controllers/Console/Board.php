@@ -149,7 +149,7 @@ class Slide extends BaseController
         $proc_result['return_url'] = '/csl/slide/view/'.$slide_idx;
         $proc_result['slide_idx'] = $slide_idx;
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     public function view()
@@ -221,7 +221,7 @@ class Slide extends BaseController
         $proc_result["message"] = $message;
         $proc_result["return_url"] = "/csl/slide/list";
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
 }

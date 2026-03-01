@@ -27,7 +27,7 @@ class SettingsModel extends Model
         $cnt = $builder->countAllResults(false);
         $list = $builder->get()->getResult();
         foreach ($list as $no => $val) {
-            $list[$no]->list_no = $cnt-$no-(($page-1)*$rows);
+            $list[$no]->list_no = $cnt - $no - (($page - 1) * $rows);
             $list[$no]->ins_date_txt = convertTextToDate($val->ins_date, 1, 1);
         }
 
@@ -267,6 +267,145 @@ class SettingsModel extends Model
         if ($db->transStatus() === false) {
             $result = false;
             $message = '삭제에 오류가 발생했습니다.';
+        }
+
+        $model_result = array();
+        $model_result['result'] = $result;
+        $model_result['message'] = $message;
+
+        return $model_result;
+    }
+
+    // 게시판 관리자 목록 갖고오기
+    public function getBoardAdminList($data)
+    {
+        $member_model = new MemberModel();
+
+        $result = true;
+        $message = '게시판 관리자 목록을 불러왔습니다.';
+
+        $board_id = $data['board_id'];
+
+        $db = $this->db;
+        $builder = $db->table('board_admin');
+        $builder->where('del_yn', 'N');
+        $builder->where('board_id', $board_id);
+        $builder->orderBy('board_admin_idx', 'asc');
+        $list = $builder->get()->getResult();
+        $cnt = count($list);
+
+        foreach ($list as $no => $val) {
+            $list[$no]->list_no = $cnt - $no;
+            $list[$no]->ins_date_txt = convertTextToDate($val->ins_date, 1, 1);
+
+            $data = array();
+            $data['member_id'] = $val->member_id;
+            $list[$no]->member_info = $member_model->getMemberInfo($data)["info"];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['list'] = $list;
+
+        return $proc_result;
+    }
+
+    // 회원목록 갖고 오기
+    public function getMemberList($data)
+    {
+        $result = true;
+        $message = '회원 목록을 불러왔습니다.';
+
+        $search_text = $data['search_text'];
+
+        $db = $this->db;
+        $builder = $db->table('member');
+        $builder->where('del_yn', 'N');
+        if ($search_text != null) {
+            $builder->groupStart();
+            $builder->like('member_id', $search_text);
+            $builder->orLike('member_name', $search_text);
+            $builder->orLike('email', $search_text);
+            $builder->groupEnd();
+        }
+        $builder->orderBy('member_idx', 'desc');
+        $list = $builder->get()->getResult();
+        $cnt = count($list);
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['list'] = $list;
+        $proc_result['cnt'] = $cnt;
+
+        return $proc_result;
+    }
+
+    // 게시판 관리자 등록
+    public function procBoardAdminInsert($data)
+    {
+        $user_id = getUserSessionInfo('member_id');
+        $today = date('YmdHis');
+
+        $result = true;
+        $message = '게시판 관리자가 등록되었습니다.';
+
+        $board_id = $data['board_id'];
+        $member_id = $data['member_id'];
+
+        $db = $this->db;
+        $db->transStart();
+
+        $builder = $db->table('board_admin');
+        $builder->set('board_id', $board_id);
+        $builder->set('member_id', $member_id);
+        $builder->set('ins_id', $user_id);
+        $builder->set('ins_date', $today);
+        $builder->set('upd_id', $user_id);
+        $builder->set('upd_date', $today);
+        $builder->set('del_yn', 'N');
+        $result = $builder->insert();
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = '게시판 관리자 등록에 오류가 발생했습니다.';
+        }
+
+        $model_result = array();
+        $model_result['result'] = $result;
+        $model_result['message'] = $message;
+
+        return $model_result;
+    }
+
+    // 게시판 관리자 삭제
+    public function procBoardAdminDelete($data)
+    {
+        $user_id = getUserSessionInfo('member_id');
+        $today = date('YmdHis');
+
+        $result = true;
+        $message = '게시판 관리자가 삭제되었습니다.';
+
+        $board_admin_idx = $data['board_admin_idx'];
+
+        $db = $this->db;
+        $db->transStart();
+
+        $builder = $db->table('board_admin');
+        $builder->set('del_yn', 'Y');
+        $builder->set('upd_id', $user_id);
+        $builder->set('upd_date', $today);
+        $builder->where('board_admin_idx', $board_admin_idx);
+        $result = $builder->update();
+
+        $db->transComplete();
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = '게시판 관리자 삭제에 오류가 발생했습니다.';
         }
 
         $model_result = array();

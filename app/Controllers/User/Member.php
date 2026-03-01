@@ -321,7 +321,7 @@ class Member extends BaseController
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/member/login';
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     public function resetPassword($reset_key)
@@ -409,7 +409,7 @@ class Member extends BaseController
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/member/login';
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
 

@@ -116,7 +116,7 @@ class Config extends BaseController
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/csl/config/view';
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
 }

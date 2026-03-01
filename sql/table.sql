@@ -141,6 +141,20 @@ create table mng_board_config (
     primary key (board_config_idx)
 ) comment='게시판 설정 관리' collate='utf8mb4_unicode_ci';
 
+drop table if exists gst_board_admin;
+create table gst_board_admin (
+    board_admin_idx int not null auto_increment comment '인덱스',
+    board_id varchar(20) default null comment '게시판 아이디',
+    member_id varchar(64) not null comment '사용자 아이디',
+    del_yn varchar(1) not null default 'N' comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key index1 (board_id),
+    primary key (board_admin_idx)
+) comment='게시판 관리자 설정' collate='utf8mb4_unicode_ci';
+
 drop table if exists mng_file;
 create table mng_file (
     file_idx int not null auto_increment comment '연번',

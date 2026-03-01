@@ -114,7 +114,7 @@ class Contents extends BaseController
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/csl/contents/view/'.$contents_idx;
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     public function view()
@@ -180,7 +180,7 @@ class Contents extends BaseController
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/console/contents/list';
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
 }

@@ -100,3 +100,8 @@ $routes->post('/csl/board/(:alphanum)/update', 'Console\Board::update/$1');
 $routes->get('/csl/board/(:alphanum)/view/(:num)', 'Console\Board::view/$1/$2');
 $routes->get('/csl/board/(:alphanum)/edit/(:num)', 'Console\Board::edit/$1/$2');
 $routes->post('/csl/board/(:alphanum)/delete', 'Console\Board::delete/$1');
+
+$routes->get('/csl/settings/board/(:alphanum)/admin/list', 'Console\Settings::boardAdminList/$1');
+$routes->post('/csl/settings/board/(:alphanum)/admin/search', 'Console\Settings::boardAdminSearch');
+$routes->post('/csl/settings/board/(:alphanum)/admin/insert', 'Console\Settings::boardAdminInsert');
+$routes->post('/csl/settings/board/(:alphanum)/admin/delete', 'Console\Settings::boardAdminDelete');

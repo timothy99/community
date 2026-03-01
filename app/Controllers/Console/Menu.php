@@ -100,7 +100,7 @@ class Menu extends BaseController
         $proc_result['return_url'] = '/csl/menu/list';
         $proc_result['menu_idx'] = $menu_idx;
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     public function edit()
@@ -147,7 +147,7 @@ class Menu extends BaseController
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/csl/menu/list';
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
 }

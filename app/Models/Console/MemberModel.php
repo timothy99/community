@@ -3,7 +3,6 @@
 namespace App\Models\Console;
 
 use CodeIgniter\Model;
-use App\Models\Console\FileModel;
 
 class MemberModel extends Model
 {
@@ -43,8 +42,6 @@ class MemberModel extends Model
 
     public function getMemberInfo($data)
     {
-        $file_model = new FileModel();
-
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
 

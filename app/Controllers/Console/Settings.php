@@ -188,7 +188,7 @@ class Settings extends BaseController
         $proc_result['return_url'] = '/csl/settings/board/list';
         $proc_result['board_config_idx'] = $board_config_idx;
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     public function boardEdit($board_id)
@@ -233,7 +233,7 @@ class Settings extends BaseController
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/csl/settings/board/list';
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     public function boardView($board_id)
@@ -251,12 +251,140 @@ class Settings extends BaseController
         $message = $model_result['message'];
         $info = $model_result['info'];
 
+        $model_result = $settings_model->getBoardAdminList($data);
+        $admin_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['admin_list'] = $admin_list;
 
         return aview('console/settings/board/view', $proc_result);
+    }
+
+    public function boardAdminList($board_id)
+    {
+        $settings_model = new SettingsModel();
+
+        $result = true;
+        $message = '정상';
+
+        $data = array();
+        $data['board_id'] = $board_id;
+
+        $model_result = $settings_model->getBoardAdminList($data);
+        $result = $model_result['result'];
+        $message = $model_result['message'];
+        $list = $model_result['list'];
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['list'] = $list;
+        $proc_result['board_id'] = $board_id;
+
+        return aview('console/settings/admin/list', $proc_result);
+    }
+
+    public function boardAdminSearch()
+    {
+        $settings_model = new SettingsModel();
+
+        $result = true;
+        $message = '정상';
+
+        $search_text = $this->request->getPost("search_text", FILTER_SANITIZE_SPECIAL_CHARS);
+        $strlen = mb_strlen($search_text);
+        if ($strlen < 2) {
+            $result = false;
+            $message = "검색어는 최소 2자 이상 입력해주세요.";
+        }
+
+        if ($result == true) {
+            $data = array();
+            $data["search_text"] = $search_text;
+
+            $model_result = $settings_model->getMemberList($data);
+            $return_html = view('console/settings/admin/search', $model_result);
+        } else {
+            $return_html = null;
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_html'] = $return_html;
+
+        return $this->response->setJSON($proc_result);
+    }
+
+    // 관리자 등록
+    public function boardAdminInsert()
+    {
+        $settings_model = new SettingsModel();
+
+        $result = true;
+        $message = '정상';
+
+        $board_id = $this->request->getPost('board_id', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_id = $this->request->getPost('member_id', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($board_id == null || $board_id == '') {
+            $result = false;
+            $message = '게시판 아이디가 누락되었습니다.';
+        }
+        if ($result && ($member_id == null || $member_id == '')) {
+            $result = false;
+            $message = '회원 아이디가 누락되었습니다.';
+        }
+
+        if ($result == true) {
+            $data = array();
+            $data['board_id'] = $board_id;
+            $data['member_id'] = $member_id;
+
+            $model_result = $settings_model->procBoardAdminInsert($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+
+        return $this->response->setJSON($proc_result);
+    }
+
+    // 관리자 삭제
+    public function boardAdminDelete()
+    {
+        $settings_model = new SettingsModel();
+
+        $result = true;
+        $message = '정상';
+
+        $board_admin_idx = $this->request->getPost('board_admin_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($board_admin_idx == null || $board_admin_idx == '') {
+            $result = false;
+            $message = '관리자 아이디가 누락되었습니다.';
+        }
+
+        if ($result == true) {
+            $data = array();
+            $data['board_admin_idx'] = $board_admin_idx;
+
+            $model_result = $settings_model->procBoardAdminDelete($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+
+        return $this->response->setJSON($proc_result);
     }
 
 }

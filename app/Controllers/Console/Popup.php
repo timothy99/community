@@ -165,7 +165,7 @@ class Popup extends BaseController
         $proc_result['return_url'] = '/csl/popup/view/'.$popup_idx;
         $proc_result['popup_idx'] = $popup_idx;
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
     public function view()
@@ -237,7 +237,7 @@ class Popup extends BaseController
         $proc_result["message"] = $message;
         $proc_result["return_url"] = "/csl/popup/list";
 
-        return json_encode($proc_result);
+        return $this->response->setJSON($proc_result);
     }
 
 }

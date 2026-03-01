@@ -18,7 +18,7 @@
                         <tbody>
                             <!-- 기본정보 -->
                             <tr>
-                                <th colspan="2" class="bg-primary bg-opacity-75 text-white">기본정보</th>
+                                <th colspan="2" class="bg-success text-white">기본정보</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">게시판 아이디</th>
@@ -39,7 +39,7 @@
 
                             <!-- 카테고리 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-info bg-opacity-75 text-white">카테고리 설정</th>
+                                <th colspan="2" class="bg-success text-white">카테고리 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">카테고리 사용여부</th>
@@ -52,7 +52,7 @@
 
                             <!-- 사용자 화면 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-teal text-white">사용자 화면 설정</th>
+                                <th colspan="2" class="bg-success text-white">사용자 화면 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">사용자 글쓰기 가능 여부</th>
@@ -81,7 +81,7 @@
 
                             <!-- 권한 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-success bg-opacity-75 text-white">권한 설정</th>
+                                <th colspan="2" class="bg-success text-white">권한 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">입력일 수정 기능 사용 여부</th>
@@ -94,7 +94,7 @@
 
                             <!-- 파일 업로드 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-warning bg-opacity-75 text-white">파일 업로드 설정</th>
+                                <th colspan="2" class="bg-success text-white">파일 업로드 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">최대 첨부파일 수</th>
@@ -111,7 +111,7 @@
 
                             <!-- 포인트 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-secondary bg-opacity-75 text-white">포인트 설정</th>
+                                <th colspan="2" class="bg-success text-white">포인트 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">글 작성시 지급 포인트</th>
@@ -124,7 +124,7 @@
 
                             <!-- 폼 양식 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-dark bg-opacity-75 text-white">폼 양식 설정</th>
+                                <th colspan="2" class="bg-success text-white">폼 양식 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">폼 양식 사용 여부</th>
@@ -151,6 +151,49 @@
             </div>
         </div>
 
+        <h3>관리자 목록</h3>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered text-nowrap">
+                        <colgroup>
+                            <col style="width: 10%;">
+                            <col style="width: 30%;">
+                            <col style="width: 30%;">
+                            <col style="width: 30%;">
+                        </colgroup>
+                        <thead>
+                            <tr class="text-center">
+                                <th class="align-middle bg-light">번호</th>
+                                <th class="align-middle bg-light">아이디</th>
+                                <th class="align-middle bg-light">닉네임</th>
+                                <th class="align-middle bg-light">이름</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+<?php   foreach($admin_list as $no => $val) { ?>
+                            <tr class="text-center">
+                                <td><?=$val->list_no ?></td>
+                                <td><?=$val->member_id ?></td>
+                                <td><?=$val->member_info->member_nickname ?></td>
+                                <td><?=$val->member_info->member_name ?></td>
+                            </tr>
+<?php   } ?>
+<?php   if(count($admin_list) == 0) { ?>
+                            <tr>
+                                <td colspan="4" class="text-center">관리자가 지정되지 않았습니다.</td>
+                            </tr>
+<?php   } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <div class="d-flex gap-2 justify-content-end">
+                    <a href="/csl/settings/board/<?= $info->board_id ?>/admin/list" class="btn btn-primary">관리</a>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
