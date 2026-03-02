@@ -85,6 +85,7 @@ class Settings extends BaseController
         $info->heart_yn = 'N';
         $info->pdf_yn = 'N';
         $info->youtube_yn = 'N';
+        $info->url_link_yn = 'N';
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -114,6 +115,7 @@ class Settings extends BaseController
         $heart_yn = $this->request->getPost('heart_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $pdf_yn = $this->request->getPost('pdf_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $youtube_yn = $this->request->getPost('youtube_yn', FILTER_SANITIZE_SPECIAL_CHARS);
+        $url_link_yn = $this->request->getPost('url_link_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $reg_date_yn = $this->request->getPost('reg_date_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $hit_edit_yn = $this->request->getPost('hit_edit_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $file_cnt = $this->request->getPost('file_cnt', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -157,6 +159,7 @@ class Settings extends BaseController
         if ($list_authority == null || $list_authority == '') { $result = false; $message = '목록 권한을 선택해주세요.'; }
         if ($view_authority == null || $view_authority == '') { $result = false; $message = '상세 권한을 선택해주세요.'; }
         if ($write_authority == null || $write_authority == '') { $result = false; $message = '쓰기 권한을 선택해주세요.'; }
+        if ($url_link_yn == null || $url_link_yn == '') { $result = false; $message = '링크 기능 사용 여부를 선택해주세요.'; }
 
         $data = array();
         $data['board_config_idx'] = $board_config_idx;
@@ -182,6 +185,7 @@ class Settings extends BaseController
         $data['form_style_yn'] = $form_style_yn;
         $data['form_style'] = $form_style;
         $data['authority_arr'] = $authority_arr;
+        $data['url_link_yn'] = $url_link_yn;
 
         if ($result == true) {
             if ($board_config_idx == 0) {

@@ -1,11 +1,12 @@
 <form id="frm" name="frm">
 
-<input type="hidden" id="slide_idx" name="slide_idx" value="<?= $info->slide_idx ?>">
+<input type="hidden" id="board_idx" name="board_idx" value="<?= $info->board_idx ?>">
+<input type="hidden" id="board_id" name="board_id" value="<?= $info->board_id ?>">
 
 <!-- Main Content -->
 <main id="main-content">
     <div class="container-fluid py-4">
-        <h3>슬라이드</h3>
+        <h3>게시판 보기</h3>
 
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
@@ -17,21 +18,41 @@
                             <col style="width: 80%;">
                         </colgroup>
                         <tbody>
+<?php if ($board_config->category_yn == 'Y') { ?>
                             <tr>
-                                <th class="align-middle bg-light">정렬순서</th>
-                                <td><?= $info->order_no ?></td>
+                                <th class="align-middle bg-light">카테고리</th>
+                                <td><?= $info->category ?></td>
                             </tr>
+<?php } ?>
                             <tr>
                                 <th class="align-middle bg-light">제목</th>
                                 <td><?= $info->title ?></td>
                             </tr>
                             <tr>
-                                <th class="align-middle bg-light">소제목</th>
-                                <td><?= $info->sub_title ?></td>
-                            </tr>
-                            <tr>
                                 <th class="align-middle bg-light">내용</th>
                                 <td><?= nl2br($info->contents) ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">대표 이미지</th>
+                                <td>
+<?php   if ($info->main_file_info != null) { ?>
+                                    <div class="mb-3">
+                                        <img src="/csl/file/view/<?= $info->main_file_id ?>" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-auto">
+                                            <small class="text-muted d-block">원본파일명</small>
+                                            <strong><?= $info->main_file_info->file_name_org ?></strong>
+                                        </div>
+                                        <div class="col-auto">
+                                            <small class="text-muted d-block">파일 크기</small>
+                                            <strong><?= $info->main_file_info->file_size_kb ?> KB</strong>
+                                        </div>
+                                    </div>
+<?php   } else { ?>
+                                    <p class="text-muted mb-0">등록된 이미지가 없습니다.</p>
+<?php   } ?>
+                                </td>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">링크 URL</th>
@@ -43,9 +64,55 @@
 <?php   } ?>
                                 </td>
                             </tr>
+<?php if ($board_config->pdf_yn == 'Y') { ?>
                             <tr>
-                                <th class="align-middle bg-light">게시기간</th>
-                                <td><?= $info->start_date_txt ?> ~ <?= $info->end_date_txt ?></td>
+                                <th class="align-middle bg-light">PDF 파일</th>
+                                <td>
+<?php   if ($info->pdf_file_info != null) { ?>
+                                    <div class="row g-3">
+                                        <div class="col-auto">
+                                            <small class="text-muted d-block">원본파일명</small>
+                                            <strong><?= $info->pdf_file_info->file_name_org ?></strong>
+                                        </div>
+                                        <div class="col-auto">
+                                            <small class="text-muted d-block">파일 크기</small>
+                                            <strong><?= $info->pdf_file_info->file_size_kb ?> KB</strong>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="/csl/file/download/<?= $info->pdf_file_id ?>" class="btn btn-sm btn-primary">다운로드</a>
+                                        </div>
+                                    </div>
+<?php   } else { ?>
+                                    <p class="text-muted mb-0">등록된 파일이 없습니다.</p>
+<?php   } ?>
+                                </td>
+                            </tr>
+<?php } ?>
+<?php if ($board_config->youtube_yn == 'Y') { ?>
+                            <tr>
+                                <th class="align-middle bg-light">유튜브 링크</th>
+                                <td>
+<?php   if (!empty($info->youtube_link)) { ?>
+                                    <a href="<?= $info->youtube_link ?>" target="_blank"><?= $info->youtube_link ?></a>
+<?php   } else { ?>
+                                    <span class="text-muted">-</span>
+<?php   } ?>
+                                </td>
+                            </tr>
+<?php } ?>
+<?php if ($board_config->hit_yn == 'Y') { ?>
+                            <tr>
+                                <th class="align-middle bg-light">조회수</th>
+                                <td><?= number_format($info->hit_cnt) ?></td>
+                            </tr>
+<?php } ?>
+                            <tr>
+                                <th class="align-middle bg-light">공지여부</th>
+                                <td>
+                                    <span class="badge <?= $info->notice_yn === 'Y' ? 'bg-danger' : 'bg-secondary' ?>">
+                                        <?= $info->notice_yn === 'Y' ? '공지' : '일반' ?>
+                                    </span>
+                                </td>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">노출여부</th>
@@ -56,30 +123,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th class="align-middle bg-light">슬라이드 이미지</th>
-                                <td>
-<?php   if ($info->slide_file_info != null) { ?>
-                                    <div class="mb-3">
-                                        <img src="/csl/file/view/<?= $info->slide_file ?>" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-auto">
-                                            <small class="text-muted d-block">원본파일명</small>
-                                            <strong><?= $info->slide_file_info->file_name_org ?></strong>
-                                        </div>
-                                        <div class="col-auto">
-                                            <small class="text-muted d-block">해상도</small>
-                                            <strong><?= $info->slide_file_info->image_width_txt ?> × <?= $info->slide_file_info->image_height_txt ?> px</strong>
-                                        </div>
-                                        <div class="col-auto">
-                                            <small class="text-muted d-block">파일 크기</small>
-                                            <strong><?= $info->slide_file_info->file_size_kb ?> KB</strong>
-                                        </div>
-                                    </div>
-<?php   } else { ?>
-                                    <p class="text-muted mb-0">등록된 이미지가 없습니다.</p>
-<?php   } ?>
-                                </td>
+                                <th class="align-middle bg-light">등록일</th>
+                                <td><?= $info->ins_date_txt ?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -87,9 +132,9 @@
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
-                    <button type="button" class="btn btn-danger" onclick="slideDelete()">삭제</button>
-                    <a href="/csl/slide/list" class="btn btn-secondary">목록</a>
-                    <a href="/csl/slide/edit/<?= $info->slide_idx ?>" class="btn btn-primary">수정</a>
+                    <button type="button" class="btn btn-danger" onclick="boardDelete()">삭제</button>
+                    <a href="/csl/board/list?board_id=<?= $info->board_id ?>" class="btn btn-secondary">목록</a>
+                    <a href="/csl/board/edit/<?= $info->board_id ?>/<?= $info->board_idx ?>" class="btn btn-primary">수정</a>
                 </div>
             </div>
         </div>
@@ -101,21 +146,21 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
-        // $('#li-slide').addClass('active-level-1').attr({'data-bs-toggle': 'collapse', 'aria-expanded': 'true'});
-        $('#li-slide').addClass('active-level-1');
+        $('#li-board').addClass('active-level-1');
     });
 
-    function slideDelete() {
+    function boardDelete() {
         if (confirm('정말 삭제하시겠습니까?')) {
-            ajax1('/csl/slide/delete', 'frm', 'slideDeleteAfter');
+            ajax1('/csl/board/delete', 'frm', 'boardDeleteAfter');
         }
     }
 
-    function slideDeleteAfter(proc_result) {
+    function boardDeleteAfter(proc_result) {
         var result = proc_result.result;
         var message = proc_result.message;
+        var return_url = proc_result.return_url;
         if (result == true) {
-            location.href = '/csl/slide/list';
+            location.href = return_url;
         } else {
             alert(message);
         }

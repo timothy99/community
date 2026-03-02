@@ -92,6 +92,7 @@ class SettingsModel extends Model
         $comment_point = $data['comment_point'];
         $form_style_yn = $data['form_style_yn'];
         $form_style = $data['form_style'];
+        $url_link_yn = $data['url_link_yn'];
         $authority_arr = $data['authority_arr'];
 
         $category_arr = explode('||', $category);
@@ -127,6 +128,7 @@ class SettingsModel extends Model
         $builder->set('comment_point', $comment_point);
         $builder->set('form_style_yn', $form_style_yn);
         $builder->set('form_style', $form_style);
+        $builder->set('url_link_yn', $url_link_yn);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $user_id);
         $builder->set('ins_date', $today);
@@ -202,6 +204,7 @@ class SettingsModel extends Model
         $comment_point = $data['comment_point'];
         $form_style_yn = $data['form_style_yn'];
         $form_style = $data['form_style'];
+        $url_link_yn = $data['url_link_yn'];
         $authority_arr = $data['authority_arr'];
 
         $category_arr = explode('||', $category);
@@ -237,6 +240,7 @@ class SettingsModel extends Model
         $builder->set('comment_point', $comment_point);
         $builder->set('form_style_yn', $form_style_yn);
         $builder->set('form_style', $form_style);
+        $builder->set('url_link_yn', $url_link_yn);
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
         $builder->where('board_config_idx', $board_config_idx);

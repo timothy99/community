@@ -78,6 +78,10 @@
                                 <th class="align-middle bg-light">유튜브 기능 사용 여부</th>
                                 <td><?= code_replace('youtube_yn', $info->youtube_yn) ?></td>
                             </tr>
+                            <tr>
+                                <th class="align-middle bg-light">링크 기능 사용 여부</th>
+                                <td><?= code_replace('url_link_yn', $info->url_link_yn) ?></td>
+                            </tr>
 
                             <!-- 관리자 수정 권한 설정 -->
                             <tr>

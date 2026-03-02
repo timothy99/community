@@ -188,6 +188,22 @@
                     <small class="text-muted">게시글에서 유튜브 영상 삽입 기능 사용 여부를 설정합니다.</small>
                 </div>
 
+                <!-- 링크 기능 사용여부 -->
+                <div class="mb-3">
+                    <label class="form-label">링크 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="url_link_yn" id="url_link_yn_y" value="Y">
+                            <label class="form-check-label" for="url_link_yn_y">사용</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="url_link_yn" id="url_link_yn_n" value="N">
+                            <label class="form-check-label" for="url_link_yn_n">미사용</label>
+                        </div>
+                    </div>
+                    <small class="text-muted">게시글에서 링크 삽입 기능 사용 여부를 설정합니다.</small>
+                </div>
+
             </div>
         </div>
 
@@ -396,6 +412,7 @@
         $('input[name="heart_yn"][value="<?=$info->heart_yn ?>"]').prop('checked', true);
         $('input[name="pdf_yn"][value="<?=$info->pdf_yn ?>"]').prop('checked', true);
         $('input[name="youtube_yn"][value="<?=$info->youtube_yn ?>"]').prop('checked', true);
+        $('input[name="url_link_yn"][value="<?=$info->url_link_yn ?>"]').prop('checked', true);
         $('#type').val('<?=$info->type ?>');
 
 <?php   foreach ($authority_list as $val){ ?>

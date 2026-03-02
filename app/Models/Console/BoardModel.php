@@ -5,33 +5,73 @@ namespace App\Models\Console;
 use CodeIgniter\Model;
 use App\Models\Console\FileModel;
 
-class SlideModel extends Model
+class BoardModel extends Model
 {
-    public function getSlideList($data)
+    public function getBoardConfig($board_id)
+    {
+        $result = true;
+        $message = '게시판 설정을 가져왔습니다.';
+
+        $db = $this->db;
+        $builder = $db->table('board_config');
+        $builder->where('del_yn', 'N');
+        $builder->where('board_id', $board_id);
+        $config = $builder->get()->getRow();
+
+        if (!$config) {
+            // 기본 설정 반환
+            $config = new \stdClass();
+            $config->board_id = $board_id;
+            $config->category_yn = 'N';
+            $config->reg_date_yn = 'N';
+            $config->hit_yn = 'Y';
+            $config->hit_edit_yn = 'N';
+            $config->heart_yn = 'Y';
+            $config->pdf_yn = 'N';
+            $config->youtube_yn = 'N';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['config'] = $config;
+
+        return $proc_result;
+    }
+
+    public function getBoardList($data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
 
+        $board_id = $data['board_id'];
         $page = $data['search_page'];
         $rows = $data['search_rows'];
         $search_condition = $data['search_condition'];
         $search_text = $data['search_text'];
+        $category = $data['category'] ?? '';
 
         $db = $this->db;
-        $builder = $db->table('slide');
+        $builder = $db->table('board');
         $builder->where('del_yn', 'N');
+        if ($board_id) {
+            $builder->where('board_id', $board_id);
+        }
+        if ($category) {
+            $builder->where('category', $category);
+        }
         if ($search_text != null) {
             $builder->like($search_condition, $search_text);
         }
-        $builder->orderBy('slide_idx', 'desc');
+        $builder->orderBy('notice_yn', 'desc');
+        $builder->orderBy('board_idx', 'desc');
         $builder->limit($rows, getOffset($page, $rows));
         $cnt = $builder->countAllResults(false);
         $list = $builder->get()->getResult();
         foreach ($list as $no => $val) {
             $list[$no]->list_no = $cnt-$no-(($page-1)*$rows);
             $list[$no]->ins_date_txt = convertTextToDate($val->ins_date, 1, 1);
-            $list[$no]->start_date_txt = convertTextToDate($val->start_date, 1, 2);
-            $list[$no]->end_date_txt = convertTextToDate($val->end_date, 1, 2);
+            $list[$no]->reg_date_txt = $val->reg_date ? convertTextToDate($val->reg_date, 1, 2) : '';
         }
 
         $proc_result = array();
@@ -43,30 +83,42 @@ class SlideModel extends Model
         return $proc_result;
     }
 
-    public function getSlideInfo($data)
+    public function getBoardInfo($data)
     {
         $file_model = new FileModel();
 
         $result = true;
-        $message = '목록 불러오기가 완료되었습니다.';
+        $message = '게시물 정보를 가져왔습니다.';
 
-        $slide_idx = $data['slide_idx'];
+        $board_idx = $data['board_idx'];
 
         $db = $this->db;
-        $builder = $db->table('slide');
+        $builder = $db->table('board');
         $builder->where('del_yn', 'N');
-        $builder->where('slide_idx', $slide_idx);
+        $builder->where('board_idx', $board_idx);
         $info = $builder->get()->getRow();
 
         $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
-        $info->start_date_txt = convertTextToDate($info->start_date, 1, 2);
-        $info->end_date_txt = convertTextToDate($info->end_date, 1, 2);
-        $info->contents = nl2br_only($info->contents);
+        $info->reg_date_txt = $info->reg_date ? convertTextToDate($info->reg_date, 1, 2) : '';
+        $info->contents = $info->contents;
 
-        $info->slide_file_info = $file_model->getFileInfo($info->slide_file);
-        $info->slide_file_info->file_size_kb = number_format($info->slide_file_info->file_size / 1024, 2);
-        $info->slide_file_info->image_width_txt = number_format($info->slide_file_info->image_width);
-        $info->slide_file_info->image_height_txt = number_format($info->slide_file_info->image_height);
+        if ($info->main_file_id) {
+            $info->main_file_info = $file_model->getFileInfo($info->main_file_id);
+            $info->main_file_info->file_size_kb = number_format($info->main_file_info->file_size / 1024, 2);
+            if ($info->main_file_info->image_width > 0) {
+                $info->main_file_info->image_width_txt = number_format($info->main_file_info->image_width);
+                $info->main_file_info->image_height_txt = number_format($info->main_file_info->image_height);
+            }
+        } else {
+            $info->main_file_info = null;
+        }
+
+        if ($info->pdf_file_id) {
+            $info->pdf_file_info = $file_model->getFileInfo($info->pdf_file_id);
+            $info->pdf_file_info->file_size_kb = number_format($info->pdf_file_info->file_size / 1024, 2);
+        } else {
+            $info->pdf_file_info = null;
+        }
 
         $badge_color = $info->display_yn === 'Y' ? 'bg-success' : 'bg-secondary';
         $info->display_yn_badge = $badge_color;
@@ -79,38 +131,51 @@ class SlideModel extends Model
         return $proc_result;
     }
 
-    public function procSlideInsert($data)
+    public function procBoardInsert($data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
 
         $result = true;
-        $message = '슬라이드가 등록되었습니다.';
+        $message = '게시물이 등록되었습니다.';
         $insert_id = 0;
 
+        $board_id = $data['board_id'];
+        $category = $data['category'];
         $title = $data['title'];
-        $sub_title = $data['sub_title'];
         $contents = $data['contents'];
-        $slide_file = $data['slide_file'];
-        $order_no = $data['order_no'];
+        $main_file_id = $data['main_file_id'];
         $url_link = $data['url_link'];
-        $start_date = $data['start_date'];
-        $end_date = $data['end_date'];
+        $pdf_file_id = $data['pdf_file_id'];
+        $youtube_link = $data['youtube_link'];
+        $notice_yn = $data['notice_yn'];
         $display_yn = $data['display_yn'];
+        $hit_cnt = $data['hit_cnt'];
+        $reg_date = $data['reg_date'];
 
         $db = $this->db;
         $db->transStart();
 
-        $builder = $db->table('slide');
+        // board_idx_desc 계산 (최대값 + 1)
+        $builder = $db->table('board');
+        $builder->selectMax('board_idx_desc');
+        $max_result = $builder->get()->getRow();
+        $board_idx_desc = ($max_result->board_idx_desc ?? 0) + 1;
+
+        $builder = $db->table('board');
+        $builder->set('board_idx_desc', $board_idx_desc);
+        $builder->set('board_id', $board_id);
+        $builder->set('category', $category);
         $builder->set('title', $title);
-        $builder->set('sub_title', $sub_title);
         $builder->set('contents', $contents);
-        $builder->set('slide_file', $slide_file);
-        $builder->set('order_no', $order_no);
+        $builder->set('main_file_id', $main_file_id);
         $builder->set('url_link', $url_link);
-        $builder->set('start_date', $start_date);
-        $builder->set('end_date', $end_date);
+        $builder->set('pdf_file_id', $pdf_file_id);
+        $builder->set('youtube_link', $youtube_link);
+        $builder->set('notice_yn', $notice_yn);
         $builder->set('display_yn', $display_yn);
+        $builder->set('hit_cnt', $hit_cnt);
+        $builder->set('reg_date', $reg_date);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $user_id);
         $builder->set('ins_date', $today);
@@ -134,7 +199,7 @@ class SlideModel extends Model
         return $model_result;
     }
 
-    public function procSlideUpdate($data)
+    public function procBoardUpdate($data)
     {
         // 게시판 입력과 관련된 기본 정보
         $user_id = getUserSessionInfo('member_id');
@@ -143,33 +208,39 @@ class SlideModel extends Model
         $result = true;
         $message = '입력이 잘 되었습니다';
 
-        $slide_idx = $data['slide_idx'];
+        $board_idx = $data['board_idx'];
+        $board_id = $data['board_id'];
+        $category = $data['category'];
         $title = $data['title'];
-        $sub_title = $data['sub_title'];
         $contents = $data['contents'];
-        $slide_file = $data['slide_file'];
-        $order_no = $data['order_no'];
+        $main_file_id = $data['main_file_id'];
         $url_link = $data['url_link'];
-        $start_date = $data['start_date'];
-        $end_date = $data['end_date'];
+        $pdf_file_id = $data['pdf_file_id'];
+        $youtube_link = $data['youtube_link'];
+        $notice_yn = $data['notice_yn'];
         $display_yn = $data['display_yn'];
+        $hit_cnt = $data['hit_cnt'];
+        $reg_date = $data['reg_date'];
 
         $db = $this->db;
         $db->transStart();
 
-        $builder = $db->table('slide');
+        $builder = $db->table('board');
+        $builder->set('board_id', $board_id);
+        $builder->set('category', $category);
         $builder->set('title', $title);
-        $builder->set('sub_title', $sub_title);
         $builder->set('contents', $contents);
-        $builder->set('slide_file', $slide_file);
-        $builder->set('order_no', $order_no);
+        $builder->set('main_file_id', $main_file_id);
         $builder->set('url_link', $url_link);
-        $builder->set('start_date', $start_date);
-        $builder->set('end_date', $end_date);
+        $builder->set('pdf_file_id', $pdf_file_id);
+        $builder->set('youtube_link', $youtube_link);
+        $builder->set('notice_yn', $notice_yn);
         $builder->set('display_yn', $display_yn);
+        $builder->set('hit_cnt', $hit_cnt);
+        $builder->set('reg_date', $reg_date);
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
-        $builder->where('slide_idx', $slide_idx);
+        $builder->where('board_idx', $board_idx);
         $result = $builder->update();
 
         $db->transComplete();
@@ -186,7 +257,7 @@ class SlideModel extends Model
         return $model_result;
     }
 
-    public function procSlideDelete($data)
+    public function procBoardDelete($data)
     {
         $member_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -194,16 +265,16 @@ class SlideModel extends Model
         $result = true;
         $message = '삭제가 잘 되었습니다';
 
-        $slide_idx = $data['slide_idx'];
+        $board_idx = $data['board_idx'];
 
         $db = $this->db;
         $db->transStart();
 
-        $builder = $db->table('slide');
+        $builder = $db->table('board');
         $builder->set('del_yn', 'Y');
         $builder->set('upd_id', $member_id);
         $builder->set('upd_date', $today);
-        $builder->where('slide_idx', $slide_idx);
+        $builder->where('board_idx', $board_idx);
         $result = $builder->update();
 
         $db->transComplete();

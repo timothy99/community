@@ -3,41 +3,61 @@
 namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
-use App\Models\Console\SlideModel;
+use App\Models\Console\BoardModel;
 
-class Slide extends BaseController
+class Board extends BaseController
 {
     public function index()
     {
-        return redirect()->to('/csl/slide/list');
+        return redirect()->to('/csl/board/list');
     }
 
-    public function list()
+    public function list($board_id)
     {
-        $slide_model = new SlideModel();
+        $board_model = new BoardModel();
 
         $search_page = $this->request->getGet('search_page') ?? 1;
         $search_rows = $this->request->getGet('search_rows') ?? 10;
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
+        $category = $this->request->getGet('category', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
 
         $data = array();
+        $data['board_id'] = $board_id;
         $data['search_page'] = $search_page;
         $data['search_rows'] = $search_rows;
         $data['search_text'] = $search_text;
         $data['search_condition'] = $search_condition;
+        $data['category'] = $category;
 
-        $model_result = $slide_model->getSlideList($data);
+        // 게시판 설정 가져오기
+        $config_result = $board_model->getBoardConfig($board_id);
+        $board_config = $config_result['config'];
+
+        // 공지사항 표시가 안된 일반 데이터
+        $data['notice_yn'] = 'N';
+        $data['reg_date_yn'] = $board_config->reg_date_yn;
+        $model_result = $board_model->getBoardList($data);
         $result = $model_result['result'];
         $message = $model_result['message'];
         $list = $model_result['list'];
         $cnt = $model_result['cnt'];
+
+        // 공지사항인 일반 데이터
+        $data['notice_yn'] = 'Y';
+        $data['reg_date_yn'] = $board_config->reg_date_yn;
+        $model_result = $board_model->getBoardList($data);
+        $notice_list = $model_result['list'];
+
+        // 카테고리 데이터 원복
+        $data['category'] = $category;
 
         $search_arr = array();
         $search_arr['search_condition'] = $search_condition;
         $search_arr['search_text'] = $search_text;
         $search_arr['search_page'] = $search_page;
         $search_arr['search_rows'] = $search_rows;
+        $search_arr['category'] = $category;
         $search_arr['cnt'] = $cnt;
         $paging_info = getPagingInfo($search_arr);
 
@@ -45,98 +65,104 @@ class Slide extends BaseController
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['list'] = $list;
+        $proc_result['notice_list'] = $notice_list;
         $proc_result['cnt'] = $cnt;
         $proc_result['paging_info'] = $paging_info;
         $proc_result['data'] = $data;
+        $proc_result['board_config'] = $board_config;
 
-        return aview('/console/slide/list', $proc_result);
+        return aview('/console/board/list', $proc_result);
     }
 
-    public function write()
+    public function write($board_id)
     {
+        $board_model = new BoardModel();
+
         $result = true;
         $message = '정상';
 
+        // 게시판 설정 가져오기
+        $config_result = $board_model->getBoardConfig($board_id);
+        $board_config = $config_result['config'];
+
         $info = new \stdClass();
-        $info->slide_idx = 0;
-        $info->order_no = 0;
+        $info->board_idx = 0;
+        $info->board_id = $board_id;
+        $info->category = '';
         $info->title = '';
-        $info->sub_title = '';
         $info->contents = '';
-        $info->slide_file = '';
+        $info->main_file_id = '';
         $info->url_link = '';
+        $info->pdf_file_id = '';
+        $info->youtube_link = '';
+        $info->notice_yn = 'N';
         $info->display_yn = 'Y';
-        $info->start_date_txt = '2000-01-01 00:00';
-        $info->end_date_txt = '9999-12-31 23:59';
-        $info->slide_file_info = null;
+        $info->hit_cnt = 0;
+        $info->reg_date_txt = date('Y-m-d');
+        $info->main_file_info = null;
+        $info->pdf_file_info = null;
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['board_config'] = $board_config;
 
-        return aview('console/slide/edit', $proc_result);
+        return aview('console/board/edit', $proc_result);
     }
 
     public function update()
     {
-        $slide_model = new SlideModel();
+        $board_model = new BoardModel();
 
         $result = true;
         $message = '정상처리 되었습니다.';
 
-        $slide_idx = $this->request->getPost('slide_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+        $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+        $board_id = $this->request->getPost('board_id', FILTER_SANITIZE_SPECIAL_CHARS);
+        $category = $this->request->getPost('category', FILTER_SANITIZE_SPECIAL_CHARS);
         $title = $this->request->getPost('title', FILTER_SANITIZE_SPECIAL_CHARS);
-        $sub_title = $this->request->getPost('sub_title', FILTER_SANITIZE_SPECIAL_CHARS);
-        $contents = $this->request->getPost('contents', FILTER_SANITIZE_SPECIAL_CHARS);
+        $contents = $this->request->getPost('contents');
+        $main_file_id = $this->request->getPost('main_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
         $url_link = $this->request->getPost('url_link', FILTER_SANITIZE_SPECIAL_CHARS);
-        $order_no = $this->request->getPost('order_no', FILTER_SANITIZE_SPECIAL_CHARS);
-        $slide_file = $this->request->getPost('slide_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
+        $pdf_file_id = $this->request->getPost('pdf_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
+        $youtube_link = $this->request->getPost('youtube_link', FILTER_SANITIZE_SPECIAL_CHARS);
+        $notice_yn = $this->request->getPost('notice_yn');
         $display_yn = $this->request->getPost('display_yn');
-        $start_date_txt = $this->request->getPost('start_date').' 00:00:00';
-        $end_date_txt = $this->request->getPost('end_date').' 23:59:59';
+        $hit_cnt = $this->request->getPost('hit_cnt', FILTER_SANITIZE_SPECIAL_CHARS);
+        $reg_date = $this->request->getPost('reg_date', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $start_date = convertTextToDate($start_date_txt, 2, 3);
-        $end_date = convertTextToDate($end_date_txt, 2, 3);
-
-        if ($title == null) {
+        if (empty($title)) {
             $result = false;
             $message = '제목을 입력해주세요.';
         }
 
-        if ($slide_file == null) {
+        if (empty($contents)) {
             $result = false;
-            $message = '이미지 파일을 올려주세요.';
-        }
-
-        if ($url_link == null) {
-            $result = false;
-            $message = '링크를 입력해주세요.';
-        }
-
-        if ($order_no == null) {
-            $result = false;
-            $message = '정렬순서를 입력해주세요.';
+            $message = '내용을 입력해주세요.';
         }
 
         $data = array();
-        $data['slide_idx'] = $slide_idx;
+        $data['board_idx'] = $board_idx;
+        $data['board_id'] = $board_id;
+        $data['category'] = $category;
         $data['title'] = $title;
-        $data['sub_title'] = $sub_title;
         $data['contents'] = $contents;
-        $data['slide_file'] = $slide_file;
-        $data['order_no'] = $order_no;
+        $data['main_file_id'] = $main_file_id;
         $data['url_link'] = $url_link;
-        $data['start_date'] = $start_date;
-        $data['end_date'] = $end_date;
+        $data['pdf_file_id'] = $pdf_file_id;
+        $data['youtube_link'] = $youtube_link;
+        $data['notice_yn'] = $notice_yn;
         $data['display_yn'] = $display_yn;
+        $data['hit_cnt'] = $hit_cnt;
+        $data['reg_date'] = $reg_date ? convertTextToDate($reg_date, 2, 3) : date('YmdHis');
 
         if ($result == true) {
-            if ($slide_idx == 0) {
-                $model_result = $slide_model->procSlideInsert($data);
-                $slide_idx = $model_result['insert_id'];
+            if ($board_idx == 0) {
+                $model_result = $board_model->procBoardInsert($data);
+                $board_idx = $model_result['insert_id'];
             } else {
-                $model_result = $slide_model->procSlideUpdate($data);
+                $model_result = $board_model->procBoardUpdate($data);
             }
 
             $result = $model_result['result'];
@@ -146,25 +172,31 @@ class Slide extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/slide/view/'.$slide_idx;
-        $proc_result['slide_idx'] = $slide_idx;
+        $proc_result['return_url'] = '/csl/board/view/'.$board_id.'/'.$board_idx;
+        $proc_result['board_idx'] = $board_idx;
 
         return $this->response->setJSON($proc_result);
     }
 
     public function view()
     {
-        $slide_model = new SlideModel();
+        $board_model = new BoardModel();
 
         $result = true;
         $message = '정상';
 
-        $slide_idx = $this->request->getUri()->getSegment(4);
+        $board_id = $this->request->getUri()->getSegment(4);
+        $board_idx = $this->request->getUri()->getSegment(5);
 
         $data = array();
-        $data['slide_idx'] = $slide_idx;
+        $data['board_id'] = $board_id;
+        $data['board_idx'] = $board_idx;
 
-        $model_result = $slide_model->getSlideInfo($data);
+        // 게시판 설정 가져오기
+        $config_result = $board_model->getBoardConfig($board_id);
+        $board_config = $config_result['config'];
+
+        $model_result = $board_model->getBoardInfo($data);
         $result = $model_result['result'];
         $message = $model_result['message'];
         $info = $model_result['info'];
@@ -173,53 +205,62 @@ class Slide extends BaseController
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['board_config'] = $board_config;
 
-        return aview('console/slide/view', $proc_result);
+        return aview('console/board/view', $proc_result);
     }
 
     public function edit()
     {
-        $slide_model = new SlideModel();
+        $board_model = new BoardModel();
 
         $result = true;
         $message = '정상';
 
-        $slide_idx = $this->request->getUri()->getSegment(4);
+        $board_id = $this->request->getUri()->getSegment(4);
+        $board_idx = $this->request->getUri()->getSegment(5);
 
         $data = array();
-        $data['slide_idx'] = $slide_idx;
+        $data['board_id'] = $board_id;
+        $data['board_idx'] = $board_idx;
 
-        $model_result = $slide_model->getSlideInfo($data);
+        // 게시판 설정 가져오기
+        $config_result = $board_model->getBoardConfig($board_id);
+        $board_config = $config_result['config'];
+
+        $model_result = $board_model->getBoardInfo($data);
         $info = $model_result['info'];
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['board_config'] = $board_config;
 
-        return aview('console/slide/edit', $proc_result);
+        return aview('console/board/edit', $proc_result);
     }
 
     public function delete()
     {
         $result = true;
-        $message = "정상처리 되었습니다.";
+        $message = '정상처리 되었습니다.';
 
-        $slide_model = new SlideModel();
+        $board_model = new BoardModel();
 
-        $slide_idx = $this->request->getPost("slide_idx", FILTER_SANITIZE_SPECIAL_CHARS);
+        $board_id = $this->request->getPost('board_id', FILTER_SANITIZE_SPECIAL_CHARS);
+        $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $data = array();
-        $data["slide_idx"] = $slide_idx;
+        $data['board_idx'] = $board_idx;
 
-        $model_result = $slide_model->procSlideDelete($data);
-        $result = $model_result["result"];
-        $message = $model_result["message"];
+        $model_result = $board_model->procBoardDelete($data);
+        $result = $model_result['result'];
+        $message = $model_result['message'];
 
         $proc_result = array();
-        $proc_result["result"] = $result;
-        $proc_result["message"] = $message;
-        $proc_result["return_url"] = "/csl/slide/list";
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/csl/board/list?board_id='.$board_id;
 
         return $this->response->setJSON($proc_result);
     }

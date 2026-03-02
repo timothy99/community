@@ -58,6 +58,7 @@ create table mng_menu (
     key menu_idx1 (idx1, idx2)
 ) comment='메뉴' collate='utf8mb4_unicode_ci';
 
+drop table if exists mng_board;
 create table mng_board (
     board_idx int not null auto_increment comment '게시물 번호',
     board_idx_desc int not null default 0 comment '게시물 번호 역순',
@@ -67,12 +68,13 @@ create table mng_board (
     contents longtext not null comment '내용',
     main_file_id varchar(32) default null comment '대표파일 id',
     url_link varchar(500) default null comment '인터넷 링크',
+    pdf_file_id varchar(32) default null comment 'pdf 파일 id',
+    youtube_link varchar(500) default null comment '유튜브 링크',
     comment_cnt int not null default 0 comment '댓글 등록수',
     heart_cnt int not null default 0 comment '공감수',
     hit_cnt int not null default 0 comment '조회수',
     reg_date varchar(14) null comment '등록일-정렬을 위해 사용자가 입력한 날짜',
     notice_yn enum('Y', 'N') not null default 'N' comment '공지 여부',
-    display_yn enum('Y', 'N') not null default 'Y' comment '노출 여부',
     del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
     ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
@@ -132,6 +134,7 @@ create table mng_board_config (
     heart_yn enum('Y', 'N') default 'Y' not null comment '공감 기능 사용 여부',
     pdf_yn enum('Y', 'N') default 'N' not null comment 'PDF 보기 기능 사용 여부',
     youtube_yn enum('Y', 'N') default 'N' not null comment '유튜브 기능 사용 여부',
+    url_link_yn enum('Y', 'N') default 'N' not null comment '링크 기능 사용 여부',
     del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
     ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
