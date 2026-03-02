@@ -18,7 +18,7 @@
                         <tbody>
                             <!-- 기본정보 -->
                             <tr>
-                                <th colspan="2" class="bg-success text-white">기본정보</th>
+                                <th colspan="2" class="bg-success bg-opacity-75 text-white">기본정보</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">게시판 아이디</th>
@@ -39,7 +39,7 @@
 
                             <!-- 카테고리 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-success text-white">카테고리 설정</th>
+                                <th colspan="2" class="bg-success bg-opacity-75 text-white">카테고리 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">카테고리 사용여부</th>
@@ -52,7 +52,7 @@
 
                             <!-- 사용자 화면 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-success text-white">사용자 화면 설정</th>
+                                <th colspan="2" class="bg-success bg-opacity-75 text-white">사용자 화면 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">사용자 글쓰기 가능 여부</th>
@@ -79,9 +79,9 @@
                                 <td><?= code_replace('youtube_yn', $info->youtube_yn) ?></td>
                             </tr>
 
-                            <!-- 권한 설정 -->
+                            <!-- 관리자 수정 권한 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-success text-white">권한 설정</th>
+                                <th colspan="2" class="bg-success bg-opacity-75 text-white">관리자 수정 권한 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">입력일 수정 기능 사용 여부</th>
@@ -92,9 +92,19 @@
                                 <td><?= code_replace('hit_edit_yn', $info->hit_edit_yn) ?></td>
                             </tr>
 
+                            <!-- 권한별 접속 설정 -->
+                            <tr>
+                                <th colspan="2" class="bg-success bg-opacity-75 text-white">권한별 접속 설정</th>
+                            </tr>
+<?php   foreach($authority_list as $no => $val) { ?>
+                            <tr>
+                                <th class="align-middle bg-light"><?=code_replace("authority_role", $val->authority_role) ?></th>
+                                <td><?=$val->auth_group ?></td>
+                            </tr>
+<?php   } ?>
                             <!-- 파일 업로드 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-success text-white">파일 업로드 설정</th>
+                                <th colspan="2" class="bg-success bg-opacity-75 text-white">파일 업로드 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">최대 첨부파일 수</th>
@@ -111,7 +121,7 @@
 
                             <!-- 포인트 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-success text-white">포인트 설정</th>
+                                <th colspan="2" class="bg-success bg-opacity-75 text-white">포인트 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">글 작성시 지급 포인트</th>
@@ -124,7 +134,7 @@
 
                             <!-- 폼 양식 설정 -->
                             <tr>
-                                <th colspan="2" class="bg-success text-white">폼 양식 설정</th>
+                                <th colspan="2" class="bg-success bg-opacity-75 text-white">폼 양식 설정</th>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">폼 양식 사용 여부</th>

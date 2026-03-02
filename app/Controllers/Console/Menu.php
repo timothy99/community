@@ -34,7 +34,7 @@ class Menu extends BaseController
         $result = true;
         $message = '정상';
 
-        $info = (object)array();
+        $info = new \stdClass();
         $info->menu_idx = 0;
         $info->upper_idx = $upper_idx;
         $info->idx1 = 0;

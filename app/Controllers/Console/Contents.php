@@ -58,7 +58,7 @@ class Contents extends BaseController
         $result = true;
         $message = '정상';
 
-        $info = (object)array();
+        $info = new \stdClass();
         $info->contents_idx = 0;
         $info->contents_id = '';
         $info->title = '';

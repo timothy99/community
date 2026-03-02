@@ -115,6 +115,11 @@ function code_replace($category, $text)
     $replace['pdf_yn']['N'] = '미사용';
     $replace['youtube_yn']['Y'] = '사용';
     $replace['youtube_yn']['N'] = '미사용';
+    $replace["authority_role"]["list"] = "목록";
+    $replace["authority_role"]["view"] = "상세";
+    $replace["authority_role"]["write"] = "쓰기";
+    $replace["authority_role"]["edit"] = "수정";
+    $replace["authority_role"]["delete"] = "삭제";
 
     return isset($replace[$category][$text]) ? $replace[$category][$text] : $text;
 }

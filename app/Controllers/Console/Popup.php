@@ -57,7 +57,7 @@ class Popup extends BaseController
         $result = true;
         $message = '정상';
 
-        $info = (object)array();
+        $info = new \stdClass();
         $info->popup_idx = 0;
         $info->title = '';
         $info->popup_file = '';

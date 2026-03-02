@@ -256,7 +256,7 @@ class MemberModel extends Model
         } else {
             $result = false;
             $message = '회원정보가 다릅니다. 다시 확인해주세요.';
-            $member_info = (object)array();
+            $member_info = new \stdClass();
         }
 
         $proc_result = array();
@@ -289,7 +289,7 @@ class MemberModel extends Model
         } else {
             $result = false;
             $message = '회원정보가 다릅니다. 다시 확인해주세요.';
-            $info = (object)array();
+            $info = new \stdClass();
         }
 
         $proc_result = array();

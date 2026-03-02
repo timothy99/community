@@ -45,13 +45,13 @@ class SettingsModel extends Model
         $cnt = 1;
         while ($cnt == 1) {
             $random_board_number = getRandomString(6, 4);
-            $random_board_id = "board".$random_board_number;
+            $random_board_id = 'board'.$random_board_number;
 
             $db = $this->db;
-            $builder = $db->table("board_config");
-            $builder->select("count(*) as cnt");
-            $builder->where("del_yn", "N");
-            $builder->where("board_id", $random_board_id);
+            $builder = $db->table('board_config');
+            $builder->select('count(*) as cnt');
+            $builder->where('del_yn', 'N');
+            $builder->where('board_id', $random_board_id);
             $info = $builder->get()->getRow();
             $cnt = $info->cnt;
             if ($cnt == 0) {
@@ -92,6 +92,15 @@ class SettingsModel extends Model
         $comment_point = $data['comment_point'];
         $form_style_yn = $data['form_style_yn'];
         $form_style = $data['form_style'];
+        $authority_arr = $data['authority_arr'];
+
+        $category_arr = explode('||', $category);
+        foreach($category_arr as $no => $val) {
+            if ($val == null) {
+                unset($category_arr[$no]);
+            }
+        }
+        $category = implode('||', $category_arr);
 
         $db = $this->db;
         $db->transStart();
@@ -125,6 +134,28 @@ class SettingsModel extends Model
         $builder->set('upd_date', $today);
         $result = $builder->insert();
         $insert_id = $db->insertID();
+
+        if (isset($authority_arr) && is_array($authority_arr)) {
+            $builder = $db->table('board_authority');
+            $builder->where('board_id', $board_id);
+            $builder->delete();
+            foreach ($authority_arr as $role => $auth_groups) {
+                if (is_array($auth_groups)) {
+                    foreach ($auth_groups as $no => $auth_group) {
+                        $builder = $db->table('board_authority');
+                        $builder->set('board_id', $board_id);
+                        $builder->set('authority_role', $role);
+                        $builder->set('auth_group', $auth_group);
+                        $builder->set('del_yn', 'N');
+                        $builder->set('ins_id', $user_id);
+                        $builder->set('ins_date', $today);
+                        $builder->set('upd_id', $user_id);
+                        $builder->set('upd_date', $today);
+                        $result = $builder->insert();
+                    }
+                }
+            }
+        }
 
         $db->transComplete();
 
@@ -171,6 +202,15 @@ class SettingsModel extends Model
         $comment_point = $data['comment_point'];
         $form_style_yn = $data['form_style_yn'];
         $form_style = $data['form_style'];
+        $authority_arr = $data['authority_arr'];
+
+        $category_arr = explode('||', $category);
+        foreach($category_arr as $no => $val) {
+            if ($val == null) {
+                unset($category_arr[$no]);
+            }
+        }
+        $category = implode('||', $category_arr);
 
         $db = $this->db;
         $db->transStart();
@@ -201,6 +241,28 @@ class SettingsModel extends Model
         $builder->set('upd_date', $today);
         $builder->where('board_config_idx', $board_config_idx);
         $result = $builder->update();
+
+        if (isset($authority_arr) && is_array($authority_arr)) {
+            $builder = $db->table('board_authority');
+            $builder->where('board_id', $board_id);
+            $builder->delete();
+            foreach ($authority_arr as $role => $auth_groups) {
+                if (is_array($auth_groups)) {
+                    foreach ($auth_groups as $no => $auth_group) {
+                        $builder = $db->table('board_authority');
+                        $builder->set('board_id', $board_id);
+                        $builder->set('authority_role', $role);
+                        $builder->set('auth_group', $auth_group);
+                        $builder->set('del_yn', 'N');
+                        $builder->set('ins_id', $user_id);
+                        $builder->set('ins_date', $today);
+                        $builder->set('upd_id', $user_id);
+                        $builder->set('upd_date', $today);
+                        $result = $builder->insert();
+                    }
+                }
+            }
+        }
 
         $db->transComplete();
 
@@ -300,7 +362,7 @@ class SettingsModel extends Model
 
             $data = array();
             $data['member_id'] = $val->member_id;
-            $list[$no]->member_info = $member_model->getMemberInfo($data)["info"];
+            $list[$no]->member_info = $member_model->getMemberInfo($data)['info'];
         }
 
         $proc_result = array();
@@ -413,6 +475,59 @@ class SettingsModel extends Model
         $model_result['message'] = $message;
 
         return $model_result;
+    }
+
+    // 게시판 권한 목록 불러오기
+    public function getBoardAuthorityList($data)
+    {
+        $result = true;
+        $message = '목록 불러오기가 완료되었습니다.';
+
+        $board_id = $data['board_id'];
+
+        $db = $this->db;
+        $builder = $db->table('board_authority');
+        $builder->where('board_id', $board_id);
+        $builder->where('del_yn', 'N');
+        $list = $builder->get()->getResult();
+
+        // authority_role 기준으로 auth_group을 묶어서 콤마로 구분
+        $grouped_list = array();
+        foreach ($list as $item) {
+            $role = $item->authority_role;
+            if (!isset($grouped_list[$role])) {
+                $grouped_list[$role] = array(
+                    'authority_role' => $role,
+                    'auth_groups' => array()
+                );
+            }
+            $grouped_list[$role]['auth_groups'][] = $item->auth_group;
+        }
+
+        // 최종 결과 생성 - authority_role과 auth_group만 포함
+        $list2 = array();
+        foreach ($grouped_list as $group) {
+            $result_item = new \stdClass();
+            $result_item->authority_role = $group['authority_role'];
+            $result_item->auth_group = implode(', ', $group['auth_groups']);
+            $list2[] = $result_item;
+        }
+
+        // authority_role 기준으로 정렬 (list, view, write, edit, delete 순서)
+        $sort_order = array('list' => 1, 'view' => 2, 'write' => 3, 'edit' => 4, 'delete' => 5);
+        usort($list2, function($a, $b) use ($sort_order) {
+            $order_a = isset($sort_order[$a->authority_role]) ? $sort_order[$a->authority_role] : 999;
+            $order_b = isset($sort_order[$b->authority_role]) ? $sort_order[$b->authority_role] : 999;
+            return $order_a - $order_b;
+        });
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['list'] = $list;
+        $proc_result['list2'] = $list2;
+
+        return $proc_result;
     }
 
 }

@@ -191,9 +191,9 @@
             </div>
         </div>
 
-        <!-- 권한 설정 -->
+        <!-- 관리자 수정 권한 설정 -->
         <div class="card mb-4">
-            <div class="card-header bg-success bg-opacity-75 text-white">권한 설정</div>
+            <div class="card-header bg-success bg-opacity-75 text-white">관리자 수정 권한 설정</div>
             <div class="card-body">
                 <!-- 입력일 수정 기능 -->
                 <div class="mb-3">
@@ -226,7 +226,64 @@
                     </div>
                     <small class="text-muted">관리자에서 게시글 조회수를 수동으로 수정할 수 있는 기능입니다.</small>
                 </div>
+            </div>
+        </div>
 
+        <!-- 권한별 접속 설정 -->
+        <div class="card mb-4">
+            <div class="card-header bg-danger bg-opacity-75 text-white">권한별 접속 설정</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="list_authority" class="form-label">목록</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="list_authority1" name="list_authority[]" value="전체">
+                            <label class="form-check-label" for="list_authority1">전체</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="list_authority2" name="list_authority[]" value="로그인">
+                            <label class="form-check-label" for="list_authority2">로그인</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="list_authority3" name="list_authority[]" value="관리자">
+                            <label class="form-check-label" for="list_authority3">관리자</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="view_authority" class="form-label">상세</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="view_authority1" name="view_authority[]" value="전체">
+                            <label class="form-check-label" for="view_authority1">전체</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="view_authority2" name="view_authority[]" value="로그인">
+                            <label class="form-check-label" for="view_authority2">로그인</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="view_authority3" name="view_authority[]" value="관리자">
+                            <label class="form-check-label" for="view_authority3">관리자</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="write_authority" class="form-label">쓰기</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="write_authority1" name="write_authority[]" value="전체">
+                            <label class="form-check-label" for="write_authority1">전체</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="write_authority2" name="write_authority[]" value="로그인">
+                            <label class="form-check-label" for="write_authority2">로그인</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="write_authority3" name="write_authority[]" value="관리자">
+                            <label class="form-check-label" for="write_authority3">관리자</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -340,6 +397,18 @@
         $('input[name="pdf_yn"][value="<?=$info->pdf_yn ?>"]').prop('checked', true);
         $('input[name="youtube_yn"][value="<?=$info->youtube_yn ?>"]').prop('checked', true);
         $('#type').val('<?=$info->type ?>');
+
+<?php   foreach ($authority_list as $val){ ?>
+        var auth_groups = "<?=$val->auth_group?>".split(', ');
+        var authority_role = "<?=$val->authority_role?>";
+
+        // authority_role에 따라 해당하는 체크박스들을 체크
+        auth_groups.forEach(function(group) {
+            if (group.trim() !== '') {
+                $('input[name="' + authority_role + '_authority[]"][value="' + group.trim() + '"]').prop('checked', true);
+            }
+        });
+<?php   } ?>
     });
 
     // 게시판 설정 업데이트
@@ -353,12 +422,10 @@
         var result = proc_result.result;
         var message = proc_result.message;
         var return_url = proc_result.return_url;
-        
+
+        alert(message);
         if (result == true) {
-            alert('저장되었습니다.');
             location.href = return_url;
-        } else {
-            alert(message);
         }
     }
 </script>

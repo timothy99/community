@@ -61,7 +61,7 @@ class Settings extends BaseController
 
         $random_board_number = $settings_model->getBoardNumber();
 
-        $info = (object)array();
+        $info = new \stdClass();
         $info->board_config_idx = 0;
         $info->board_id = 'board'.$random_board_number;
         $info->type = 'board';
@@ -124,27 +124,39 @@ class Settings extends BaseController
         $form_style_yn = $this->request->getPost('form_style_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $form_style = sanitizeHtml($this->request->getPost('summer_code'));
 
+        $list_authority = $this->request->getPost('list_authority');
+        $view_authority = $this->request->getPost('view_authority');
+        $write_authority = $this->request->getPost('write_authority');
+
+        $authority_arr = array();
+        $authority_arr['list'] = $list_authority;
+        $authority_arr['view'] = $view_authority;
+        $authority_arr['write'] = $write_authority;
+
         // 유효성 검사
         if ($board_id == null || $board_id == '') { $result = false; $message = '게시판 아이디를 입력해주세요.'; }
-        if ($result && ($title == null || $title == '')) { $result = false; $message = '게시판 제목을 입력해주세요.'; }
-        if ($result && ($base_rows == null || $base_rows == '' || $base_rows < 1)) { $result = false; $message = '화면에 보여줄 줄 수를 입력해주세요.'; }
-        if ($result && ($file_cnt == null || $file_cnt == '' || $file_cnt < 0)) { $result = false; $message = '최대 첨부파일 수를 입력해주세요.'; }
-        if ($result && ($file_upload_size_limit == null || $file_upload_size_limit == '' || $file_upload_size_limit < 1)) { $result = false; $message = '첨부파일 1개당 업로드 용량 제한을 입력해주세요.'; }
-        if ($result && ($file_upload_size_total == null || $file_upload_size_total == '' || $file_upload_size_total < 1)) { $result = false; $message = '첨부파일 전체 업로드 용량 제한을 입력해주세요.'; }
-        if ($result && ($write_point == null || $write_point == '' || $write_point < 0)) { $result = false; $message = '글쓰기 포인트를 입력해주세요.'; }
-        if ($result && ($category_yn == null || $category_yn == '')) { $result = false; $message = '카테고리 사용여부를 선택해주세요.'; }
-        if ($result && ($user_write == null || $user_write == '')) { $result = false; $message = '사용자 글쓰기 가능 여부를 선택해주세요.'; }
-        if ($result && ($comment_write == null || $comment_write == '')) { $result = false; $message = '사용자 댓글쓰기 가능 여부를 선택해주세요.'; }
-        if ($result && ($reg_date_yn == null || $reg_date_yn == '')) { $result = false; $message = '입력일 수정 기능 사용 여부를 선택해주세요.'; }
-        if ($result && ($hit_edit_yn == null || $hit_edit_yn == '')) { $result = false; $message = '조회수 수정 기능 사용 여부를 선택해주세요.'; }
-        if ($result && ($hit_yn == null || $hit_yn == '')) { $result = false; $message = '조회수 노출 기능 사용 여부를 선택해주세요.'; }
-        if ($result && ($heart_yn == null || $heart_yn == '')) { $result = false; $message = '공감 기능 사용 여부를 선택해주세요.'; }
-        if ($result && ($pdf_yn == null || $pdf_yn == '')) { $result = false; $message = 'PDF 보기 기능 사용 여부를 선택해주세요.'; }
-        if ($result && ($youtube_yn == null || $youtube_yn == '')) { $result = false; $message = '유튜브 기능 사용 여부를 선택해주세요.'; }
-        if ($result && ($reg_date_yn == null || $reg_date_yn == '')) { $result = false; $message = '입력일 수정 기능 사용 여부를 선택해주세요.'; }
-        if ($result && ($hit_edit_yn == null || $hit_edit_yn == '')) { $result = false; $message = '조회수 수정 기능 사용 여부를 선택해주세요.'; }
-        if ($result && ($form_style_yn == null || $form_style_yn == '')) { $result = false; $message = '폼 스타일 사용 여부를 선택해주세요.'; }
+        if ($title == null || $title == '') { $result = false; $message = '게시판 제목을 입력해주세요.'; }
+        if ($base_rows == null || $base_rows == '' || $base_rows < 1) { $result = false; $message = '화면에 보여줄 줄 수를 입력해주세요.'; }
+        if ($file_cnt == null || $file_cnt == '' || $file_cnt < 0) { $result = false; $message = '최대 첨부파일 수를 입력해주세요.'; }
+        if ($file_upload_size_limit == null || $file_upload_size_limit == '' || $file_upload_size_limit < 1) { $result = false; $message = '첨부파일 1개당 업로드 용량 제한을 입력해주세요.'; }
+        if ($file_upload_size_total == null || $file_upload_size_total == '' || $file_upload_size_total < 1) { $result = false; $message = '첨부파일 전체 업로드 용량 제한을 입력해주세요.'; }
+        if ($write_point == null || $write_point == '' || $write_point < 0) { $result = false; $message = '글쓰기 포인트를 입력해주세요.'; }
+        if ($category_yn == null || $category_yn == '') { $result = false; $message = '카테고리 사용여부를 선택해주세요.'; }
+        if ($user_write == null || $user_write == '') { $result = false; $message = '사용자 글쓰기 가능 여부를 선택해주세요.'; }
+        if ($comment_write == null || $comment_write == '') { $result = false; $message = '사용자 댓글쓰기 가능 여부를 선택해주세요.'; }
+        if ($reg_date_yn == null || $reg_date_yn == '') { $result = false; $message = '입력일 수정 기능 사용 여부를 선택해주세요.'; }
+        if ($hit_edit_yn == null || $hit_edit_yn == '') { $result = false; $message = '조회수 수정 기능 사용 여부를 선택해주세요.'; }
+        if ($hit_yn == null || $hit_yn == '') { $result = false; $message = '조회수 노출 기능 사용 여부를 선택해주세요.'; }
+        if ($heart_yn == null || $heart_yn == '') { $result = false; $message = '공감 기능 사용 여부를 선택해주세요.'; }
+        if ($pdf_yn == null || $pdf_yn == '') { $result = false; $message = 'PDF 보기 기능 사용 여부를 선택해주세요.'; }
+        if ($youtube_yn == null || $youtube_yn == '') { $result = false; $message = '유튜브 기능 사용 여부를 선택해주세요.'; }
+        if ($reg_date_yn == null || $reg_date_yn == '') { $result = false; $message = '입력일 수정 기능 사용 여부를 선택해주세요.'; }
+        if ($hit_edit_yn == null || $hit_edit_yn == '') { $result = false; $message = '조회수 수정 기능 사용 여부를 선택해주세요.'; }
+        if ($form_style_yn == null || $form_style_yn == '') { $result = false; $message = '폼 스타일 사용 여부를 선택해주세요.'; }
         if ($result && !preg_match('/^[a-z0-9]+$/', $board_id)) { $result = false; $message = '게시판 아이디는 영문 소문자와 숫자만 사용 가능합니다.'; }
+        if ($list_authority == null || $list_authority == '') { $result = false; $message = '목록 권한을 선택해주세요.'; }
+        if ($view_authority == null || $view_authority == '') { $result = false; $message = '상세 권한을 선택해주세요.'; }
+        if ($write_authority == null || $write_authority == '') { $result = false; $message = '쓰기 권한을 선택해주세요.'; }
 
         $data = array();
         $data['board_config_idx'] = $board_config_idx;
@@ -169,6 +181,7 @@ class Settings extends BaseController
         $data['comment_point'] = $comment_point;
         $data['form_style_yn'] = $form_style_yn;
         $data['form_style'] = $form_style;
+        $data['authority_arr'] = $authority_arr;
 
         if ($result == true) {
             if ($board_config_idx == 0) {
@@ -204,10 +217,24 @@ class Settings extends BaseController
         $model_result = $settings_model->getBoardInfo($data);
         $info = $model_result['info'];
 
+        // 게시판 정보가 없으면 목록으로 이동
+        if ($result == false || $model_result['info'] === null) {
+            redirect_alert($message, '/csl/board/config/list');
+            exit;
+        }
+
+        $model_result = $settings_model->getBoardAdminList($data);
+        $admin_list = $model_result['list'];
+
+        $model_result = $settings_model->getBoardAuthorityList($data);
+        $authority_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['admin_list'] = $admin_list;
+        $proc_result['authority_list'] = $authority_list;
 
         return aview('console/settings/board/edit', $proc_result);
     }
@@ -251,14 +278,24 @@ class Settings extends BaseController
         $message = $model_result['message'];
         $info = $model_result['info'];
 
+        // 게시판 정보가 없으면 목록으로 이동
+        if ($result == false || $model_result['info'] === null) {
+            redirect_alert($message, '/csl/board/config/list');
+            exit;
+        }
+
         $model_result = $settings_model->getBoardAdminList($data);
         $admin_list = $model_result['list'];
+
+        $model_result = $settings_model->getBoardAuthorityList($data);
+        $authority_list = $model_result['list'];
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
         $proc_result['admin_list'] = $admin_list;
+        $proc_result['authority_list'] = $authority_list;
 
         return aview('console/settings/board/view', $proc_result);
     }
@@ -294,16 +331,16 @@ class Settings extends BaseController
         $result = true;
         $message = '정상';
 
-        $search_text = $this->request->getPost("search_text", FILTER_SANITIZE_SPECIAL_CHARS);
+        $search_text = $this->request->getPost('search_text', FILTER_SANITIZE_SPECIAL_CHARS);
         $strlen = mb_strlen($search_text);
         if ($strlen < 2) {
             $result = false;
-            $message = "검색어는 최소 2자 이상 입력해주세요.";
+            $message = '검색어는 최소 2자 이상 입력해주세요.';
         }
 
         if ($result == true) {
             $data = array();
-            $data["search_text"] = $search_text;
+            $data['search_text'] = $search_text;
 
             $model_result = $settings_model->getMemberList($data);
             $return_html = view('console/settings/admin/search', $model_result);
@@ -334,7 +371,7 @@ class Settings extends BaseController
             $result = false;
             $message = '게시판 아이디가 누락되었습니다.';
         }
-        if ($result && ($member_id == null || $member_id == '')) {
+        if ($member_id == null || $member_id == '') {
             $result = false;
             $message = '회원 아이디가 누락되었습니다.';
         }

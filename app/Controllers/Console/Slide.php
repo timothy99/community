@@ -57,7 +57,7 @@ class Slide extends BaseController
         $result = true;
         $message = '정상';
 
-        $info = (object)array();
+        $info = new \stdClass();
         $info->slide_idx = 0;
         $info->order_no = 0;
         $info->title = '';

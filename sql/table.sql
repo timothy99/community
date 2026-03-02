@@ -141,8 +141,8 @@ create table mng_board_config (
     primary key (board_config_idx)
 ) comment='게시판 설정 관리' collate='utf8mb4_unicode_ci';
 
-drop table if exists gst_board_admin;
-create table gst_board_admin (
+drop table if exists mng_board_admin;
+create table mng_board_admin (
     board_admin_idx int not null auto_increment comment '인덱스',
     board_id varchar(20) default null comment '게시판 아이디',
     member_id varchar(64) not null comment '사용자 아이디',
@@ -302,7 +302,7 @@ create table mng_youtube (
     primary key (youtube_idx)
 ) comment='유튜브 재생 목록' collate='utf8mb4_unicode_ci';
 
-create table gst_config (
+create table mng_config (
     config_idx int auto_increment comment '인덱스' primary key,
     title varchar(300) null comment '회사명',
     phone varchar(13) null comment '전화',
@@ -324,4 +324,19 @@ create table gst_config (
     smtp_mail varchar(200) null comment 'SMTP 발송자 메일'
 ) comment '설정 관리';
 
-INSERT INTO gst_config (title, phone, fax, email, work_hour, post_code, addr1, addr2, biz_no, company_logo, program_ver, smtp_yn, smtp_host, smtp_user, smtp_pass, smtp_port, smtp_name, smtp_mail) VALUES ('회사', '000-111-2222', '', 'email@test.com', '평일 9:00 ~ 18:00 토요일/공휴일 휴무', '00000', '서울 중구 세종로', '', '123-45-67890', '', '1', 'Y', 'smtp.mail.nate.com', 'bjm1175', 'Nate4728!', '587', '회사', 'bjm1175@nate.com');
+INSERT INTO mng_config (title, phone, fax, email, work_hour, post_code, addr1, addr2, biz_no, company_logo, program_ver, smtp_yn, smtp_host, smtp_user, smtp_pass, smtp_port, smtp_name, smtp_mail) VALUES ('회사', '000-111-2222', '', 'email@test.com', '평일 9:00 ~ 18:00 토요일/공휴일 휴무', '00000', '서울 중구 세종로', '', '123-45-67890', '', '1', 'Y', '', '', '', '', '', '');
+
+drop table if exists mng_board_authority;
+create table mng_board_authority (
+    board_authority_idx int not null auto_increment comment '인덱스',
+    board_id varchar(20) default null comment '게시판 아이디',
+    auth_group varchar(20) default null comment '권한 그룹',
+    authority_role varchar(20) not null comment '권한 역할(list-목록, view-상세, write-쓰기)',
+    del_yn varchar(1) not null default 'N' comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key index1 (board_id),
+    primary key (board_authority_idx)
+) comment='게시판 권한 설정' collate='utf8mb4_unicode_ci';

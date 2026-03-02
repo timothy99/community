@@ -51,7 +51,7 @@ function setUserSessionInfo($session_id, $session_value)
 function setBaseSession()
 {
     // 세션이 비어 있으면 언어설정만 한국어로
-    $session_info = (object)array(); // 기본 만들기
+    $session_info = new \stdClass(); // 기본 만들기
     $session_info->member_idx = 0; // 인덱스
     $session_info->member_id = "guest"; // 아이디
     $session_info->member_nickname = "손님"; // 별명

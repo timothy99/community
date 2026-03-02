@@ -64,7 +64,7 @@ class Member extends BaseController
             if (isset($member_info->member_idx) == false) {
                 $result = false;
                 $message = '회원정보가 없거나 아이디 또는 암호가 틀립니다. 회원정보를 확인하세요.';
-                $member_info = (object)array();
+                $member_info = new \stdClass();
                 $auth_group = 'guest';
             } else {
                 setUserSessionInfo('member_idx', $member_info->member_idx);
@@ -82,7 +82,7 @@ class Member extends BaseController
         } else {
             $result = false;
             $message = '회원정보가 없습니다. 회원정보를 확인하세요.';
-            $member_info = (object)array();
+            $member_info = new \stdClass();
         }
 
         $proc_result = array();
