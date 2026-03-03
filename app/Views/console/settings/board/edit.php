@@ -19,14 +19,14 @@
             <div class="card-body">
                 <!-- 게시판 아이디 -->
                 <div class="mb-3">
-                    <label for="board_id" class="form-label">게시판 아이디 <span class="text-danger">*</span></label>
+                    <label for="board_id" class="form-label">게시판 아이디</label>
                     <input type="text" class="form-control" id="board_id" name="board_id" placeholder="게시판 아이디를 입력하세요 (예: notice, qna)" value="<?= $info->board_id ?>" maxlength="20">
                     <small class="text-muted">영문 소문자, 숫자만 사용 가능합니다.</small>
                 </div>
 
                 <!-- 제목 -->
                 <div class="mb-3">
-                    <label for="title" class="form-label">게시판 제목 <span class="text-danger">*</span></label>
+                    <label for="title" class="form-label">게시판 제목</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="게시판 제목을 입력하세요" value="<?= $info->title ?>" maxlength="1000">
                 </div>
 
@@ -44,7 +44,7 @@
 
                 <!-- 화면에 보여줄 줄 수 -->
                 <div class="mb-3">
-                    <label for="base_rows" class="form-label">화면에 보여줄 줄 수 <span class="text-danger">*</span></label>
+                    <label for="base_rows" class="form-label">화면에 보여줄 줄 수</label>
                     <input type="number" class="form-control w-25" id="base_rows" name="base_rows" placeholder="10" value="<?= $info->base_rows ?>" min="1">
                     <small class="text-muted">한 페이지에 표시할 게시글 수입니다.</small>
                 </div>
@@ -57,7 +57,7 @@
             <div class="card-body">
                 <!-- 카테고리 사용여부 -->
                 <div class="mb-3">
-                    <label class="form-label">카테고리 사용여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">카테고리 사용여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="category_yn" id="category_yn_y" value="Y">
@@ -86,7 +86,7 @@
 
                 <!-- 사용자 글쓰기 권한 -->
                 <div class="mb-3">
-                    <label class="form-label">사용자 글쓰기 가능 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">사용자 글쓰기 가능 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="user_write" id="user_write_y" value="Y">
@@ -102,7 +102,7 @@
 
                 <!-- 사용자 댓글쓰기 권한 -->
                 <div class="mb-3">
-                    <label class="form-label">사용자 댓글쓰기 가능 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">사용자 댓글쓰기 가능 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="comment_write" id="comment_write_y" value="Y">
@@ -118,7 +118,7 @@
 
                 <!-- 조회수 노출 기능 사용여부 -->
                 <div class="mb-3">
-                    <label class="form-label">조회수 노출 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">조회수 노출 기능 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="hit_yn" id="hit_yn_y" value="Y">
@@ -134,7 +134,7 @@
 
                 <!-- 공감 기능 사용여부 -->
                 <div class="mb-3">
-                    <label class="form-label">공감 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">공감 기능 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="heart_yn" id="heart_yn_y" value="Y">
@@ -150,7 +150,7 @@
 
                 <!-- PDF 보기 기능 사용여부 -->
                 <div class="mb-3">
-                    <label class="form-label">PDF 보기 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">PDF 보기 기능 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="pdf_yn" id="pdf_yn_y" value="Y">
@@ -166,7 +166,7 @@
 
                 <!-- 유튜브 기능 사용여부 -->
                 <div class="mb-3">
-                    <label class="form-label">유튜브 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">유튜브 기능 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="youtube_yn" id="youtube_yn_y" value="Y">
@@ -182,7 +182,7 @@
 
                 <!-- 링크 기능 사용여부 -->
                 <div class="mb-3">
-                    <label class="form-label">링크 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">링크 기능 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="url_link_yn" id="url_link_yn_y" value="Y">
@@ -198,7 +198,7 @@
 
                 <!-- 대표 이미지 기능 사용여부 -->
                 <div class="mb-3">
-                    <label class="form-label">대표 이미지 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">대표 이미지 기능 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="main_image_yn" id="main_image_yn_y" value="Y">
@@ -221,7 +221,7 @@
             <div class="card-body">
                 <!-- 입력일 수정 기능 -->
                 <div class="mb-3">
-                    <label class="form-label">입력일 수정 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">입력일 수정 기능 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="reg_date_yn" id="reg_date_yn_y" value="Y">
@@ -237,7 +237,7 @@
 
                 <!-- 조회수 수정 기능 -->
                 <div class="mb-3">
-                    <label class="form-label">조회수 수정 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">조회수 수정 기능 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="hit_edit_yn" id="hit_edit_yn_y" value="Y">
@@ -317,7 +317,7 @@
             <div class="card-body">
                 <!-- 최대 첨부파일 수 -->
                 <div class="mb-3">
-                    <label for="file_cnt" class="form-label">최대 첨부파일 수 <span class="text-danger">*</span></label>
+                    <label for="file_cnt" class="form-label">최대 첨부파일 수</label>
                     <input type="number" class="form-control w-25" id="file_cnt" name="file_cnt" placeholder="0" value="<?= $info->file_cnt ?>" min="0">
                     <small class="text-muted">0을 입력하면 파일 업로드를 사용하지 않습니다.</small>
                 </div>
@@ -364,7 +364,7 @@
             <div class="card-body">
                 <!-- 폼 양식 사용여부 -->
                 <div class="mb-3">
-                    <label class="form-label">폼 양식 사용 여부 <span class="text-danger">*</span></label>
+                    <label class="form-label">폼 양식 사용 여부</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="form_style_yn" id="form_style_yn_y" value="Y">

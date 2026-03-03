@@ -12,13 +12,13 @@
             <div class="card-body">
                 <!-- 이름 -->
                 <div class="mb-3">
-                    <label for="member_name" class="form-label">이름 <span class="text-danger">*</span></label>
+                    <label for="member_name" class="form-label">이름</label>
                     <input type="text" class="form-control w-25" id="member_name" name="member_name" placeholder="이름을 입력하세요" value="<?= $info->member_name ?>">
                 </div>
 
                 <!-- 아이디 -->
                 <div class="mb-3">
-                    <label for="member_id" class="form-label">아이디 <span class="text-danger">*</span></label>
+                    <label for="member_id" class="form-label">아이디</label>
                     <input type="text" class="form-control bg-light" placeholder="아이디를 입력하세요" value="<?= $info->member_id ?>" readonly>
                 </div>
 

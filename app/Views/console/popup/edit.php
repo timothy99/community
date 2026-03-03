@@ -13,19 +13,19 @@
             <div class="card-body">
                 <!-- 제목 -->
                 <div class="mb-3">
-                    <label for="title" class="form-label">제목 <span class="text-danger">*</span></label>
+                    <label for="title" class="form-label">제목</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" value="<?= $info->title ?>">
                 </div>
 
                 <!-- URL 링크 -->
                 <div class="mb-3">
-                    <label for="url_link" class="form-label">링크 URL <span class="text-danger">*</span></label>
+                    <label for="url_link" class="form-label">링크 URL</label>
                     <input type="text" class="form-control" id="url_link" name="url_link" placeholder="http로 시작하는 주소 전체. 내부 링크는 /부터 입력도 가능합니다." value="<?= $info->url_link ?>">
                 </div>
 
                 <!-- 팝업 위치 -->
                 <div class="mb-3">
-                    <label class="form-label">팝업 위치 <span class="text-danger">*</span></label>
+                    <label class="form-label">팝업 위치</label>
                     <div class="row g-2">
                         <div class="col-md-6">
                             <div class="input-group">
@@ -46,7 +46,7 @@
 
                 <!-- 팝업 크기 -->
                 <div class="mb-3">
-                    <label class="form-label">팝업 크기 <span class="text-danger">*</span></label>
+                    <label class="form-label">팝업 크기</label>
                     <div class="row g-2">
                         <div class="col-md-6">
                             <div class="input-group">
@@ -67,7 +67,7 @@
 
                 <!-- 다시 보지 않음 시간 -->
                 <div class="mb-3">
-                    <label for="disabled_hours" class="form-label">다시 보지 않음 시간 <span class="text-danger">*</span></label>
+                    <label for="disabled_hours" class="form-label">다시 보지 않음 시간</label>
                     <div class="input-group w-50">
                         <input type="number" class="form-control" id="disabled_hours" name="disabled_hours" placeholder="24" value="<?= $info->disabled_hours ?>">
                         <span class="input-group-text">시간</span>
@@ -106,7 +106,7 @@
 
                 <!-- 팝업 이미지 -->
                 <div class="mb-3">
-                    <label for="popup_file" class="form-label">팝업 이미지 <span class="text-danger">*</span></label>
+                    <label for="popup_file" class="form-label">팝업 이미지</label>
                     <input type="file" class="form-control" id="popup_file" name="popup_file" onchange="uploadFile(this.id, 'image', 'uploadAfter')">
                     <div class="mb-2 mt-2" id="popup_file_view">
 <?php   if ($info->popup_file_info != null) { ?>

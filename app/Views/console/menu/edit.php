@@ -16,19 +16,19 @@
             <div class="card-body">
                 <!-- 메뉴명 -->
                 <div class="mb-3">
-                    <label for="menu_name" class="form-label">메뉴명 <span class="text-danger">*</span></label>
+                    <label for="menu_name" class="form-label">메뉴명</label>
                     <input type="text" class="form-control" id="menu_name" name="menu_name" placeholder="메뉴명을 입력하세요" value="<?= $info->menu_name ?>">
                 </div>
 
                 <!-- 정렬순서 -->
                 <div class="mb-3">
-                    <label for="order_no" class="form-label">정렬순서 <span class="text-danger">*</span></label>
+                    <label for="order_no" class="form-label">정렬순서</label>
                     <input type="number" class="form-control w-25" id="order_no" name="order_no" placeholder="숫자를 입력하세요" value="<?= $info->order_no ?>">
                 </div>
 
                 <!-- URL 링크 -->
                 <div class="mb-3">
-                    <label for="url_link" class="form-label">링크 URL <span class="text-danger">*</span></label>
+                    <label for="url_link" class="form-label">링크 URL</label>
                     <input type="text" class="form-control" id="url_link" name="url_link" placeholder="http로 시작하는 주소 전체. 내부 링크는 /부터 입력도 가능합니다." value="<?= $info->url_link ?>">
                 </div>
             </div>

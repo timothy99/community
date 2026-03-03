@@ -12,7 +12,7 @@
             <div class="card-body">
                 <!-- 제목 -->
                 <div class="mb-3">
-                    <label for="title" class="form-label">제목 <span class="text-danger">*</span></label>
+                    <label for="title" class="form-label">제목</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" value="<?= $info->title ?>">
                 </div>
 
