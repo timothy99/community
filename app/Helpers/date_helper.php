@@ -65,6 +65,8 @@ function convertTextToDate($date_text, $input_type, $output_type)
                 $output_date = $input_date->format("y.m.d");
             } elseif ($output_type == 15) {
                 $output_date = $input_date->format("m.d");
+            } elseif ($output_type == 16) {
+                $output_date = $input_date->format("m-d");
             }
         }
     } catch (Throwable $t) {
