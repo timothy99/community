@@ -1,13 +1,5 @@
 <style>
-/* 썸머노트 에디터 기본 폰트 설정 */
-.note-editable {
-    font-family: 'Noto Sans', sans-serif !important;
-}
-.note-editable p,
-.note-editable div,
-.note-editable span {
-    font-family: 'Noto Sans', sans-serif;
-}
+
 </style>
 
 <form id="frm" name="frm">
@@ -202,6 +194,22 @@
                         </div>
                     </div>
                     <small class="text-muted">게시글에서 링크 삽입 기능 사용 여부를 설정합니다.</small>
+                </div>
+
+                <!-- 대표 이미지 기능 사용여부 -->
+                <div class="mb-3">
+                    <label class="form-label">대표 이미지 기능 사용 여부 <span class="text-danger">*</span></label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="main_image_yn" id="main_image_yn_y" value="Y">
+                            <label class="form-check-label" for="main_image_yn_y">사용</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="main_image_yn" id="main_image_yn_n" value="N">
+                            <label class="form-check-label" for="main_image_yn_n">미사용</label>
+                        </div>
+                    </div>
+                    <small class="text-muted">게시글에서 대표 이미지 기능 사용 여부를 설정합니다.</small>
                 </div>
 
             </div>
@@ -413,6 +421,7 @@
         $('input[name="pdf_yn"][value="<?=$info->pdf_yn ?>"]').prop('checked', true);
         $('input[name="youtube_yn"][value="<?=$info->youtube_yn ?>"]').prop('checked', true);
         $('input[name="url_link_yn"][value="<?=$info->url_link_yn ?>"]').prop('checked', true);
+        $('input[name="main_image_yn"][value="<?=$info->main_image_yn ?>"]').prop('checked', true);
         $('#type').val('<?=$info->type ?>');
 
 <?php   foreach ($authority_list as $val){ ?>

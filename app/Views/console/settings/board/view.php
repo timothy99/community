@@ -82,6 +82,10 @@
                                 <th class="align-middle bg-light">링크 기능 사용 여부</th>
                                 <td><?= code_replace('url_link_yn', $info->url_link_yn) ?></td>
                             </tr>
+                            <tr>
+                                <th class="align-middle bg-light">대표 이미지 기능 사용 여부</th>
+                                <td><?= code_replace('main_image_yn', $info->main_image_yn) ?></td>
+                            </tr>
 
                             <!-- 관리자 수정 권한 설정 -->
                             <tr>

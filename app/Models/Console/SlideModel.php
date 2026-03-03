@@ -3,7 +3,7 @@
 namespace App\Models\Console;
 
 use CodeIgniter\Model;
-use App\Models\Console\FileModel;
+use App\Models\User\FileModel;
 
 class SlideModel extends Model
 {

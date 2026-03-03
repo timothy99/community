@@ -24,7 +24,7 @@
 <?php   if ($info->company_logo != null) { ?>
                         <div class="row g-2 align-items-center">
                             <div class="col">
-                                <img src="/csl/file/view/<?= $info->company_logo ?>" class="img-thumbnail" style="width: 300px; height: auto;">
+                                <img src="/file/view/<?= $info->company_logo ?>" class="img-thumbnail" style="width: 300px; height: auto;">
                             </div>
                             <div class="col">
                                 <small class="text-muted">원본파일명</small><br>
@@ -198,7 +198,7 @@
         if (result == true) {
             $('#company_logo_hidden').val(info.file_id);
             var html = '<div class="row g-2 align-items-center">';
-            html += '<div class="col"><img src="/csl/file/view/' + info.file_id + '" class="img-thumbnail" style="width: 300px; height: auto;"></div>';
+            html += '<div class="col"><img src="/file/view/' + info.file_id + '" class="img-thumbnail" style="width: 300px; height: auto;"></div>';
             html += '<div class="col"><small class="text-muted">원본파일명</small><br>' + info.file_name_org + '</div>';
             html += '<div class="col"><small class="text-muted">가로해상도</small><br>' + info.image_width_txt + 'px</div>';
             html += '<div class="col"><small class="text-muted">세로해상도</small><br>' + info.image_height_txt + 'px</div>';

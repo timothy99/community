@@ -122,6 +122,10 @@ function code_replace($category, $text)
     $replace["authority_role"]["delete"] = "삭제";
     $replace["url_link_yn"]["Y"] = "사용";
     $replace["url_link_yn"]["N"] = "미사용";
+    $replace["main_image_yn"]["Y"] = "사용";
+    $replace["main_image_yn"]["N"] = "미사용";
+    $replace["notice_yn"]["Y"] = "공지";
+    $replace["notice_yn"]["N"] = "일반";
 
     return isset($replace[$category][$text]) ? $replace[$category][$text] : $text;
 }

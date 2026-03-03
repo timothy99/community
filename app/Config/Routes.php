@@ -32,13 +32,6 @@ $routes->post('/member/send/password', 'User\Member::sendPassword');
 $routes->get('/member/reset/password/(:any)', 'User\Member::resetPassword/$1');
 $routes->post('/member/update/password', 'User\Member::updatePassword');
 
-$routes->post('/csl/file/upload/general', 'Console\File::uploadGeneral');
-$routes->post('/csl/file/upload/board', 'Console\File::uploadBoard');
-$routes->post('/csl/file/upload/image', 'Console\File::uploadImage');
-$routes->post('/csl/file/upload/original', 'Console\File::uploadOriginal');
-$routes->post('/csl/file/upload/dropzone', 'Console\File::uploadDropzone');
-$routes->get('/csl/file/view/(:any)', 'Console\File::view/$1');
-
 $routes->get('/csl/config/view', 'Console\Config::view');
 $routes->get('/csl/config/edit', 'Console\Config::edit');
 $routes->post('/csl/config/update', 'Console\Config::update');
@@ -57,6 +50,7 @@ $routes->post('/file/upload/image', 'User\File::uploadImage');
 $routes->post('/file/upload/original', 'User\File::uploadOriginal');
 $routes->post('/file/upload/dropzone', 'User\File::uploadDropzone');
 $routes->get('/file/view/(:any)', 'User\File::view/$1');
+$routes->get('/file/download/(:any)', 'User\File::download/$1');
 
 $routes->get("/contents/(:any)", "User\Contents::view/$1");
 
@@ -99,7 +93,7 @@ $routes->get('/csl/board/(:alphanum)/write', 'Console\Board::write/$1');
 $routes->post('/csl/board/(:alphanum)/update', 'Console\Board::update/$1');
 $routes->get('/csl/board/(:alphanum)/view/(:num)', 'Console\Board::view/$1/$2');
 $routes->get('/csl/board/(:alphanum)/edit/(:num)', 'Console\Board::edit/$1/$2');
-$routes->post('/csl/board/(:alphanum)/delete', 'Console\Board::delete/$1');
+$routes->post('/csl/board/(:alphanum)/delete', 'Console\Board::delete');
 
 $routes->get('/csl/settings/board/(:alphanum)/admin/list', 'Console\Settings::boardAdminList/$1');
 $routes->post('/csl/settings/board/(:alphanum)/admin/search', 'Console\Settings::boardAdminSearch');

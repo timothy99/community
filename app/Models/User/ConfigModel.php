@@ -3,7 +3,7 @@
 namespace App\Models\User;
 
 use CodeIgniter\Model;
-use App\Models\Console\FileModel;
+use App\Models\User\FileModel;
 
 class ConfigModel extends Model
 {

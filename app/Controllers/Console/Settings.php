@@ -86,11 +86,15 @@ class Settings extends BaseController
         $info->pdf_yn = 'N';
         $info->youtube_yn = 'N';
         $info->url_link_yn = 'N';
+        $info->main_image_yn = 'N';
+
+        $authority_list = array();
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['authority_list'] = $authority_list;
 
         return aview('console/settings/board/edit', $proc_result);
     }
@@ -125,6 +129,7 @@ class Settings extends BaseController
         $comment_point = $this->request->getPost('comment_point', FILTER_SANITIZE_SPECIAL_CHARS);
         $form_style_yn = $this->request->getPost('form_style_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $form_style = sanitizeHtml($this->request->getPost('summer_code'));
+        $main_image_yn = $this->request->getPost('main_image_yn', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $list_authority = $this->request->getPost('list_authority');
         $view_authority = $this->request->getPost('view_authority');
@@ -160,6 +165,7 @@ class Settings extends BaseController
         if ($view_authority == null || $view_authority == '') { $result = false; $message = '상세 권한을 선택해주세요.'; }
         if ($write_authority == null || $write_authority == '') { $result = false; $message = '쓰기 권한을 선택해주세요.'; }
         if ($url_link_yn == null || $url_link_yn == '') { $result = false; $message = '링크 기능 사용 여부를 선택해주세요.'; }
+        if ($main_image_yn == null || $main_image_yn == '') { $result = false; $message = '대표 이미지 사용 여부를 선택해주세요.'; }
 
         $data = array();
         $data['board_config_idx'] = $board_config_idx;
@@ -186,6 +192,7 @@ class Settings extends BaseController
         $data['form_style'] = $form_style;
         $data['authority_arr'] = $authority_arr;
         $data['url_link_yn'] = $url_link_yn;
+        $data['main_image_yn'] = $main_image_yn;
 
         if ($result == true) {
             if ($board_config_idx == 0) {

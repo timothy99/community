@@ -3,7 +3,7 @@
 namespace App\Models\Console;
 
 use CodeIgniter\Model;
-use App\Models\Console\FileModel;
+use App\Models\User\FileModel;
 
 class BoardModel extends Model
 {
@@ -50,6 +50,7 @@ class BoardModel extends Model
         $search_condition = $data['search_condition'];
         $search_text = $data['search_text'];
         $category = $data['category'] ?? '';
+        $notice_yn = $data['notice_yn'] ?? 'N';
 
         $db = $this->db;
         $builder = $db->table('board');
@@ -63,8 +64,8 @@ class BoardModel extends Model
         if ($search_text != null) {
             $builder->like($search_condition, $search_text);
         }
-        $builder->orderBy('notice_yn', 'desc');
-        $builder->orderBy('board_idx', 'desc');
+        $builder->where('notice_yn', $notice_yn);
+        $builder->orderBy('board_idx_desc', 'asc');
         $builder->limit($rows, getOffset($page, $rows));
         $cnt = $builder->countAllResults(false);
         $list = $builder->get()->getResult();
@@ -99,18 +100,17 @@ class BoardModel extends Model
         $info = $builder->get()->getRow();
 
         $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
-        $info->reg_date_txt = $info->reg_date ? convertTextToDate($info->reg_date, 1, 2) : '';
+        $info->upd_date_txt = convertTextToDate($info->ins_date, 1, 1);
+        $info->reg_date_txt = convertTextToDate($info->reg_date, 1, 1);
         $info->contents = $info->contents;
 
-        if ($info->main_file_id) {
-            $info->main_file_info = $file_model->getFileInfo($info->main_file_id);
-            $info->main_file_info->file_size_kb = number_format($info->main_file_info->file_size / 1024, 2);
-            if ($info->main_file_info->image_width > 0) {
-                $info->main_file_info->image_width_txt = number_format($info->main_file_info->image_width);
-                $info->main_file_info->image_height_txt = number_format($info->main_file_info->image_height);
-            }
+        if ($info->main_image_id) {
+            $info->main_image_info = $file_model->getFileInfo($info->main_image_id);
+            $info->main_image_info->file_size_kb = number_format($info->main_image_info->file_size / 1024, 2);
+            $info->main_image_info->image_width_txt = number_format($info->main_image_info->image_width);
+            $info->main_image_info->image_height_txt = number_format($info->main_image_info->image_height);
         } else {
-            $info->main_file_info = null;
+            $info->main_image_info = null;
         }
 
         if ($info->pdf_file_id) {
@@ -119,9 +119,6 @@ class BoardModel extends Model
         } else {
             $info->pdf_file_info = null;
         }
-
-        $badge_color = $info->display_yn === 'Y' ? 'bg-success' : 'bg-secondary';
-        $info->display_yn_badge = $badge_color;
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -144,36 +141,27 @@ class BoardModel extends Model
         $category = $data['category'];
         $title = $data['title'];
         $contents = $data['contents'];
-        $main_file_id = $data['main_file_id'];
+        $main_image_id = $data['main_image_id'];
         $url_link = $data['url_link'];
         $pdf_file_id = $data['pdf_file_id'];
         $youtube_link = $data['youtube_link'];
         $notice_yn = $data['notice_yn'];
-        $display_yn = $data['display_yn'];
         $hit_cnt = $data['hit_cnt'];
         $reg_date = $data['reg_date'];
 
         $db = $this->db;
         $db->transStart();
 
-        // board_idx_desc 계산 (최대값 + 1)
         $builder = $db->table('board');
-        $builder->selectMax('board_idx_desc');
-        $max_result = $builder->get()->getRow();
-        $board_idx_desc = ($max_result->board_idx_desc ?? 0) + 1;
-
-        $builder = $db->table('board');
-        $builder->set('board_idx_desc', $board_idx_desc);
         $builder->set('board_id', $board_id);
         $builder->set('category', $category);
         $builder->set('title', $title);
         $builder->set('contents', $contents);
-        $builder->set('main_file_id', $main_file_id);
+        $builder->set('main_image_id', $main_image_id);
         $builder->set('url_link', $url_link);
         $builder->set('pdf_file_id', $pdf_file_id);
         $builder->set('youtube_link', $youtube_link);
         $builder->set('notice_yn', $notice_yn);
-        $builder->set('display_yn', $display_yn);
         $builder->set('hit_cnt', $hit_cnt);
         $builder->set('reg_date', $reg_date);
         $builder->set('del_yn', 'N');
@@ -183,6 +171,11 @@ class BoardModel extends Model
         $builder->set('upd_date', $today);
         $result = $builder->insert();
         $insert_id = $db->insertID();
+
+        $builder = $db->table('board');
+        $builder->set('board_idx_desc', -$insert_id);
+        $builder->where('board_idx', $insert_id);
+        $builder->update();
 
         $db->transComplete();
 
@@ -213,12 +206,11 @@ class BoardModel extends Model
         $category = $data['category'];
         $title = $data['title'];
         $contents = $data['contents'];
-        $main_file_id = $data['main_file_id'];
+        $main_image_id = $data['main_image_id'];
         $url_link = $data['url_link'];
         $pdf_file_id = $data['pdf_file_id'];
         $youtube_link = $data['youtube_link'];
         $notice_yn = $data['notice_yn'];
-        $display_yn = $data['display_yn'];
         $hit_cnt = $data['hit_cnt'];
         $reg_date = $data['reg_date'];
 
@@ -230,12 +222,11 @@ class BoardModel extends Model
         $builder->set('category', $category);
         $builder->set('title', $title);
         $builder->set('contents', $contents);
-        $builder->set('main_file_id', $main_file_id);
+        $builder->set('main_image_id', $main_image_id);
         $builder->set('url_link', $url_link);
         $builder->set('pdf_file_id', $pdf_file_id);
         $builder->set('youtube_link', $youtube_link);
         $builder->set('notice_yn', $notice_yn);
-        $builder->set('display_yn', $display_yn);
         $builder->set('hit_cnt', $hit_cnt);
         $builder->set('reg_date', $reg_date);
         $builder->set('upd_id', $user_id);
@@ -265,6 +256,7 @@ class BoardModel extends Model
         $result = true;
         $message = '삭제가 잘 되었습니다';
 
+        $board_id = $data['board_id'];
         $board_idx = $data['board_idx'];
 
         $db = $this->db;
@@ -275,6 +267,7 @@ class BoardModel extends Model
         $builder->set('upd_id', $member_id);
         $builder->set('upd_date', $today);
         $builder->where('board_idx', $board_idx);
+        $builder->where('board_id', $board_id);
         $result = $builder->update();
 
         $db->transComplete();

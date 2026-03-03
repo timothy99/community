@@ -85,21 +85,23 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
 
+        $board_config->category_arr = explode("||", $board_config->category);
+
         $info = new \stdClass();
         $info->board_idx = 0;
         $info->board_id = $board_id;
         $info->category = '';
         $info->title = '';
-        $info->contents = '';
-        $info->main_file_id = '';
+        $info->contents = $board_config->form_style;
+        $info->main_image_id = '';
         $info->url_link = '';
         $info->pdf_file_id = '';
         $info->youtube_link = '';
         $info->notice_yn = 'N';
         $info->display_yn = 'Y';
         $info->hit_cnt = 0;
-        $info->reg_date_txt = date('Y-m-d');
-        $info->main_file_info = null;
+        $info->reg_date_txt = date('Y-m-d H:i:s');
+        $info->main_image_info = null;
         $info->pdf_file_info = null;
 
         $proc_result = array();
@@ -120,27 +122,21 @@ class Board extends BaseController
 
         $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
         $board_id = $this->request->getPost('board_id', FILTER_SANITIZE_SPECIAL_CHARS);
+        $main_image_id = $this->request->getPost('main_image_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
+        $pdf_file_id = $this->request->getPost('pdf_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
+        $notice_yn = $this->request->getPost('notice_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $category = $this->request->getPost('category', FILTER_SANITIZE_SPECIAL_CHARS);
         $title = $this->request->getPost('title', FILTER_SANITIZE_SPECIAL_CHARS);
         $contents = $this->request->getPost('contents');
-        $main_file_id = $this->request->getPost('main_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
         $url_link = $this->request->getPost('url_link', FILTER_SANITIZE_SPECIAL_CHARS);
-        $pdf_file_id = $this->request->getPost('pdf_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
         $youtube_link = $this->request->getPost('youtube_link', FILTER_SANITIZE_SPECIAL_CHARS);
-        $notice_yn = $this->request->getPost('notice_yn');
-        $display_yn = $this->request->getPost('display_yn');
-        $hit_cnt = $this->request->getPost('hit_cnt', FILTER_SANITIZE_SPECIAL_CHARS);
         $reg_date = $this->request->getPost('reg_date', FILTER_SANITIZE_SPECIAL_CHARS);
+        $hit_cnt = $this->request->getPost('hit_cnt', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if (empty($title)) {
-            $result = false;
-            $message = '제목을 입력해주세요.';
-        }
+        if (empty($title)) { $result = false; $message = '제목을 입력해주세요.'; }
+        if (empty($contents)) { $result = false; $message = '내용을 입력해주세요.';}
 
-        if (empty($contents)) {
-            $result = false;
-            $message = '내용을 입력해주세요.';
-        }
+        $reg_date = convertTextToDate($reg_date, 2, 3);
 
         $data = array();
         $data['board_idx'] = $board_idx;
@@ -148,14 +144,13 @@ class Board extends BaseController
         $data['category'] = $category;
         $data['title'] = $title;
         $data['contents'] = $contents;
-        $data['main_file_id'] = $main_file_id;
+        $data['main_image_id'] = $main_image_id;
         $data['url_link'] = $url_link;
         $data['pdf_file_id'] = $pdf_file_id;
         $data['youtube_link'] = $youtube_link;
         $data['notice_yn'] = $notice_yn;
-        $data['display_yn'] = $display_yn;
         $data['hit_cnt'] = $hit_cnt;
-        $data['reg_date'] = $reg_date ? convertTextToDate($reg_date, 2, 3) : date('YmdHis');
+        $data['reg_date'] = $reg_date;
 
         if ($result == true) {
             if ($board_idx == 0) {
@@ -172,21 +167,18 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/board/view/'.$board_id.'/'.$board_idx;
+        $proc_result['return_url'] = '/csl/board/'.$board_id.'/view/'.$board_idx;
         $proc_result['board_idx'] = $board_idx;
 
         return $this->response->setJSON($proc_result);
     }
 
-    public function view()
+    public function view($board_id, $board_idx)
     {
         $board_model = new BoardModel();
 
         $result = true;
         $message = '정상';
-
-        $board_id = $this->request->getUri()->getSegment(4);
-        $board_idx = $this->request->getUri()->getSegment(5);
 
         $data = array();
         $data['board_id'] = $board_id;
@@ -195,6 +187,8 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
+
+        $board_config->category_arr = explode("||", $board_config->category);
 
         $model_result = $board_model->getBoardInfo($data);
         $result = $model_result['result'];
@@ -210,15 +204,12 @@ class Board extends BaseController
         return aview('console/board/view', $proc_result);
     }
 
-    public function edit()
+    public function edit($board_id, $board_idx)
     {
         $board_model = new BoardModel();
 
         $result = true;
         $message = '정상';
-
-        $board_id = $this->request->getUri()->getSegment(4);
-        $board_idx = $this->request->getUri()->getSegment(5);
 
         $data = array();
         $data['board_id'] = $board_id;
@@ -227,6 +218,7 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
+        $board_config->category_arr = explode("||", $board_config->category);
 
         $model_result = $board_model->getBoardInfo($data);
         $info = $model_result['info'];
@@ -251,6 +243,7 @@ class Board extends BaseController
         $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $data = array();
+        $data['board_id'] = $board_id;
         $data['board_idx'] = $board_idx;
 
         $model_result = $board_model->procBoardDelete($data);
@@ -260,7 +253,7 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/board/list?board_id='.$board_id;
+        $proc_result['return_url'] = '/csl/board/'.$board_id.'/list';
 
         return $this->response->setJSON($proc_result);
     }

@@ -3,7 +3,7 @@
 namespace App\Controllers\User;
 
 use App\Controllers\BaseController;
-use App\Models\Console\FileModel;
+use App\Models\User\FileModel;
 
 class File extends BaseController
 {

@@ -78,7 +78,7 @@
 <?php   if ($info->slide_file_info != null) { ?>
                         <div class="row g-2 align-items-center">
                             <div class="col">
-                                <img src="/csl/file/view/<?= $info->slide_file ?>" class="img-thumbnail" style="width: 300px; height: auto;">
+                                <img src="/file/view/<?= $info->slide_file ?>" class="img-thumbnail" style="width: 300px; height: auto;">
                             </div>
                             <div class="col">
                                 <small class="text-muted">원본파일명</small><br>
@@ -148,7 +148,7 @@
         if (result == true) {
             $('#slide_file_hidden').val(info.file_id);
             var html = '<div class="row g-2 align-items-center">';
-            html += '<div class="col"><img src="/csl/file/view/' + info.file_id + '" class="img-thumbnail" style="width: 300px; height: auto;"></div>';
+            html += '<div class="col"><img src="/file/view/' + info.file_id + '" class="img-thumbnail" style="width: 300px; height: auto;"></div>';
             html += '<div class="col"><small class="text-muted">원본파일명</small><br>' + info.file_name_org + '</div>';
             html += '<div class="col"><small class="text-muted">가로해상도</small><br>' + info.image_width_txt + 'px</div>';
             html += '<div class="col"><small class="text-muted">세로해상도</small><br>' + info.image_height_txt + 'px</div>';

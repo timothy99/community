@@ -288,7 +288,15 @@ dl.row dd {
 
 ======================================== */
 
-
+/* 썸머노트 에디터 기본 폰트 설정 */
+.note-editable {
+    font-family: 'Noto Sans', sans-serif !important;
+}
+.note-editable p,
+.note-editable div,
+.note-editable span {
+    font-family: 'Noto Sans', sans-serif;
+}
 
 /* 모바일 반응형 사이드바 */
 @media (max-width: 991.98px) {

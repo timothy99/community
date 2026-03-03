@@ -35,18 +35,22 @@
                             <tr>
                                 <th class="align-middle bg-light">대표 이미지</th>
                                 <td>
-<?php   if ($info->main_file_info != null) { ?>
+<?php   if ($info->main_image_info != null) { ?>
                                     <div class="mb-3">
-                                        <img src="/csl/file/view/<?= $info->main_file_id ?>" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
+                                        <img src="/file/view/<?= $info->main_image_id ?>" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-auto">
                                             <small class="text-muted d-block">원본파일명</small>
-                                            <strong><?= $info->main_file_info->file_name_org ?></strong>
+                                            <strong><?= $info->main_image_info->file_name_org ?></strong>
+                                        </div>
+                                        <div class="col-auto">
+                                            <small class="text-muted d-block">해상도</small>
+                                            <strong><?= $info->main_image_info->image_width_txt ?> × <?= $info->main_image_info->image_height_txt ?> px</strong>
                                         </div>
                                         <div class="col-auto">
                                             <small class="text-muted d-block">파일 크기</small>
-                                            <strong><?= $info->main_file_info->file_size_kb ?> KB</strong>
+                                            <strong><?= $info->main_image_info->file_size_kb ?> KB</strong>
                                         </div>
                                     </div>
 <?php   } else { ?>
@@ -79,7 +83,7 @@
                                             <strong><?= $info->pdf_file_info->file_size_kb ?> KB</strong>
                                         </div>
                                         <div class="col-auto">
-                                            <a href="/csl/file/download/<?= $info->pdf_file_id ?>" class="btn btn-sm btn-primary">다운로드</a>
+                                            <a href="/file/download/<?= $info->pdf_file_id ?>" class="btn btn-sm btn-primary">다운로드</a>
                                         </div>
                                     </div>
 <?php   } else { ?>
@@ -108,23 +112,27 @@
 <?php } ?>
                             <tr>
                                 <th class="align-middle bg-light">공지여부</th>
-                                <td>
-                                    <span class="badge <?= $info->notice_yn === 'Y' ? 'bg-danger' : 'bg-secondary' ?>">
-                                        <?= $info->notice_yn === 'Y' ? '공지' : '일반' ?>
-                                    </span>
-                                </td>
+                                <td><?= code_replace('notice_yn', $info->notice_yn) ?></td>
                             </tr>
                             <tr>
-                                <th class="align-middle bg-light">노출여부</th>
-                                <td>
-                                    <span class="badge <?= $info->display_yn_badge ?>">
-                                        <?= code_replace('display_yn', $info->display_yn) ?>
-                                    </span>
-                                </td>
+                                <th class="align-middle bg-light">등록자</th>
+                                <td><?= $info->ins_id ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">입력일</th>
+                                <td><?= $info->ins_date_txt ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">수정자</th>
+                                <td><?= $info->upd_id ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">수정일</th>
+                                <td><?= $info->upd_date_txt ?></td>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">등록일</th>
-                                <td><?= $info->ins_date_txt ?></td>
+                                <td><?= $info->reg_date_txt ?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -133,8 +141,8 @@
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
                     <button type="button" class="btn btn-danger" onclick="boardDelete()">삭제</button>
-                    <a href="/csl/board/list?board_id=<?= $info->board_id ?>" class="btn btn-secondary">목록</a>
-                    <a href="/csl/board/edit/<?= $info->board_id ?>/<?= $info->board_idx ?>" class="btn btn-primary">수정</a>
+                    <a href="/csl/board/<?= $info->board_id ?>/list" class="btn btn-secondary">목록</a>
+                    <a href="/csl/board/<?= $info->board_id ?>/edit/<?= $info->board_idx ?>" class="btn btn-primary">수정</a>
                 </div>
             </div>
         </div>
@@ -146,12 +154,14 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
-        $('#li-board').addClass('active-level-1');
+        $('#a-board-top').addClass('active-level-1').attr({'data-bs-toggle': 'collapse', 'aria-expanded': 'true'});
+        $('#collapse-board-top').addClass('show').addClass('submenu');
+        $('#a-board-<?= $info->board_id ?>').addClass('active-level-2');
     });
 
     function boardDelete() {
         if (confirm('정말 삭제하시겠습니까?')) {
-            ajax1('/csl/board/delete', 'frm', 'boardDeleteAfter');
+            ajax1('/csl/board/<?= $info->board_id ?>/delete', 'frm', 'boardDeleteAfter');
         }
     }
 

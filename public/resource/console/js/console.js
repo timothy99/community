@@ -64,7 +64,7 @@ function uploadFile(file_id, method, callback) {
     $.ajax({
         data : form_data,
         type : 'POST',
-        url : '/csl/file/upload/'+method,
+        url : '/file/upload/'+method,
         dataType: 'json',
         processData : false,
         contentType : false,

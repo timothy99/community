@@ -50,7 +50,7 @@
                                 <td>
 <?php   if ($info->popup_file_info != null) { ?>
                                     <div class="mb-3">
-                                        <img src="/csl/file/view/<?= $info->popup_file ?>" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
+                                        <img src="/file/view/<?= $info->popup_file ?>" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-auto">
