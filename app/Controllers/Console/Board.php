@@ -134,8 +134,8 @@ class Board extends BaseController
         $contents = $this->request->getPost('contents');
         $url_link = $this->request->getPost('url_link', FILTER_SANITIZE_SPECIAL_CHARS);
         $youtube_link = $this->request->getPost('youtube_link', FILTER_SANITIZE_SPECIAL_CHARS);
-        $reg_date = $this->request->getPost('reg_date', FILTER_SANITIZE_SPECIAL_CHARS);
-        $hit_cnt = $this->request->getPost('hit_cnt', FILTER_SANITIZE_SPECIAL_CHARS);
+        $reg_date = $this->request->getPost('reg_date', FILTER_SANITIZE_SPECIAL_CHARS) ?? date('Y-m-d H:i:s');
+        $hit_cnt = $this->request->getPost('hit_cnt', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
 
         if (empty($title)) { $result = false; $message = '제목을 입력해주세요.'; }
         if (empty($contents)) { $result = false; $message = '내용을 입력해주세요.';}

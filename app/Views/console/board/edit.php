@@ -57,12 +57,13 @@
                     <textarea class="form-control" id="contents" name="contents" rows="10" placeholder="내용을 입력하세요"><?= $info->contents ?></textarea>
                 </div>
 
+<?php   if ($board_config->main_image_yn == 'Y') { ?>
                 <!-- 대표 이미지 -->
                 <div class="mb-3">
                     <label for="main_image" class="form-label">대표 이미지</label>
                     <input type="file" class="form-control" id="main_image" name="main_image" onchange="uploadFile(this.id, 'image', 'uploadMainImageAfter')">
                     <div class="mb-2 mt-2 ml-2 mr-2 p-3 border rounded" id="main_image_view" style="display:none;">
-<?php   if ($info->main_image_info != null) { ?>
+<?php       if ($info->main_image_info != null) { ?>
                         <div class="row g-2 align-items-center">
                             <div class="col">
                                 <img src="/file/view/<?= $info->main_image_id ?>" class="img-thumbnail" style="width: 300px; height: auto;">
@@ -84,10 +85,11 @@
                                 <?= $info->main_image_info->file_size_kb ?>KB
                             </div>
                         </div>
-<?php   } ?>
+<?php       } ?>
                     </div>
                     <small class="text-muted">갤러리 형태에 사용하는 대표 이미지입니다. 목록에 이미지가 표시되는 형태가 아니라면 동작하지 않습니다.</small>
                 </div>
+<?php   } ?>
 
 <?php   if ($board_config->url_link_yn == 'Y') { ?>
                 <!-- URL 링크 -->
