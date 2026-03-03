@@ -92,7 +92,11 @@ class Board extends BaseController
         $info->board_id = $board_id;
         $info->category = '';
         $info->title = '';
-        $info->contents = $board_config->form_style;
+        if ($board_config->form_style == 'Y') {
+            $info->contents = $board_config->form_style;
+        } else {
+            $info->contents = '';
+        }
         $info->main_image_id = '';
         $info->url_link = '';
         $info->pdf_file_id = '';
