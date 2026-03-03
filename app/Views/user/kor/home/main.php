@@ -9,7 +9,9 @@
     <div class="carousel-inner">
 <?php    foreach ($slide_list as $no => $val) { ?>
         <div class="carousel-item <?= $val->active_class ?>">
-            <img src="/file/view/<?= $val->slide_file ?>" class="d-block w-100" alt="<?= $val->contents ?>">
+            <a href="<?= $val->url_link ?>" target="_blank">
+                <img src="/file/view/<?= $val->slide_file ?>" class="d-block w-100" alt="<?= $val->contents ?>">
+            </a>
             <div class="carousel-caption d-none d-md-block">
                 <h5><?= $val->title ?></h5>
                 <p><?= $val->sub_title ?></p>

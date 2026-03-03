@@ -4,7 +4,6 @@ namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
 use App\Models\Console\ContentsModel;
-use App\Models\Common\PagingModel;
 
 class Contents extends BaseController
 {
@@ -101,6 +100,7 @@ class Contents extends BaseController
         if ($result == true) {
             if ($contents_idx == 0) {
                 $model_result = $contents_model->procContentsInsert($data);
+                $contents_idx = $model_result['insert_id'];
             } else {
                 $model_result = $contents_model->procContentsUpdate($data);
             }
@@ -117,11 +117,9 @@ class Contents extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function view()
+    public function view($contents_idx)
     {
         $contents_model = new ContentsModel();
-
-        $contents_idx = $this->request->getUri()->getSegment(4);
 
         $result = true;
         $message = '정상';
