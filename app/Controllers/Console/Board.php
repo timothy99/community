@@ -107,6 +107,7 @@ class Board extends BaseController
         $info->reg_date_txt = date('Y-m-d H:i:s');
         $info->main_image_info = null;
         $info->pdf_file_info = null;
+        $info->file_list = array();
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -136,11 +137,13 @@ class Board extends BaseController
         $youtube_link = $this->request->getPost('youtube_link', FILTER_SANITIZE_SPECIAL_CHARS);
         $reg_date = $this->request->getPost('reg_date', FILTER_SANITIZE_SPECIAL_CHARS) ?? date('Y-m-d H:i:s');
         $hit_cnt = $this->request->getPost('hit_cnt', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
+        $file_idxs = $this->request->getPost('file_idxs', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if (empty($title)) { $result = false; $message = '제목을 입력해주세요.'; }
         if (empty($contents)) { $result = false; $message = '내용을 입력해주세요.';}
 
         $reg_date = convertTextToDate($reg_date, 2, 3);
+        $file_arr = explode("||", $file_idxs);
 
         $data = array();
         $data['board_idx'] = $board_idx;
@@ -155,17 +158,28 @@ class Board extends BaseController
         $data['notice_yn'] = $notice_yn;
         $data['hit_cnt'] = $hit_cnt;
         $data['reg_date'] = $reg_date;
+        $data['file_arr'] = $file_arr;
+
+        $db = \Config\Database::connect();
+        $db->transStart();
 
         if ($result == true) {
             if ($board_idx == 0) {
-                $model_result = $board_model->procBoardInsert($data);
+                $model_result = $board_model->procBoardInsert($data, $db);
                 $board_idx = $model_result['insert_id'];
             } else {
-                $model_result = $board_model->procBoardUpdate($data);
+                $model_result = $board_model->procBoardUpdate($data, $db);
             }
 
             $result = $model_result['result'];
             $message = $model_result['message'];
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = '처리 중 오류가 발생했습니다.';
         }
 
         $proc_result = array();

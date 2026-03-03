@@ -3,7 +3,7 @@
 namespace App\Models\User;
 
 use CodeIgniter\Model;
-use App\Models\Csl\Board\ConfigModel;
+use App\Models\Console\SettingsModel;
 
 class FileModel extends Model
 {
@@ -87,6 +87,8 @@ class FileModel extends Model
             $result = $model_result['result'];
             $message = $model_result['message'];
         }
+
+        $data['icon_class'] = $this->getFileIconClass($data['file_ext']); // 파일 확장자에 따른 아이콘 클래스 반환
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -174,7 +176,10 @@ class FileModel extends Model
             $model_result = $this->insertFileInfo($data); // DB에 파일 정보 저장
             $result = $model_result['result'];
             $message = $model_result['message'];
+
+            $data['icon_class'] = $this->getFileIconClass($data['file_ext']); // 파일 확장자에 따른 아이콘 클래스 반환
         }
+
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -414,7 +419,8 @@ class FileModel extends Model
         $file_type[] = 'text/plain'; // 텍스트
         $file_type[] = 'application/pdf'; // PDF
         $file_type[] = 'application/zip'; // ZIP
-        $file_type[] = 'application/x-hwp'; // 한글파일
+        $file_type[] = 'application/x-hwp'; // 한글파일1
+        $file_type[] = 'application/x-hwp+zip'; // 한글파일1
 
         $check_image_type = in_array($user_file_type, $image_type);
         $check_file_type = in_array($user_file_type, $file_type);
@@ -588,7 +594,7 @@ class FileModel extends Model
 
     public function getUploadInfo($data)
     {
-        $config_model = new ConfigModel();
+        $settings_model = new SettingsModel();
 
         $result = true;
         $message = '파일 수량 점검이 완료되었습니다.';
@@ -598,7 +604,7 @@ class FileModel extends Model
 
         $upload_size = $user_file->getSize();
 
-        $model_result = $config_model->getConfigInfo($data);
+        $model_result = $settings_model->getBoardInfo($data);
         $config = $model_result['info'];
 
         $file_upload_size_limit = $config->file_upload_size_limit;
@@ -663,15 +669,10 @@ class FileModel extends Model
     // base64로 인코딩된 이미지를 파일로 저장
     public function saveBase64ImageFile($data)
     {
-        $security_model = new SecurityModel();
-
-        $result = true;
-        $message = '파일 업로드가 완료되었습니다.';
-
         $base64_image = str_replace('data:image/png;base64,', '', $data['base64_image']);
         $file_ext = 'png';
         $upload_date_path = date('Y/m'); // 업로드 디렉토리는 연/월로 생성
-        $random_name = $security_model->getRandomString(5, 32).'.'.$file_ext; // 랜덤네임 생성
+        $random_name = getRandomString(5, 32).'.'.$file_ext; // 랜덤네임 생성
 
         // 디렉토리 생성
         $full_upload_path = UPLOADPATH.$upload_date_path;
@@ -687,7 +688,7 @@ class FileModel extends Model
         file_put_contents($full_file_path, $image_data);
 
         $file_size = filesize($full_file_path);
-        $file_id = $security_model->getRandomString(4, 32); // 보안을 위한 랜덤문자 생성
+        $file_id = getRandomString(4, 32); // 보안을 위한 랜덤문자 생성
 
         // 이미지의 가로세로 해상도 구하기
         $image = \Config\Services::image();
@@ -709,7 +710,7 @@ class FileModel extends Model
         $file_info['file_path'] = $full_file_path;
         $file_info['file_size'] = $file_size;
 
-        $model_result = $this->insertFileInfo($file_info); // DB에 파일 정보 저장
+        $this->insertFileInfo($file_info); // DB에 파일 정보 저장
 
         return $file_info;
     }
@@ -730,6 +731,7 @@ class FileModel extends Model
             $db_info->file_size_kb = number_format($db_info->file_size / 1024, 2);
             $db_info->image_width_txt = number_format($db_info->image_width);
             $db_info->image_height_txt = number_format($db_info->image_height);
+            $db_info->icon_class = $this->getFileIconClass($db_info->file_ext); // 파일 확장자에 따른 아이콘 클래스 반환
         }
 
         return $db_info;
@@ -744,6 +746,27 @@ class FileModel extends Model
         }
 
         return $raw_file;
+    }
+
+    public function getFileIconClass($ext)
+    {
+        $ext = strtolower($ext);
+        $iconMap = [
+            'pdf' => 'fas fa-file-pdf text-danger',
+            'doc' => 'fas fa-file-word text-primary',
+            'docx' => 'fas fa-file-word text-primary',
+            'xls' => 'fas fa-file-excel text-success',
+            'xlsx' => 'fas fa-file-excel text-success',
+            'ppt' => 'fas fa-file-powerpoint text-warning',
+            'pptx' => 'fas fa-file-powerpoint text-warning',
+            'zip' => 'fas fa-file-archive text-secondary',
+            'rar' => 'fas fa-file-archive text-secondary',
+            'txt' => 'fas fa-file-alt text-muted',
+            'csv' => 'fas fa-file-csv text-success'
+        ];
+        $iconClass = $iconMap[$ext] ?? 'fas fa-file text-secondary';
+
+        return $iconClass;
     }
 
 }

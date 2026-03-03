@@ -48,7 +48,7 @@ class File extends BaseController
         $data['resize_height'] = 0; // 이미지 해상도를 0으로 지정한 경우 리사이징을 하지 않는다. width도 마찬가지
         $data['limit_size'] = 10; // 업로드 제한 사이즈 메가바이트 단위로 입력. 반드시 0 이상을 입력해야한다.
         $data['board_id'] = $this->request->getPost('board_id'); // 게시판 아이디
-        $data['file_list'] = $this->request->getPost('file_list'); // 기존에 업로드 되어 있던 파일 아이디들
+        $data['file_list'] = explode('||', $this->request->getPost('file_idxs')); // 기존에 업로드 되어 있던 파일 아이디들
         $data['allowed_type'] = 'both';  // 업로드를 허용할 타입을 결정.
 
         $proc_result = $file_model->uploadBoardFile($data); // 파일을 올린다.

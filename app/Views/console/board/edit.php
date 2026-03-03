@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="board_idx" name="board_idx" value="<?= $info->board_idx ?>">
@@ -55,6 +58,47 @@
                 <div class="mb-3">
                     <label for="contents" class="form-label">내용</label>
                     <textarea class="form-control" id="contents" name="contents" rows="10" placeholder="내용을 입력하세요"><?= $info->contents ?></textarea>
+                </div>
+
+                <!-- 첨부파일 -->
+                <div class="mb-3">
+                    <label for="main_image" class="form-label">첨부파일</label>
+                    <input type="file" class="form-control" id="main_image" name="main_image" onchange="uploadFile(this.id, 'board', 'uploadFileAfter')">
+                    <div class="mb-2 mt-2 ml-2 mr-2 p-3 border rounded" id="main_file_list" style="display:none;">
+<?php   foreach ($info->file_list as $no => $val) { ?>
+                        <div class="row g-2 align-items-center mb-2" data-file-id="<?= $val->file_id ?>" style="padding: 8px; border-radius: 4px;">
+                            <div class="col-auto" style="width: 30px; text-align: center;">
+                                <i class="fas fa-grip-vertical text-muted" style="font-size: 16px;" title="드래그하여 순서 변경"></i>
+                            </div>
+                            <div class="col-auto" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+<?php       if ($val->file_info->category == 'image') { ?>
+                                <img src="/file/view/<?= $val->file_id ?>" class="img-thumbnail" style="max-height: 100px; width: auto; max-width: 100%;">
+<?php       } else { ?>
+                                <i class="<?= $val->file_info->icon_class ?>" style="font-size: 80px;"></i>
+<?php       } ?>
+                            </div>
+                            <div class="col">
+                                <small class="text-muted">원본파일명</small><br>
+                                <?= $val->file_info->file_name_org ?>
+                            </div>
+                            <div class="col">
+                                <small class="text-muted">가로해상도</small><br>
+                                <?= $val->file_info->image_width_txt ?>px
+                            </div>
+                            <div class="col">
+                                <small class="text-muted">세로해상도</small><br>
+                                <?= $val->file_info->image_height_txt ?>px
+                            </div>
+                            <div class="col">
+                                <small class="text-muted">사이즈</small><br>
+                                <?= $val->file_info->file_size_kb ?>KB
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removeFile('<?= $val->file_id ?>')">삭제</button>
+                            </div>
+                        </div>
+<?php   } ?>
+                    </div>
                 </div>
 
 <?php   if ($board_config->main_image_yn == 'Y') { ?>
@@ -171,17 +215,51 @@
 
         $('input[name="notice_yn"][value="<?=$info->notice_yn ?>"]').prop('checked', true);
         $('#category').val('<?= $info->category ?>');
-<?php if ($info->main_image_info != null) { ?>
+<?php   if ($info->main_image_info != null) { ?>
         $('#main_image_view').show();
-<?php } ?>
-<?php if ($info->pdf_file_info != null) { ?>
+<?php   } ?>
+<?php   if ($info->pdf_file_info != null) { ?>
         $('#pdf_file_view').show();
-<?php } ?>
-<?php if ($board_config->reg_date_yn == 'Y') { ?>
+<?php   } ?>
+<?php   if ($board_config->reg_date_yn == 'Y') { ?>
         $('#reg_date').inputmask('datetime', {inputFormat:'yyyy-mm-dd HH:MM:ss'});
-<?php } ?>
+<?php   } ?>
+<?php   if (count($info->file_list) > 0) { ?>
+        $('#main_file_list').show();
+<?php   } ?>
 
         initSummernote('#contents', { focus: false });
+        
+        // 파일 목록 드래그 앤 드롭 기능 초기화
+        $('#main_file_list').sortable({
+            axis: 'y',
+            cursor: 'move',
+            opacity: 0.7,
+            tolerance: 'pointer',
+            update: function(event, ui) {
+                updateFileIdxsOrder();
+            },
+            start: function(event, ui) {
+                ui.item.addClass('dragging');
+            },
+            stop: function(event, ui) {
+                ui.item.removeClass('dragging');
+            }
+        });
+        
+        // 드래그 가능 시각적 피드백
+        $('#main_file_list .row[data-file-id]').css({
+            'cursor': 'move',
+            'transition': 'background-color 0.2s'
+        }).hover(
+            function() { $(this).css('background-color', '#f8f9fa'); },
+            function() { $(this).css('background-color', ''); }
+        );
+        
+        // 기존 파일 목록의 순서를 file_idxs에 저장
+        if ($('#main_file_list [data-file-id]').length > 0) {
+            updateFileIdxsOrder();
+        }
     });
 
     function boardUpdate() {
@@ -234,6 +312,122 @@
             $('#pdf_file_view').show();
         } else {
             alert(message);
+        }
+    }
+
+    function uploadFileAfter(proc_result) {
+        var result = proc_result.result;
+        var message = proc_result.message;
+        var info = proc_result.info;
+        if (result == true) {
+            // 파일 ID를 hidden input에 추가 (다중 파일 관리)
+            var fileIdsInput = $('#file_idxs');
+            if (fileIdsInput.length === 0) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'file_idxs',
+                    name: 'file_idxs',
+                    value: info.file_id
+                }).appendTo('#frm');
+            } else {
+                var currentIds = fileIdsInput.val();
+                fileIdsInput.val(currentIds ? currentIds + '||' + info.file_id : info.file_id);
+            }
+
+            var html = '<div class="row g-2 align-items-center mb-2" data-file-id="' + info.file_id + '" style="padding: 8px; border-radius: 4px;">';
+            html += '<div class="col-auto" style="width: 30px; text-align: center;"><i class="fas fa-grip-vertical text-muted" style="font-size: 16px;" title="드래그하여 순서 변경"></i></div>';
+            
+            if (info.category === 'image') {
+                // 이미지 파일인 경우
+                html += '<div class="col-auto" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden;"><img src="/file/view/' + info.file_id + '" class="img-thumbnail" style="max-height: 100px; width: auto; max-width: 100%;"></div>';
+                html += '<div class="col"><small class="text-muted">원본파일명</small><br>' + info.file_name_org + '</div>';
+                html += '<div class="col"><small class="text-muted">가로해상도</small><br>' + info.image_width_txt + 'px</div>';
+                html += '<div class="col"><small class="text-muted">세로해상도</small><br>' + info.image_height_txt + 'px</div>';
+                html += '<div class="col"><small class="text-muted">사이즈</small><br>' + info.file_size_kb + 'KB</div>';
+            } else {
+                // 일반 파일인 경우 - 아이콘 표시
+                var iconClass = getFileIcon(info.file_ext);
+                html += '<div class="col-auto" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center;"><i class="' + iconClass + '" style="font-size: 80px;"></i></div>';
+                html += '<div class="col"><small class="text-muted">원본파일명</small><br>' + info.file_name_org + '</div>';
+                html += '<div class="col"><small class="text-muted">가로해상도</small><br>-</div>';
+                html += '<div class="col"><small class="text-muted">세로해상도</small><br>-</div>';
+                html += '<div class="col"><small class="text-muted">사이즈</small><br>' + info.file_size_kb + 'KB</div>';
+            }
+            
+            html += '<div class="col-auto">';
+            html += '<button type="button" class="btn btn-sm btn-danger" onclick="removeFile(\'' + info.file_id + '\')">삭제</button>';
+            html += '</div>';
+            html += '</div>';
+            
+            var $newRow = $(html);
+            $newRow.css({
+                'cursor': 'move',
+                'transition': 'background-color 0.2s'
+            }).hover(
+                function() { $(this).css('background-color', '#f8f9fa'); },
+                function() { $(this).css('background-color', ''); }
+            );
+            
+            $('#main_file_list').append($newRow);
+            $('#main_file_list').show();
+        } else {
+            alert(message);
+        }
+    }
+
+    function getFileIcon(fileExt) {
+        // Font Awesome 아이콘 클래스 반환
+        var iconMap = {
+            'pdf': 'fas fa-file-pdf text-danger',
+            'doc': 'fas fa-file-word text-primary',
+            'docx': 'fas fa-file-word text-primary',
+            'xls': 'fas fa-file-excel text-success',
+            'xlsx': 'fas fa-file-excel text-success',
+            'ppt': 'fas fa-file-powerpoint text-warning',
+            'pptx': 'fas fa-file-powerpoint text-warning',
+            'zip': 'fas fa-file-archive text-secondary',
+            'rar': 'fas fa-file-archive text-secondary',
+            'txt': 'fas fa-file-alt text-muted',
+            'csv': 'fas fa-file-csv text-success'
+        };
+        
+        return iconMap[fileExt] || 'fas fa-file text-secondary';
+    }
+
+    function removeFile(fileId) {
+        if (confirm('파일을 삭제하시겠습니까?')) {
+            // HTML에서 제거
+            $('[data-file-id="' + fileId + '"]').remove();
+            
+            // hidden input에서 file_id 제거
+            var fileIdsInput = $('#file_idxs');
+            if (fileIdsInput.length > 0) {
+                var currentIds = fileIdsInput.val().split('||');
+                var newIds = currentIds.filter(function(id) { return id !== fileId; });
+                fileIdsInput.val(newIds.join('||'));
+            }
+        }
+    }
+
+    function updateFileIdxsOrder() {
+        // DOM 순서대로 file_idxs 업데이트
+        var fileIds = [];
+        $('#main_file_list [data-file-id]').each(function() {
+            fileIds.push($(this).data('file-id'));
+        });
+        
+        if (fileIds.length > 0) {
+            var fileIdsInput = $('#file_idxs');
+            if (fileIdsInput.length === 0) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'file_idxs',
+                    name: 'file_idxs',
+                    value: fileIds.join('||')
+                }).appendTo('#frm');
+            } else {
+                fileIdsInput.val(fileIds.join('||'));
+            }
         }
     }
 </script>

@@ -120,6 +120,15 @@ class BoardModel extends Model
             $info->pdf_file_info = null;
         }
 
+        $builder = $db->table('board_file');
+        $builder->where('board_idx', $board_idx);
+        $file_list = $builder->get()->getResult();
+        foreach ($file_list as $key => $val) {
+            $file_list[$key]->file_info = $file_model->getFileInfo($val->file_id);
+            $file_list[$key]->file_info->file_size_kb = number_format($file_list[$key]->file_info->file_size / 1024, 2);
+        }
+        $info->file_list = $file_list;
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
@@ -128,7 +137,7 @@ class BoardModel extends Model
         return $proc_result;
     }
 
-    public function procBoardInsert($data)
+    public function procBoardInsert($data, $db)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -148,9 +157,7 @@ class BoardModel extends Model
         $notice_yn = $data['notice_yn'];
         $hit_cnt = $data['hit_cnt'];
         $reg_date = $data['reg_date'];
-
-        $db = $this->db;
-        $db->transStart();
+        $file_arr = $data['file_arr'];
 
         $builder = $db->table('board');
         $builder->set('board_id', $board_id);
@@ -177,6 +184,13 @@ class BoardModel extends Model
         $builder->where('board_idx', $insert_id);
         $builder->update();
 
+        foreach ($file_arr as $file_id) {
+            $builder = $db->table('board_file');
+            $builder->set('board_idx', $insert_id);
+            $builder->set('file_id', $file_id);
+            $builder->insert();
+        }
+
         $db->transComplete();
 
         if ($db->transStatus() === false) {
@@ -192,7 +206,7 @@ class BoardModel extends Model
         return $model_result;
     }
 
-    public function procBoardUpdate($data)
+    public function procBoardUpdate($data, $db)
     {
         // 게시판 입력과 관련된 기본 정보
         $user_id = getUserSessionInfo('member_id');
@@ -213,9 +227,7 @@ class BoardModel extends Model
         $notice_yn = $data['notice_yn'];
         $hit_cnt = $data['hit_cnt'];
         $reg_date = $data['reg_date'];
-
-        $db = $this->db;
-        $db->transStart();
+        $file_arr = $data['file_arr'];
 
         $builder = $db->table('board');
         $builder->set('board_id', $board_id);
@@ -234,11 +246,16 @@ class BoardModel extends Model
         $builder->where('board_idx', $board_idx);
         $result = $builder->update();
 
-        $db->transComplete();
+        // board_idx 기준으로 삭제
+        $builder = $db->table('board_file');
+        $builder->where('board_idx', $board_idx);
+        $builder->delete();
 
-        if ($db->transStatus() === false) {
-            $result = false;
-            $message = '입력에 오류가 발생했습니다.';
+        foreach ($file_arr as $file_id) {
+            $builder = $db->table('board_file');
+            $builder->set('board_idx', $board_idx);
+            $builder->set('file_id', $file_id);
+            $builder->insert();
         }
 
         $model_result = array();

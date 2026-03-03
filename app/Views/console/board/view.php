@@ -36,6 +36,44 @@
                                 <th class="align-middle bg-light">내용</th>
                                 <td><?= nl2br($info->contents) ?></td>
                             </tr>
+
+<?php   if (count($info->file_list) > 0) { ?>
+                            <tr>
+                                <th class="align-middle bg-light">첨부파일</th>
+                                <td>
+<?php       foreach ($info->file_list as $val) { ?>
+                                    <div class="mb-2 mt-2 ml-2 mr-2 p-3 border rounded">
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-auto" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+<?php       if ($val->file_info->category == 'image') { ?>
+                                                <img src="/file/view/<?= $val->file_id ?>" class="img-thumbnail" style="max-height: 150px; width: auto; max-width: 100%;">
+<?php       } else { ?>
+                                                <i class="<?= $val->file_info->icon_class ?>" style="font-size: 80px;"></i>
+<?php       } ?>
+                                            </div>
+                                            <div class="col">
+                                                <small class="text-muted">원본파일명</small><br>
+                                                <?= $val->file_info->file_name_org ?>
+                                            </div>
+                                            <div class="col">
+                                                <small class="text-muted">가로해상도</small><br>
+                                                <?= $val->file_info->image_width_txt ?>px
+                                            </div>
+                                            <div class="col">
+                                                <small class="text-muted">세로해상도</small><br>
+                                                <?= $val->file_info->image_height_txt ?>px
+                                            </div>
+                                            <div class="col">
+                                                <small class="text-muted">사이즈</small><br>
+                                                <?= $val->file_info->file_size_kb ?>KB
+                                            </div>
+                                        </div>
+                                    </div>
+<?php       } ?>
+                                </td>
+                            </tr>
+<?php   } ?>
+
 <?php   if ($board_config->main_image_yn == 'Y') { ?>
                             <tr>
                                 <th class="align-middle bg-light">대표 이미지</th>
