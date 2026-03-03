@@ -309,6 +309,7 @@ create table mng_youtube (
 create table mng_config (
     config_idx int auto_increment comment '인덱스' primary key,
     title varchar(300) null comment '회사명',
+    description varchar(1000) null comment '회사 소개(메타 설명)',
     phone varchar(13) null comment '전화',
     fax varchar(13) null comment '팩스',
     email varchar(200) null comment '이메일',
@@ -328,7 +329,7 @@ create table mng_config (
     smtp_mail varchar(200) null comment 'SMTP 발송자 메일'
 ) comment '설정 관리';
 
-INSERT INTO mng_config (title, phone, fax, email, work_hour, post_code, addr1, addr2, biz_no, company_logo, program_ver, smtp_yn, smtp_host, smtp_user, smtp_pass, smtp_port, smtp_name, smtp_mail) VALUES ('회사', '000-111-2222', '', 'email@test.com', '평일 9:00 ~ 18:00 토요일/공휴일 휴무', '00000', '서울 중구 세종로', '', '123-45-67890', '', '1', 'Y', '', '', '', '', '', '');
+INSERT INTO mng_config (title, description, phone, fax, email, work_hour, post_code, addr1, addr2, biz_no, company_logo, program_ver, smtp_yn, smtp_host, smtp_user, smtp_pass, smtp_port, smtp_name, smtp_mail) VALUES ('회사', '회사 소개', '000-111-2222', '', 'email@test.com', '평일 9:00 ~ 18:00 토요일/공휴일 휴무', '00000', '서울 중구 세종로', '', '123-45-67890', '', '1', 'Y', '', '', '', '', '', '');
 
 drop table if exists mng_board_authority;
 create table mng_board_authority (

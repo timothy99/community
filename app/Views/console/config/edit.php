@@ -16,6 +16,12 @@
                     <input type="text" class="form-control" id="title" name="title" value="<?= $info->title ?>">
                 </div>
 
+                <!-- 회사 소개 -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">회사 소개(메타용)</label>
+                    <input type="text" class="form-control" id="description" name="description" value="<?= $info->description ?>">
+                </div>
+
                 <!-- 회사로고 -->
                 <div class="mb-3">
                     <label for="company_logo" class="form-label">회사로고</label>

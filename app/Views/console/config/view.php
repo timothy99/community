@@ -20,6 +20,10 @@
                                 <td><?= $info->title ?></td>
                             </tr>
                             <tr>
+                                <th class="align-middle bg-light">회사 소개</th>
+                                <td><?= $info->description ?></td>
+                            </tr>
+                            <tr>
                                 <th class="align-middle bg-light">회사로고</th>
                                 <td>
 <?php   if ($info->company_logo != null) { ?>
