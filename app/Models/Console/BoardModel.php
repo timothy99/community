@@ -179,10 +179,9 @@ class BoardModel extends Model
         $result = $builder->insert();
         $insert_id = $db->insertID();
 
-        $builder = $db->table('board');
-        $builder->set('board_idx_desc', -$insert_id);
+        $builder = $db->table('board_file');
         $builder->where('board_idx', $insert_id);
-        $builder->update();
+        $builder->delete();
 
         foreach ($file_arr as $file_id) {
             $builder = $db->table('board_file');

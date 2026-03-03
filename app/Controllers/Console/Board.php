@@ -143,7 +143,11 @@ class Board extends BaseController
         if (empty($contents)) { $result = false; $message = '내용을 입력해주세요.';}
 
         $reg_date = convertTextToDate($reg_date, 2, 3);
-        $file_arr = explode("||", $file_idxs);
+        if ($file_idxs == '') {
+            $file_arr = array();
+        } else {
+            $file_arr = explode("||", $file_idxs);
+        }
 
         $data = array();
         $data['board_idx'] = $board_idx;
