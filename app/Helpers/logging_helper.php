@@ -58,6 +58,19 @@ function logQuery($data)
     print_r($data);
     $data_log = ob_get_clean();
     $data_log = str_replace("\n", " ", $data_log);
+    $data_log = str_replace("\r", " ", $data_log);
+    $data_log = str_replace("`", "", $data_log);
+    $data_log = str_replace("SELECT ", "select ", $data_log);
+    $data_log = str_replace("UPDATE ", "update ", $data_log);
+    $data_log = str_replace("INSERT ", "insert ", $data_log);
+    $data_log = str_replace("DELETE ", "delete ", $data_log);
+    $data_log = str_replace(" SET ", " set ", $data_log);
+    $data_log = str_replace(" FROM ", " from ", $data_log);
+    $data_log = str_replace(" JOIN ", " join ", $data_log);
+    $data_log = str_replace(" ON ", " on ", $data_log);
+    $data_log = str_replace(" WHERE ", " where ", $data_log);
+    $data_log = str_replace(" AND ", " and ", $data_log);
+
     log_message("error", $data_log);
 
     return true;
