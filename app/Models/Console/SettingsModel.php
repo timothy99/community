@@ -73,6 +73,7 @@ class SettingsModel extends Model
 
         $board_id = $data['board_id'];
         $title = $data['title'];
+        $meta_title = $data['meta_title'];
         $type = $data['type'];
         $base_rows = $data['base_rows'];
         $category_yn = $data['category_yn'];
@@ -96,7 +97,6 @@ class SettingsModel extends Model
         $main_image_yn = $data['main_image_yn'];
         $authority_arr = $data['authority_arr'];
 
-
         $category_arr = explode('||', $category);
         foreach($category_arr as $no => $val) {
             if ($val == null) {
@@ -111,6 +111,7 @@ class SettingsModel extends Model
         $builder = $db->table('board_config');
         $builder->set('board_id', $board_id);
         $builder->set('title', $title);
+        $builder->set('meta_title', $meta_title);
         $builder->set('type', $type);
         $builder->set('base_rows', $base_rows);
         $builder->set('category_yn', $category_yn);
@@ -188,6 +189,7 @@ class SettingsModel extends Model
         $board_config_idx = $data['board_config_idx'];
         $board_id = $data['board_id'];
         $title = $data['title'];
+        $meta_title = $data['meta_title'];
         $type = $data['type'];
         $base_rows = $data['base_rows'];
         $category_yn = $data['category_yn'];
@@ -225,6 +227,7 @@ class SettingsModel extends Model
         $builder = $db->table('board_config');
         $builder->set('board_id', $board_id);
         $builder->set('title', $title);
+        $builder->set('meta_title', $meta_title);
         $builder->set('type', $type);
         $builder->set('base_rows', $base_rows);
         $builder->set('category_yn', $category_yn);

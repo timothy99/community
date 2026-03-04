@@ -70,6 +70,7 @@ class Settings extends BaseController
         $info->user_write = 'N';
         $info->comment_write = 'N';
         $info->title = '게시판'.$random_board_number;
+        $info->meta_title = '';
         $info->base_rows = 10;
         $info->reg_date_yn = 'N';
         $info->file_yn = 'N';
@@ -109,6 +110,7 @@ class Settings extends BaseController
         $board_config_idx = $this->request->getPost('board_config_idx', FILTER_SANITIZE_SPECIAL_CHARS);
         $board_id = $this->request->getPost('board_id', FILTER_SANITIZE_SPECIAL_CHARS);
         $title = $this->request->getPost('title', FILTER_SANITIZE_SPECIAL_CHARS);
+        $meta_title = $this->request->getPost('meta_title', FILTER_SANITIZE_SPECIAL_CHARS);
         $type = $this->request->getPost('type', FILTER_SANITIZE_SPECIAL_CHARS);
         $base_rows = $this->request->getPost('base_rows', FILTER_SANITIZE_SPECIAL_CHARS);
         $category_yn = $this->request->getPost('category_yn', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -171,6 +173,7 @@ class Settings extends BaseController
         $data['board_config_idx'] = $board_config_idx;
         $data['board_id'] = $board_id;
         $data['title'] = $title;
+        $data['meta_title'] = $meta_title;
         $data['type'] = $type;
         $data['base_rows'] = $base_rows;
         $data['category_yn'] = $category_yn;

@@ -120,6 +120,7 @@ create table mng_board_config (
     user_write enum('Y', 'N') default 'N' not null comment '사용자가 글쓰기 가능하게 할지 여부',
     comment_write enum('Y', 'N') default 'N' not null comment '사용자가 댓글쓰기 가능하게 할지 여부',
     title varchar(1000) not null comment '제목',
+    meta_title varchar(500) null comment '메타 제목',
     base_rows int not null comment '화면에 기본으로 보여줄 줄 수',
     reg_date_yn enum('Y', 'N') default 'N' not null comment '입력일 수정 기능 사용 여부',
     file_cnt int not null comment '최대 첨부파일 업로드 수',

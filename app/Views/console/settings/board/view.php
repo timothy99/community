@@ -29,6 +29,10 @@
                                 <td><?= $info->title ?></td>
                             </tr>
                             <tr>
+                                <th class="align-middle bg-light">게시판 메타 제목</th>
+                                <td><?= $info->meta_title ?></td>
+                            </tr>
+                            <tr>
                                 <th class="align-middle bg-light">타입(스킨)</th>
                                 <td><?= !empty($info->type) ? $info->type : '<span class="text-muted">-</span>' ?></td>
                             </tr>

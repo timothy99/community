@@ -1,4 +1,4 @@
-<form id="frm" name="frm">
+<form id="frm" name="frm" onsubmit="return false;">
 
 <input type="hidden" id="member_id" name="member_id">
 <input type="hidden" id="board_admin_idx" name="board_admin_idx">
@@ -77,6 +77,14 @@
     // 메뉴강조
     $(window).on('load', function() {
         $('#li-settings-board-list').addClass('active-level-1');
+    });
+
+    $(function() {
+        $("#search_text").keydown(function(e) {
+            if(e.keyCode == 13) {
+                search();
+            }
+        });
     });
 
     function search() {

@@ -5,7 +5,7 @@
 
 <!-- Main Content -->
 <main id="main-content">
-    <div class="container-fluid py-4">
+    <div class="container">
         <h3><?= $board_config->title ?></h3>
 
         <!-- 검색 -->
@@ -82,7 +82,7 @@
 <?php       if ($board_config->category_yn == 'Y') { ?>
                                 <td><?=$val->category ?></td>
 <?php       } ?>
-                                <td class="text-start"><a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>"><?=$val->title ?></a></td>
+                                <td class="text-start"><a href="/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>"><?=$val->title ?></a></td>
 <?php       if ($board_config->hit_yn == 'Y') { ?>
                                 <td><?=number_format($val->hit_cnt) ?></td>
 <?php       } ?>
@@ -96,7 +96,7 @@
 <?php       if ($board_config->category_yn == 'Y') { ?>
                                 <td><?=$val->category ?></td>
 <?php       } ?>
-                                <td class="text-start"><a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>"><?=$val->title ?></a></td>
+                                <td class="text-start"><a href="/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>"><?=$val->title ?></a></td>
 <?php       if ($board_config->hit_yn == 'Y') { ?>
                                 <td><?=number_format($val->hit_cnt) ?></td>
 <?php       } ?>
@@ -116,7 +116,9 @@
             <div class="card-footer">
                 <div class="d-flex justify-content-between align-items-center">
 <?= $paging_info['paging_view'] ?>
-                    <a href="/csl/board/<?= $data['board_id'] ?>/write" type="button" class="btn btn-primary">등록</a>
+<?php   if ($authority->write_authority == "Y") { ?>
+                    <a href="/board/<?= $data['board_id'] ?>/write" type="button" class="btn btn-primary">등록</a>
+<?php   } ?>
                 </div>
             </div>
         </div>
@@ -153,6 +155,6 @@
         var search_rows = $('#search_rows').val();
         var search_page = $('#search_page').val();
         var category = $('#category').val();
-        location.href = '/csl/board/'+board_id+'/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows+'&category='+category;
+        location.href = '/board/'+board_id+'/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows+'&category='+category;
     }
 </script>

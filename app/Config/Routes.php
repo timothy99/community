@@ -99,3 +99,11 @@ $routes->get('/csl/settings/board/(:alphanum)/admin/list', 'Console\Settings::bo
 $routes->post('/csl/settings/board/(:alphanum)/admin/search', 'Console\Settings::boardAdminSearch');
 $routes->post('/csl/settings/board/(:alphanum)/admin/insert', 'Console\Settings::boardAdminInsert');
 $routes->post('/csl/settings/board/(:alphanum)/admin/delete', 'Console\Settings::boardAdminDelete');
+
+$routes->get('/board', 'User\Board::index');
+$routes->get('/board/(:alphanum)/list', 'User\Board::list/$1');
+$routes->get('/board/(:alphanum)/write', 'User\Board::write/$1');
+$routes->post('/board/(:alphanum)/update', 'User\Board::update/$1');
+$routes->get('/board/(:alphanum)/view/(:num)', 'User\Board::view/$1/$2');
+$routes->get('/board/(:alphanum)/edit/(:num)', 'User\Board::edit/$1/$2');
+$routes->post('/board/(:alphanum)/delete', 'User\Board::delete');

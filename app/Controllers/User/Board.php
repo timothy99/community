@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Controllers\Console;
+namespace App\Controllers\User;
 
 use App\Controllers\BaseController;
-use App\Models\Console\BoardModel;
+use App\Models\User\BoardModel;
+use App\Models\User\BoardAuthorityModel;
 
 class Board extends BaseController
 {
     public function index()
     {
-        return redirect()->to('/csl/board/list');
+        return redirect()->to('/usr/board/list');
     }
 
     public function list($board_id)
     {
         $board_model = new BoardModel();
+        $authority_model = new BoardAuthorityModel();
 
         $search_page = $this->request->getGet('search_page') ?? 1;
         $search_rows = $this->request->getGet('search_rows') ?? 10;
@@ -29,6 +31,15 @@ class Board extends BaseController
         $data['search_text'] = $search_text;
         $data['search_condition'] = $search_condition;
         $data['category'] = $category;
+
+        $authority = $authority_model->getAuthorityInfo($data);
+        if ($authority->list_authority == "Y" ) {
+            // do nothing
+        } else {
+            redirect_alert("게시판 목록 권한이 없습니다.", getUserSessionInfo("previous_url"));
+            exit;
+        }
+        $data["authority"] = $authority;
 
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
@@ -71,13 +82,16 @@ class Board extends BaseController
         $proc_result['paging_info'] = $paging_info;
         $proc_result['data'] = $data;
         $proc_result['board_config'] = $board_config;
+        $proc_result['authority'] = $authority;
+        $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 목록 > ');
 
-        return aview('/console/board/list', $proc_result);
+        return uview('/user/board/'.$board_config->type.'/list', $proc_result);
     }
 
     public function write($board_id)
     {
         $board_model = new BoardModel();
+        $authority_model = new BoardAuthorityModel();
 
         $result = true;
         $message = '정상';
@@ -85,6 +99,17 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
+
+        $data = array();
+        $data["board_id"] = $board_id;
+
+        $authority = $authority_model->getAuthorityInfo($data);
+        if ($authority->write_authority == "Y" ) {
+            // do nothing
+        } else {
+            redirect_alert("게시판 글쓰기 권한이 없습니다.", getUserSessionInfo("previous_url"));
+            exit;
+        }
 
         $board_config->category_arr = explode("||", $board_config->category);
 
@@ -115,8 +140,10 @@ class Board extends BaseController
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
         $proc_result['board_config'] = $board_config;
+        $proc_result['authority'] = $authority;
+        $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 작성 > ');
 
-        return aview('console/board/edit', $proc_result);
+        return uview('/user/board/'.$board_config->type.'/edit', $proc_result);
     }
 
     public function update()
@@ -190,7 +217,7 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/board/'.$board_id.'/view/'.$board_idx;
+        $proc_result['return_url'] = '/board/'.$board_id.'/view/'.$board_idx;
         $proc_result['board_idx'] = $board_idx;
 
         return $this->response->setJSON($proc_result);
@@ -199,6 +226,7 @@ class Board extends BaseController
     public function view($board_id, $board_idx)
     {
         $board_model = new BoardModel();
+        $authority_model = new BoardAuthorityModel();
 
         $result = true;
         $message = '정상';
@@ -210,6 +238,15 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
+
+        // 게시판 권한관련
+        $authority = $authority_model->getAuthorityInfo($data);
+        if ($authority->view_authority == "Y" ) {
+            // do nothing
+        } else {
+            redirect_alert("게시판 상세 권한이 없습니다.", getUserSessionInfo("previous_url"));
+            exit;
+        }
 
         $board_config->category_arr = explode("||", $board_config->category);
 
@@ -223,13 +260,16 @@ class Board extends BaseController
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
         $proc_result['board_config'] = $board_config;
+        $proc_result['authority'] = $authority;
+        $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 보기 > '.$info->title);
 
-        return aview('console/board/view', $proc_result);
+        return uview('/user/board/'.$board_config->type.'/view', $proc_result);
     }
 
     public function edit($board_id, $board_idx)
     {
         $board_model = new BoardModel();
+        $authority_model = new BoardAuthorityModel();
 
         $result = true;
         $message = '정상';
@@ -243,6 +283,15 @@ class Board extends BaseController
         $board_config = $config_result['config'];
         $board_config->category_arr = explode("||", $board_config->category);
 
+        // 게시판 권한관련
+        $authority = $authority_model->getAuthorityInfo($data);
+        if ($authority->edit_authority == "Y") {
+            // do nothing
+        } else {
+            redirect_alert("게시판 수정 권한이 없습니다.", getUserSessionInfo("previous_url"));
+            exit;
+        }
+
         $model_result = $board_model->getBoardInfo($data);
         $info = $model_result['info'];
 
@@ -251,8 +300,10 @@ class Board extends BaseController
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
         $proc_result['board_config'] = $board_config;
+        $proc_result['authority'] = $authority;
+        $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 수정 > '.$info->title);
 
-        return aview('console/board/edit', $proc_result);
+        return uview('/user/board/'.$board_config->type.'/edit', $proc_result);
     }
 
     public function delete()
@@ -276,7 +327,7 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/board/'.$board_id.'/list';
+        $proc_result['return_url'] = '/board/'.$board_id.'/list';
 
         return $this->response->setJSON($proc_result);
     }

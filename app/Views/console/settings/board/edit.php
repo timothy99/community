@@ -30,6 +30,12 @@
                     <input type="text" class="form-control" id="title" name="title" placeholder="게시판 제목을 입력하세요" value="<?= $info->title ?>" maxlength="1000">
                 </div>
 
+                <!-- 메타 제목 -->
+                <div class="mb-3">
+                    <label for="meta_title" class="form-label">메타 제목</label>
+                    <input type="text" class="form-control" id="meta_title" name="meta_title" placeholder="메타 제목을 입력하세요" value="<?= $info->meta_title ?>" maxlength="500">
+                </div>
+
                 <!-- 타입(스킨) -->
                 <div class="mb-3">
                     <label for="type" class="form-label">타입(스킨)</label>
@@ -295,7 +301,7 @@
                     <label for="write_authority" class="form-label">쓰기</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" id="write_authority1" name="write_authority[]" value="전체">
+                            <input class="form-check-input" type="radio" id="write_authority1" name="write_authority[]" value="전체" disabled>
                             <label class="form-check-label" for="write_authority1">전체</label>
                         </div>
                         <div class="form-check">
@@ -307,6 +313,7 @@
                             <label class="form-check-label" for="write_authority3">관리자</label>
                         </div>
                     </div>
+                    <small class="text-muted">비로그인(손님) 상태에서 글쓰기는 불가능합니다.</small>
                 </div>
             </div>
         </div>

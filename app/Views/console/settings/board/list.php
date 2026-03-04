@@ -55,6 +55,7 @@
                                 <th>아이디</th>
                                 <th>유형</th>
                                 <th>게시판명</th>
+                                <th>메타</th>
                                 <th>입력일</th>
                             </tr>
                         </thead>
@@ -65,12 +66,13 @@
                                 <td><?=$val->board_id ?></td>
                                 <td><?=$val->type ?></td>
                                 <td><a href="/csl/settings/board/view/<?=$val->board_id ?>"><?=$val->title ?></a></td>
+                                <td><?=$val->meta_title ?></td>
                                 <td><?=$val->ins_date_txt ?></td>
                             </tr>
 <?php   } ?>
 <?php   if (count($list) == 0) { ?>
                             <tr>
-                                <td colspan="5" class="text-center">데이터가 없습니다.</td>
+                                <td colspan="6" class="text-center">데이터가 없습니다.</td>
                             </tr>
 <?php   } ?>
                         </tbody>

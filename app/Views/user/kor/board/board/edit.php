@@ -192,9 +192,9 @@
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
 <?php if ($info->board_idx > 0) { ?>
-                    <a href="/csl/board/<?= $info->board_id ?>/view/<?= $info->board_idx ?>" class="btn btn-secondary">취소</a>
+                    <a href="/board/<?= $info->board_id ?>/view/<?= $info->board_idx ?>" class="btn btn-secondary">취소</a>
 <?php } else { ?>
-                    <a href="/csl/board/<?= $info->board_id ?>/list" class="btn btn-secondary">취소</a>
+                    <a href="/board/<?= $info->board_id ?>/list" class="btn btn-secondary">취소</a>
 <?php } ?>
                     <button type="button" class="btn btn-primary" onclick="boardUpdate()">저장</button>
                 </div>
@@ -263,7 +263,7 @@
     });
 
     function boardUpdate() {
-        ajax1('/csl/board/<?= $info->board_id ?>/update', 'frm', 'boardUpdateAfter');
+        ajax1('/board/<?= $info->board_id ?>/update', 'frm', 'boardUpdateAfter');
     }
 
     function boardUpdateAfter(proc_result) {

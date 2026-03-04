@@ -190,9 +190,13 @@
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
+<?php   if ($authority->delete_authority == "Y") { ?>
                     <button type="button" class="btn btn-danger" onclick="boardDelete()">삭제</button>
-                    <a href="/csl/board/<?= $info->board_id ?>/list" class="btn btn-secondary">목록</a>
-                    <a href="/csl/board/<?= $info->board_id ?>/edit/<?= $info->board_idx ?>" class="btn btn-primary">수정</a>
+<?php   } ?>
+                    <a href="/board/<?= $info->board_id ?>/list" class="btn btn-secondary">목록</a>
+<?php   if ($authority->edit_authority == "Y") { ?>
+                    <a href="/board/<?= $info->board_id ?>/edit/<?= $info->board_idx ?>" class="btn btn-primary">수정</a>
+<?php   } ?>
                 </div>
             </div>
         </div>
