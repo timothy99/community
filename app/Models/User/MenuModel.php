@@ -33,6 +33,10 @@ class MenuModel extends Model
             $list[$no]->has_sub = $has_sub > 0 ? 'has_sub' : '';
             $list[$no]->dropdown = $has_sub > 0 ? 'dropdown' : '';
             $list[$no]->dropdown_toggle = $has_sub > 0 ? 'dropdown-toggle' : '';
+            $list[$no]->data_bs_toggle = $has_sub > 0 ? 'dropdown' : '';
+            $list[$no]->dropdown_menu = $has_sub > 0 ? 'dropdown-menu' : '';
+            $list[$no]->dropdown_submenu = $has_sub > 0 ? 'dropdown-submenu' : '';
+            $list[$no]->dropdown_item = $has_sub > 0 ? 'dropdown-item' : '';
         }
 
         $proc_result = array();
