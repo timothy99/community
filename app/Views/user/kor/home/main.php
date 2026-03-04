@@ -38,7 +38,7 @@
                 <h5 class="card-title mb-0">
                     <i class="fas fa-bullhorn me-2"></i>공지사항
                 </h5>
-                <a href="#" class="btn btn-sm btn-primary">더보기</a>
+                <a href="/board/notice/list" class="btn btn-sm btn-primary">더보기</a>
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">
@@ -62,7 +62,7 @@
                 <h5 class="card-title mb-0">
                     <i class="fas fa-comments me-2"></i>FAQ
                 </h5>
-                <a href="#" class="btn btn-sm btn-primary">더보기</a>
+                <a href="/board/faq/list" class="btn btn-sm btn-primary">더보기</a>
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">
@@ -80,15 +80,19 @@
     </div>
 </div>
 
-
 <!-- Album Style Posts -->
 <div class="row mb-5">
 <?php    foreach ($gallery_list as $no => $val) { ?>
     <div class="col-md-4 mb-4">
         <div class="card rounded-0 h-100 d-flex flex-column">
-            <img src="/file/view/<?= $val->main_image_id ?>" class="card-img-top rounded-0" alt="<?= $val->title ?>">
+            <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>">
+                <img src="/file/view/<?= $val->main_image_id ?>" class="card-img-top rounded-0" alt="<?= $val->title ?>">
+            </a>
             <div class="card-body d-flex flex-column">
-                <p class="card-text flex-grow-1"><?= $val->title ?></p>
+                <p class="card-text flex-grow-1">
+                    <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="text-decoration-none text-truncate me-2">
+                        <?= $val->title ?>
+                    </a>
                 <p class="card-text mb-0 text-end">
                     <small class="text-muted"><?= $val->ins_date_txt ?></small>
                 </p>
@@ -97,7 +101,6 @@
     </div>
 <?php    } ?>
 </div>
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

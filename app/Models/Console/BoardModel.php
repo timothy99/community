@@ -179,6 +179,12 @@ class BoardModel extends Model
         $result = $builder->insert();
         $insert_id = $db->insertID();
 
+        // board_idx_desc 에 $insert_id 의 음수 업데이트
+        $builder = $db->table('board');
+        $builder->set('board_idx_desc', -$insert_id);
+        $builder->where('board_idx', $insert_id);
+        $builder->update();
+
         $builder = $db->table('board_file');
         $builder->where('board_idx', $insert_id);
         $builder->delete();
