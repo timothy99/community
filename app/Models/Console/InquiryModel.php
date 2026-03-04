@@ -63,4 +63,36 @@ class InquiryModel extends Model
         return $proc_result;
     }
 
+    public function procInquiryDelete($data)
+    {
+        $today = date('YmdHis');
+
+        $result = true;
+        $message = '문의가 삭제되었습니다.';
+
+        $inquiry_idx = $data['inquiry_idx'];
+
+        $db = $this->db;
+        $db->transStart();
+
+        $builder = $db->table('mng_inquiry');
+        $builder->where('inquiry_idx', $inquiry_idx);
+        $builder->set('del_yn', 'Y');
+        $builder->set('upd_date', $today);
+        $result = $builder->update();
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = '삭제에 오류가 발생했습니다.';
+        }
+
+        $model_result = array();
+        $model_result['result'] = $result;
+        $model_result['message'] = $message;
+
+        return $model_result;
+    }
+
 }

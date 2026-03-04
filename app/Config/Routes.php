@@ -86,6 +86,11 @@ $routes->post('/csl/popup/delete', 'Console\Popup::delete');
 $routes->get('/csl/inquiry', 'Console\Inquiry::index');
 $routes->get('/csl/inquiry/list', 'Console\Inquiry::list');
 $routes->get('/csl/inquiry/view/(:num)', 'Console\Inquiry::view/$1');
+$routes->post('/csl/inquiry/delete', 'Console\Inquiry::delete');
+
+$routes->get('/inquiry', 'User\Inquiry::index');
+$routes->get('/inquiry/write', 'User\Inquiry::write');
+$routes->post('/inquiry/update', 'User\Inquiry::update');
 
 $routes->get('/csl/board', 'Console\Board::index');
 $routes->get('/csl/board/(:alphanum)/list', 'Console\Board::list/$1');

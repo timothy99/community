@@ -31,7 +31,7 @@
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">문의 내용</th>
-                                <td><?= nl2br(htmlspecialchars($info->contents)) ?></td>
+                                <td><?= nl2br_only($info->contents) ?></td>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">등록일</th>
@@ -43,6 +43,7 @@
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
+                    <button type="button" class="btn btn-danger" onclick="inquiryDelete()">삭제</button>
                     <a href="/csl/inquiry/list" class="btn btn-secondary">목록</a>
                 </div>
             </div>
@@ -57,4 +58,23 @@
     $(window).on('load', function() {
         $('#li-inquiry').addClass('active-level-1');
     });
+
+    function inquiryDelete() {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            ajax1('/csl/inquiry/delete', 'frm', 'inquiryDeleteAfter');
+        }
+    }
+
+    function inquiryDeleteAfter(proc_result) {
+        var result = proc_result.result;
+        var message = proc_result.message;
+        var return_url = proc_result.return_url;
+        
+        if (result == true) {
+            alert(message);
+            location.href = return_url;
+        } else {
+            alert(message);
+        }
+    }
 </script>

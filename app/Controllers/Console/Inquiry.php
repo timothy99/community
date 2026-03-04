@@ -77,4 +77,35 @@ class Inquiry extends BaseController
         return aview('console/inquiry/view', $proc_result);
     }
 
+    public function delete()
+    {
+        $inquiry_model = new InquiryModel();
+
+        $result = true;
+        $message = '정상처리';
+
+        $inquiry_idx = $this->request->getPost('inquiry_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($inquiry_idx == null) {
+            $result = false;
+            $message = '문의 정보가 없습니다.';
+        }
+
+        $data = array();
+        $data['inquiry_idx'] = $inquiry_idx;
+
+        if ($result == true) {
+            $model_result = $inquiry_model->procInquiryDelete($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/csl/inquiry/list';
+
+        return $this->response->setJSON($proc_result);
+    }
+
 }

@@ -263,50 +263,6 @@ create table mng_inquiry (
     primary key (inquiry_idx)
 ) comment '단순문의' collate='utf8mb4_unicode_ci';
 
-drop table if exists mng_shortlink;
-create table mng_shortlink (
-    short_link_idx int not null auto_increment comment '단축url 인덱스',
-    title varchar(1000) not null comment '제목',
-    url_link varchar(1000) not null comment '이동할 링크',
-    del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
-    ins_id varchar(70) not null comment '입력자',
-    ins_date varchar(14) not null comment '입력일',
-    upd_id varchar(70) not null comment '수정자',
-    upd_date varchar(14) not null comment '수정일',
-    primary key (short_link_idx)
-) comment='단축url' collate='utf8mb4_unicode_ci';
-
-drop table if exists mng_privacy;
-create table mng_privacy (
-    privacy_idx int auto_increment comment '인덱스',
-    url_link varchar(1000) not null comment '링크',
-    memo varchar(2000) not null comment '상담메모',
-    ip_addr varchar(15) not null comment 'IP주소',
-    del_yn enum ('Y', 'N') default 'N' not null comment '삭제 여부',
-    ins_id varchar(70) not null comment '입력자',
-    ins_date varchar(14) not null comment '입력일',
-    upd_id varchar(70) not null comment '수정자',
-    upd_date varchar(14) not null comment '수정일',
-    key privacy_index1 (ins_id),
-    key privacy_index2 (upd_id),
-    primary key (privacy_idx)
-) comment '개인정보 처리시스템' collate='utf8mb4_unicode_ci';
-
-drop table if exists mng_youtube;
-create table mng_youtube (
-    youtube_idx int not null auto_increment comment '인덱스',
-    title varchar(200) not null comment '제목',
-    category varchar(30) not null comment '채널형인지 재생목록형인지',
-    play_id varchar(500) not null comment '채널 또는 재생목록의 아이디',
-    del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
-    ins_id varchar(70) not null comment '입력자',
-    ins_date varchar(14) not null comment '입력일',
-    upd_id varchar(70) not null comment '수정자',
-    upd_date varchar(14) not null comment '수정일',
-    key youtube_index1 (play_id),
-    primary key (youtube_idx)
-) comment='유튜브 재생 목록' collate='utf8mb4_unicode_ci';
-
 create table mng_config (
     config_idx int auto_increment comment '인덱스' primary key,
     title varchar(300) null comment '회사명',
@@ -328,7 +284,7 @@ create table mng_config (
     smtp_port varchar(200) null comment 'SMTP 포트',
     smtp_name varchar(200) null comment 'SMTP 발송자 이름',
     smtp_mail varchar(200) null comment 'SMTP 발송자 메일'
-) comment '설정 관리';
+) comment '설정 관리' collate='utf8mb4_unicode_ci';
 
 INSERT INTO mng_config (title, description, phone, fax, email, work_hour, post_code, addr1, addr2, biz_no, company_logo, program_ver, smtp_yn, smtp_host, smtp_user, smtp_pass, smtp_port, smtp_name, smtp_mail) VALUES ('회사', '회사 소개', '000-111-2222', '', 'email@test.com', '평일 9:00 ~ 18:00 토요일/공휴일 휴무', '00000', '서울 중구 세종로', '', '123-45-67890', '', '1', 'Y', '', '', '', '', '', '');
 
