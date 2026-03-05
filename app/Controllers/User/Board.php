@@ -255,6 +255,11 @@ class Board extends BaseController
         $message = $model_result['message'];
         $info = $model_result['info'];
 
+        // 조회수 증가
+        if ($result == true) {
+            $board_model->procBoardHitUpdate($data);
+        }
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;

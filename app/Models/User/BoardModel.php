@@ -318,4 +318,27 @@ class BoardModel extends Model
         return $model_result;
     }
 
+    // 조회수 증가
+    public function procBoardHitUpdate($data)
+    {
+        $board_idx = $data["board_idx"];
+        $board_id = $data["board_id"];
+
+        $result = true;
+        $message = "조회수 증가가 완료되었습니다.";
+
+        $db = $this->db;
+        $builder = $db->table("board");
+        $builder->set("hit_cnt", "hit_cnt+1", false);
+        $builder->where("board_idx", $board_idx);
+        $builder->where("board_id", $board_id);
+        $result = $builder->update();
+
+        $model_result = array();
+        $model_result["result"] = $result;
+        $model_result["message"] = $message;
+
+        return $model_result;
+    }
+
 }
