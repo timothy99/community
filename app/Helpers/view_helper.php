@@ -21,6 +21,8 @@ function uview($view_file, $proc_result = array())
     $language = service('request')->getCookie('language') ?? 'kor';
     $proc_result['language'] = $language;
 
+    $proc_result["login_yn"] = loginCheck(); // 로그인 상태 여부 저장
+
     $view_result = null;
 
     $view_file = str_replace('/user/', '/user/'.$language.'/', $view_file);
@@ -53,6 +55,8 @@ function aview($view_file, $proc_result = array())
     $board_list = $model_result['list'];
     $proc_result['board_list'] = $board_list;
 
+    $proc_result["login_yn"] = loginCheck(); // 로그인 상태 여부 저장
+
     $view_result = null;
 
     $view_result .= view('/console/include/header', $proc_result);
@@ -62,4 +66,17 @@ function aview($view_file, $proc_result = array())
     $view_result .= view('/console/include/footer', $proc_result);
 
     return $view_result;
+}
+
+// 로그인 여부 확인
+function loginCheck()
+{
+    $login_yn = false;
+    // 로그인 상태 여부
+    $auth_group = getUserSessionInfo("auth_group");
+    if ($auth_group != "guest") {
+        $login_yn = true;
+    }
+
+    return $login_yn;
 }

@@ -21,5 +21,26 @@
 <?php       } ?>
         </li>
 <?php   } ?>
+
+        <li class="nav-item">
+            <span class="nav-link">|</span>
+        </li> 
+
+<?php   if (loginCheck()) { ?>
+        <li class="nav-item align-self-center ms-2">
+            <a class="btn btn-sm btn-outline-success" href="/member/mypage">내정보</a>
+        </li>
+        <li class="nav-item align-self-center ms-2">
+            <a class="btn btn-sm btn-outline-danger" href="/member/logout">로그아웃</a>
+        </li>
+<?php   } else { ?>
+        <li class="nav-item align-self-center ms-2">
+            <a class="btn btn-sm btn-outline-primary" href="/member/login">로그인</a>
+        </li>
+        <li class="nav-item align-self-center ms-2">
+            <a class="btn btn-sm btn-outline-secondary" href="/member/register">회원가입</a>
+        </li>
+<?php   } ?>
+
     </ul>
 </header>

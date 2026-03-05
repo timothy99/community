@@ -5,7 +5,7 @@
 <!-- Main Content -->
 <main id="main-content">
     <div class="container-fluid py-4">
-        <h3>슬라이드</h3>
+        <h3>회원관리</h3>
 
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>

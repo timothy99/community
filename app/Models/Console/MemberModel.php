@@ -212,4 +212,40 @@ class MemberModel extends Model
         return $model_result;
     }
 
+    public function procPasswordUpdate($data)
+    {
+        $session_member_id = getUserSessionInfo('member_id');
+        $today = date('YmdHis');
+
+        $result = true;
+        $message = '암호가 변경되었습니다.';
+
+        $member_id = $data['member_id'];
+        $member_password = $data['member_password'];
+        $member_password_enc = getPasswordEncrypt($member_password);
+
+        $db = $this->db;
+        $db->transStart();
+
+        $builder = $db->table('member');
+        $builder->set('member_password', $member_password_enc);
+        $builder->set('upd_id', $session_member_id);
+        $builder->set('upd_date', $today);
+        $builder->where('member_id', $member_id);
+        $result = $builder->update();
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = '암호 변경에 오류가 발생했습니다.';
+        }
+
+        $model_result = array();
+        $model_result['result'] = $result;
+        $model_result['message'] = $message;
+
+        return $model_result;
+    }
+
 }

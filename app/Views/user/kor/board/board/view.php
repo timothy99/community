@@ -9,7 +9,7 @@
         <h3><?= $board_config->title ?></h3>
 
         <div class="card mb-4">
-            <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
+            <div class="card-header bg-primary bg-opacity-75 text-white">기본정보</div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered text-nowrap">

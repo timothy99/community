@@ -431,4 +431,119 @@ class MemberModel extends Model
         return $proc_result;
     }
 
+    // 회원 정보 가져오기
+    public function getMemberInfo($data)
+    {
+        $result = true;
+        $message = '정상처리';
+
+        $member_id = $data['member_id'];
+
+        $db = $this->db;
+        $builder = $db->table('member');
+        $builder->where('del_yn', 'N');
+        $builder->where('member_id', $member_id);
+        $info = $builder->get()->getRow();
+
+        if ($info == null) {
+            $result = false;
+            $message = '회원정보가 없습니다.';
+            $info = new \stdClass();
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['info'] = $info;
+
+        return $proc_result;
+    }
+
+    // 마이페이지 정보 업데이트
+    public function procMypageUpdate($data)
+    {
+        $today = date('YmdHis');
+
+        $result = true;
+        $message = '회원정보가 수정되었습니다.';
+
+        $member_id = $data['member_id'];
+        $member_name = $data['member_name'];
+        $member_nickname = $data['member_nickname'];
+        $email = $data['email'];
+        $email_yn = $data['email_yn'];
+        $sms_yn = $data['sms_yn'];
+        $phone = $data['phone'];
+        $post_code = $data['post_code'];
+        $addr1 = $data['addr1'];
+        $addr2 = $data['addr2'];
+
+        $db = $this->db;
+        $db->transStart();
+
+        $builder = $db->table('member');
+        $builder->set('member_name', $member_name);
+        $builder->set('member_nickname', $member_nickname);
+        $builder->set('email', $email);
+        $builder->set('email_yn', $email_yn);
+        $builder->set('sms_yn', $sms_yn);
+        $builder->set('phone', $phone);
+        $builder->set('post_code', $post_code);
+        $builder->set('addr1', $addr1);
+        $builder->set('addr2', $addr2);
+        $builder->set('upd_id', $member_id);
+        $builder->set('upd_date', $today);
+        $builder->where('member_id', $member_id);
+        $result = $builder->update();
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = '정보 수정에 오류가 발생했습니다.';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+
+        return $proc_result;
+    }
+
+    // 암호 변경
+    public function procPasswordChange($data)
+    {
+        $today = date('YmdHis');
+
+        $result = true;
+        $message = '암호가 변경되었습니다.';
+
+        $member_id = $data['member_id'];
+        $member_password = $data['member_password'];
+        $member_password_enc = getPasswordEncrypt($member_password);
+
+        $db = $this->db;
+        $db->transStart();
+
+        $builder = $db->table('member');
+        $builder->set('member_password', $member_password_enc);
+        $builder->set('upd_id', $member_id);
+        $builder->set('upd_date', $today);
+        $builder->where('member_id', $member_id);
+        $result = $builder->update();
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            $result = false;
+            $message = '암호 변경에 오류가 발생했습니다.';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+
+        return $proc_result;
+    }
+
 }

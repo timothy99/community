@@ -412,5 +412,185 @@ class Member extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
+    // 마이페이지
+    public function mypage()
+    {
+        // 로그인 체크
+        $auth_group = getUserSessionInfo('auth_group');
+        if ($auth_group == 'guest') {
+            return redirect()->to('/member/login');
+        }
+
+        $member_model = new MemberModel();
+        $member_id = getUserSessionInfo('member_id');
+
+        $data = array();
+        $data['member_id'] = $member_id;
+
+        $model_result = $member_model->getMemberInfo($data);
+        $info = $model_result['info'];
+
+        $proc_result = array();
+        $proc_result['info'] = $info;
+        $proc_result['html_meta'] = create_meta('홈 > 마이페이지');
+
+        return uview('/user/member/mypage', $proc_result);
+    }
+
+    // 마이페이지 정보 업데이트
+    public function mypageUpdate()
+    {
+        // 로그인 체크
+        $auth_group = getUserSessionInfo('auth_group');
+        if ($auth_group == 'guest') {
+            $proc_result = array();
+            $proc_result['result'] = false;
+            $proc_result['message'] = '로그인이 필요합니다.';
+            $proc_result['return_url'] = '/member/login';
+            return $this->response->setJSON($proc_result);
+        }
+
+        $member_model = new MemberModel();
+
+        $result = true;
+        $message = '회원정보가 수정되었습니다.';
+
+        $member_id = getUserSessionInfo('member_id');
+        $member_idx = $this->request->getPost('member_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_name = $this->request->getPost('member_name', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_nickname = $this->request->getPost('member_nickname', FILTER_SANITIZE_SPECIAL_CHARS);
+        $email = $this->request->getPost('email', FILTER_SANITIZE_EMAIL);
+        $email_yn = $this->request->getPost('email_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
+        $sms_yn = $this->request->getPost('sms_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
+        $phone = $this->request->getPost('phone', FILTER_SANITIZE_SPECIAL_CHARS);
+        $post_code = $this->request->getPost('post_code', FILTER_SANITIZE_SPECIAL_CHARS);
+        $addr1 = $this->request->getPost('addr1', FILTER_SANITIZE_SPECIAL_CHARS);
+        $addr2 = $this->request->getPost('addr2', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($member_name == null) {
+            $result = false;
+            $message = '이름을 입력해주세요.';
+        }
+
+        if ($member_nickname == null) {
+            $result = false;
+            $message = '별명을 입력해주세요.';
+        }
+
+        $data = array();
+        $data['member_id'] = $member_id;
+        $data['member_name'] = $member_name;
+        $data['member_nickname'] = $member_nickname;
+        $data['email'] = $email;
+        $data['email_yn'] = $email_yn;
+        $data['sms_yn'] = $sms_yn;
+        $data['phone'] = $phone;
+        $data['post_code'] = $post_code;
+        $data['addr1'] = $addr1;
+        $data['addr2'] = $addr2;
+
+        if ($result == true) {
+            $model_result = $member_model->procMypageUpdate($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+
+            // 세션 정보 업데이트
+            if ($result == true) {
+                setUserSessionInfo('member_nickname', $member_nickname);
+            }
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/member/mypage';
+
+        return $this->response->setJSON($proc_result);
+    }
+
+    // 암호 변경 화면
+    public function passwordChange()
+    {
+        // 로그인 체크
+        $auth_group = getUserSessionInfo('auth_group');
+        if ($auth_group == 'guest') {
+            return redirect()->to('/member/login');
+        }
+
+        $member_model = new MemberModel();
+        $member_id = getUserSessionInfo('member_id');
+
+        $data = array();
+        $data['member_id'] = $member_id;
+
+        $model_result = $member_model->getMemberInfo($data);
+        $info = $model_result['info'];
+
+        $proc_result = array();
+        $proc_result['info'] = $info;
+        $proc_result['html_meta'] = create_meta('홈 > 암호 변경');
+
+        return uview('/user/member/passwordChange', $proc_result);
+    }
+
+    // 암호 변경 처리
+    public function passwordChangeUpdate()
+    {
+        // 로그인 체크
+        $auth_group = getUserSessionInfo('auth_group');
+        if ($auth_group == 'guest') {
+            $proc_result = array();
+            $proc_result['result'] = false;
+            $proc_result['message'] = '로그인이 필요합니다.';
+            $proc_result['return_url'] = '/member/login';
+            return $this->response->setJSON($proc_result);
+        }
+
+        $member_model = new MemberModel();
+
+        $result = true;
+        $message = '암호가 변경되었습니다.';
+
+        $member_id = getUserSessionInfo('member_id');
+        $member_password = $this->request->getPost('member_password', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_password_confirm = $this->request->getPost('member_password_confirm', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($member_password == null) {
+            $result = false;
+            $message = '암호를 입력해주세요.';
+        }
+
+        if ($member_password_confirm == null) {
+            $result = false;
+            $message = '암호 확인을 입력해주세요.';
+        }
+
+        if ($member_password != $member_password_confirm) {
+            $result = false;
+            $message = '입력된 암호가 다릅니다.';
+        }
+
+        if (strlen($member_password) < 8) {
+            $result = false;
+            $message = '암호는 8자리 이상이어야 합니다.';
+        }
+
+        $data = array();
+        $data['member_id'] = $member_id;
+        $data['member_password'] = $member_password;
+
+        if ($result == true) {
+            $model_result = $member_model->procPasswordChange($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/member/mypage';
+
+        return $this->response->setJSON($proc_result);
+    }
 
 }

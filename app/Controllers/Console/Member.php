@@ -173,4 +173,76 @@ class Member extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
+    public function password($member_id)
+    {
+        $member_model = new MemberModel();
+
+        $result = true;
+        $message = '정상';
+
+        $data = array();
+        $data['member_id'] = $member_id;
+
+        $model_result = $member_model->getMemberInfo($data);
+        $result = $model_result['result'];
+        $message = $model_result['message'];
+        $info = $model_result['info'];
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['info'] = $info;
+
+        return aview('console/member/password', $proc_result);
+    }
+
+    public function passwordUpdate()
+    {
+        $member_model = new MemberModel();
+
+        $result = true;
+        $message = '암호가 변경되었습니다.';
+
+        $member_id = $this->request->getPost('member_id', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_password = $this->request->getPost('member_password', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_password_confirm = $this->request->getPost('member_password_confirm', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($member_password == null) {
+            $result = false;
+            $message = '암호를 입력해주세요.';
+        }
+
+        if ($member_password_confirm == null) {
+            $result = false;
+            $message = '암호 확인을 입력해주세요.';
+        }
+
+        if ($member_password != $member_password_confirm) {
+            $result = false;
+            $message = '입력된 암호가 다릅니다.';
+        }
+
+        if (strlen($member_password) < 8) {
+            $result = false;
+            $message = '암호는 8자리 이상이어야 합니다.';
+        }
+
+        $data = array();
+        $data['member_id'] = $member_id;
+        $data['member_password'] = $member_password;
+
+        if ($result == true) {
+            $model_result = $member_model->procPasswordUpdate($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/csl/member/view/'.$member_id;
+
+        return $this->response->setJSON($proc_result);
+    }
+
 }

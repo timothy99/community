@@ -6,7 +6,7 @@
 <!-- Main Content -->
 <main id="main-content">
     <div class="container-fluid py-4">
-        <h3>회원</h3>
+        <h3>회원관리</h3>
 
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
@@ -25,6 +25,12 @@
                             <tr>
                                 <th class="align-middle bg-light">아이디</th>
                                 <td><?= $info->member_id ?></td>
+                            </tr>
+                            <tr>
+                                <th class="align-middle bg-light">암호</th>
+                                <td>
+                                    <a href="/csl/member/password/<?= $info->member_id ?>" class="btn btn-sm btn-warning">암호 변경</a>
+                                </td>
                             </tr>
                             <tr>
                                 <th class="align-middle bg-light">별명</th>

@@ -31,6 +31,10 @@ $routes->get('/member/find/password', 'User\Member::findPassword');
 $routes->post('/member/send/password', 'User\Member::sendPassword');
 $routes->get('/member/reset/password/(:any)', 'User\Member::resetPassword/$1');
 $routes->post('/member/update/password', 'User\Member::updatePassword');
+$routes->get('/member/mypage', 'User\Member::mypage');
+$routes->post('/member/mypage/update', 'User\Member::mypageUpdate');
+$routes->get('/member/password/change', 'User\Member::passwordChange');
+$routes->post('/member/password/change/update', 'User\Member::passwordChangeUpdate');
 
 $routes->get('/csl/config/view', 'Console\Config::view');
 $routes->get('/csl/config/edit', 'Console\Config::edit');
@@ -43,6 +47,8 @@ $routes->get('/csl/member/edit/(:any)', 'Console\Member::edit/$1');
 $routes->post('/csl/member/update', 'Console\Member::update');
 $routes->post('/csl/member/delete', 'Console\Member::delete');
 $routes->get('/csl/member/excel', 'Console\Member::excel');
+$routes->get('/csl/member/password/(:any)', 'Console\Member::password/$1');
+$routes->post('/csl/member/password/update', 'Console\Member::passwordUpdate');
 
 $routes->post('/file/upload/general', 'User\File::uploadGeneral');
 $routes->post('/file/upload/board', 'User\File::uploadBoard');
