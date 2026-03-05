@@ -99,6 +99,11 @@ class BoardModel extends Model
         $builder->where('board_idx', $board_idx);
         $info = $builder->get()->getRow();
 
+        if ($info == null) {
+            redirect_alert('존재하지 않는 게시물입니다.', '/');
+            exit;
+        }
+
         $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
         $info->upd_date_txt = convertTextToDate($info->ins_date, 1, 1);
         $info->reg_date_txt = convertTextToDate($info->reg_date, 1, 1);
