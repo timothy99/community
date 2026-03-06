@@ -516,9 +516,10 @@ class FileModel extends Model
             }
             $image->resize($width, $height, true, $master_dimension);
         }
-        $image->save($image_path, $quality); // 이미지를 저장할때 퀄리티 조정은 반드시 한다. CI프레임워크의 기본값은 90
+        // save() 전에 가로세로 치수를 얻어야 함 - save()는 이미지 리소스를 파괴함
         $image_width = $image->getWidth();
         $image_height = $image->getHeight();
+        $image->save($image_path, $quality); // 이미지를 저장할때 퀄리티 조정은 반드시 한다. CI프레임워크의 기본값은 90
 
         // 파일에 대한 저장 용량 얻기
         $file = new \CodeIgniter\Files\File($image_path);
