@@ -24,7 +24,14 @@ class Home extends BaseController
         $model_result = $main_model->getSlideList();
         $slide_list = $model_result['list'];
 
-        $model_result = $main_model->getPopupList();
+        $agent = $this->request->getUserAgent();
+        if ($agent->isMobile()) {
+            $is_mobile = true;
+        } else {
+            $is_mobile = false;
+        }
+
+        $model_result = $main_model->getPopupList($is_mobile);
         $popup_list = $model_result['list'];
 
         $data = array();
@@ -52,6 +59,33 @@ class Home extends BaseController
         $proc_result["html_meta"] = create_meta($config_info->title, $config_info->description);
 
         return uview('/user/home/main', $proc_result);
+    }
+
+    // 정해진 시간동안 팝업이 차단되게 하는 컨트롤러
+    public function popupBlock()
+    {
+        $popup_idx = $this->request->getPost("popup_idx", FILTER_SANITIZE_NUMBER_INT);
+        $disabled_hours = $this->request->getPost("disabled_hours", FILTER_SANITIZE_NUMBER_INT);
+        $expire_date = date("YmdHis", strtotime("+".$disabled_hours." hours"));
+
+        $result = true;
+        $message = "정상";
+
+        $data = (object)array();
+        $data->popup_idx = $popup_idx;
+        $data->disabled_hours = $disabled_hours;
+        $data->expire_date = $expire_date;
+
+        $layer_closed = getUserSessionInfo("layer_closed");
+        array_push($layer_closed, $data);
+        setUserSessionInfo("layer_closed", $layer_closed);
+
+        $proc_result = array();
+        $proc_result["result"] = $result;
+        $proc_result["message"] = $message;
+        $proc_result["popup_idx"] = $popup_idx;
+
+        return $this->response->setJSON($proc_result);
     }
 
 }

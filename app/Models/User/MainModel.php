@@ -33,7 +33,7 @@ class MainModel extends Model
     }
 
     // 팝업 목록 갖고 오기
-    public function getPopupList()
+    public function getPopupList($is_mobile)
     {
         $result = true;
         $message = '팝업 불러오기가 정상적으로 이루어졌습니다.';
@@ -46,6 +46,26 @@ class MainModel extends Model
         $builder->where('start_date <=', $today);
         $builder->where('end_date >=', $today);
         $list = $builder->get()->getResult();
+
+        $layer_closed = getUserSessionInfo("layer_closed");
+        foreach ($layer_closed as $no1 => $val1) {
+            foreach ($list as $no2 => $val2) {
+                if ($val1->popup_idx == $val2->popup_idx && $val1->expire_date > date("YmdHis")) {
+                    unset($list[$no2]);
+                }
+            }
+        }
+
+        // 현재 접속한 기기가 모바일인 경우 목록을 돌면서 width, height를 1/2로 줄임
+        if ($is_mobile) {
+            foreach ($list as $no => $val) {
+                $list[$no]->popup_width = intval($val->popup_width / 2);
+                $list[$no]->popup_height = intval($val->popup_height / 2);
+                $list[$no]->position_left = intval($val->position_left / 2);
+                $list[$no]->position_top = intval($val->position_top / 2);
+            }
+        }
+
 
         $proc_result = array();
         $proc_result['result'] = $result;

@@ -118,3 +118,5 @@ $routes->post('/board/(:alphanum)/update', 'User\Board::update/$1');
 $routes->get('/board/(:alphanum)/view/(:num)', 'User\Board::view/$1/$2');
 $routes->get('/board/(:alphanum)/edit/(:num)', 'User\Board::edit/$1/$2');
 $routes->post('/board/(:alphanum)/delete', 'User\Board::delete');
+
+$routes->post("/main/popup/block", "User\Home::popupBlock");

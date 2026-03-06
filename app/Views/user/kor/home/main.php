@@ -1,3 +1,20 @@
+<div id="hd_pop">
+    <h2>팝업레이어 알림</h2>
+<?php   foreach($popup_list as $no => $val) { ?>
+    <div id="popup_<?=$val->popup_idx ?>" class="hd_pops" style="top:<?=$val->position_top ?>px;left:<?=$val->position_left ?>px">
+        <div class="hd_pops_con" style="width:<?=$val->popup_width ?>px;height:<?=$val->popup_height ?>px">
+            <p>
+                <a href="<?=$val->url_link ?>">
+                    <img src="/file/view/<?=$val->popup_file ?>" alt="<?=$val->title ?>" class="img-fluid"></p>
+                </a>
+        </div>
+        <div class="hd_pops_footer">
+            <button class="hd_pops_reject" onclick="popupBlock(<?=$val->popup_idx ?>, <?=$val->disabled_hours ?>)"><strong><?=$val->disabled_hours ?></strong>시간 동안 다시 열람하지 않습니다.</button>
+            <button class="hd_pops_close" onclick="popupClose(<?=$val->popup_idx ?>)">닫기 <i class="fa fa-times" aria-hidden="true"></i></button>
+        </div>
+    </div>
+<?php   } ?>
+</div>
 
 <!-- Carousel -->
 <div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
@@ -117,4 +134,19 @@
             });
         }
     });
+
+    function popupClose(popup_idx) {
+        $('#popup_'+popup_idx).remove();
+    }
+
+    function popupBlock(popup_idx, block_hours) {
+        var update_form = new FormData();
+        update_form.append('popup_idx', popup_idx);
+        update_form.append('disabled_hours', block_hours);
+        ajax1('/main/popup/block', update_form, 'popupBlockAfter');
+    }
+
+    function popupBlockAfter(proc_result) {
+        $('#popup_'+proc_result.popup_idx).remove();
+    }
 </script>
