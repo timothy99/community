@@ -4,6 +4,21 @@
 # 기본설정
 
 ## composer 를 이용한 설치
+### PHP 7.4에서
+```
+// 7.4에서 구동이 가능한 최대 버전 설치
+composer create-project codeigniter4/appstarter 프로젝트 --no-install '4.4.8'
+
+// 디렉토리 이동
+cd 프로젝트
+
+// php환경을 7.4.25으로 변경
+composer config platform.php 7.4.25
+
+composer require codeigniter4/framework:4.4.8
+composer require phpoffice/phpspreadsheet:1.29.0
+```
+
 ### PHP 8.3+ 최신버전 설치
 ```
 composer create-project codeigniter4/appstarter 프로젝트명
@@ -62,7 +77,21 @@ public $indexPage = 'index.php'     ->      public $indexPage = ''
 ### BaseController.php 헬퍼 추가
 - 헬퍼는 initController함수 아래에 추가.
 ```
-$this->helpers = ['alert', 'array', 'board', 'curl', 'logging', 'privacy', 'session', 'text', 'view'];
+        $this->helpers = array();
+        $this->helpers[] = 'alert';
+        $this->helpers[] = 'array';
+        $this->helpers[] = 'board';
+        $this->helpers[] = 'curl';
+        $this->helpers[] = 'logging';
+        $this->helpers[] = 'privacy';
+        $this->helpers[] = 'session';
+        $this->helpers[] = 'text';
+        $this->helpers[] = 'view';
+        $this->helpers[] = 'authority';
+        $this->helpers[] = 'security';
+        $this->helpers[] = 'email';
+        $this->helpers[] = 'paging';
+        $this->helpers[] = 'date';
 ```
 
 ### Constants.php 설정
