@@ -177,6 +177,16 @@ class Board extends BaseController
             $file_arr = explode("||", $file_idxs);
         }
 
+        $contents = str_replace('<!--[if !supportEmptyParas]-->&nbsp;<!--[endif]-->', '', $contents);
+        // HWP JSON 데이터 제거
+        $start = strpos($contents, '<!--[data-hwpjson]');
+        if ($start !== false) {
+            $end = strpos($contents, '-->', $start);
+            if ($end !== false) {
+                $contents = substr($contents, 0, $start) . substr($contents, $end + 3);
+            }
+        }
+
         $data = array();
         $data['board_idx'] = $board_idx;
         $data['board_id'] = $board_id;
