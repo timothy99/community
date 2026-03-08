@@ -32,12 +32,15 @@ class MailModel extends Model
         return $proc_result;
     }
 
-    public function procMailSend($data, $config)
+    public function procMailSend($data)
     {
         $email = \Config\Services::email(); // 이메일 서비스 로드
 
         $result = true;
         $message = '메일발송이 정상적으로 이루어졌습니다.';
+
+        $model_result = $this->getMailConfig();
+        $config = $model_result['mail_config'];
 
         $receive_email = $data['receive_email'];
         $title = $data['title'];
