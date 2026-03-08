@@ -4,6 +4,7 @@ namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
 use App\Models\Console\InquiryModel;
+use App\Models\User\SpreadsheetModel;
 
 class Inquiry extends BaseController
 {
@@ -106,6 +107,43 @@ class Inquiry extends BaseController
         $proc_result['return_url'] = '/csl/inquiry/list';
 
         return $this->response->setJSON($proc_result);
+    }
+
+    // 엑셀다운로드
+    public function excel()
+    {
+        $inquiry_model = new InquiryModel();
+        $spreadsheet_model = new SpreadsheetModel();
+
+        $search_page = $this->request->getGet('search_page') ?? 1;
+        // $search_rows = $this->request->getGet('search_rows') ?? 10; // 엑셀다운로드는 줄 수 제한 없음
+        $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'name';
+
+        $data = array();
+        $data['search_page'] = $search_page;
+        $data['search_rows'] = 999999;
+        $data['search_text'] = $search_text;
+        $data['search_condition'] = $search_condition;
+
+        $model_result = $inquiry_model->getInquiryList($data);
+        $list = $model_result['list'];
+
+        $content_list = array();
+        foreach ($list as $no => $val) {
+            $content = array();
+            $content[] = $val->list_no;
+            $content[] = $val->name;
+            $content[] = $val->phone;
+            $content[] = $val->email;
+            $content[] = $val->contents;
+            $content[] = $val->ins_date_txt;
+            $content_list[] = $content;
+        }
+
+        $header_list = array('번호', '이름', '전화번호', '이메일', '내용', '등록일'); // 엑셀 헤더명
+        $filename = '문의관리_'.date('Ymd_His').'.xlsx'; // 파일명
+        $spreadsheet_model->procExcelWrite($content_list, $filename, $header_list); // 엑셀파일 생성 및 다운로드
     }
 
 }

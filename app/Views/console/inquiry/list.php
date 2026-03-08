@@ -83,6 +83,7 @@
             <div class="card-footer">
                 <div class="d-flex justify-content-between align-items-center">
 <?= $paging_info['paging_view'] ?>
+                    <a href="/csl/inquiry/excel" type="button" class="btn btn-success">엑셀 다운로드</a>
                 </div>
             </div>
         </div>
