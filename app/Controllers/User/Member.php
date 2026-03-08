@@ -242,10 +242,7 @@ class Member extends BaseController
             $email_data['title'] = $title;
             $email_data['contents'] = $contents;
 
-            $model_result = $mail_model->getMailConfig();
-            $mail_config = $model_result['mail_config'];
-
-            $model_result = $mail_model->procMailSend($email_data, $mail_config);
+            $model_result = $mail_model->procMailSend($email_data);
         }
 
         $proc_result = array();
@@ -302,10 +299,7 @@ class Member extends BaseController
             $email_data['title'] = $title;
             $email_data['contents'] = $contents;
 
-            $model_result = $mail_model->getMailConfig();
-            $mail_config = $model_result['mail_config'];
-
-            $model_result = $mail_model->procMailSend($email_data, $mail_config);
+            $model_result = $mail_model->procMailSend($email_data);
         } else {
             // 검색해서 나오는 이메일 정보가 없는 경우 이메일을 보내지 않는다.
         }

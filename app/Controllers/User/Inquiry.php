@@ -4,6 +4,8 @@ namespace App\Controllers\User;
 
 use App\Controllers\BaseController;
 use App\Models\User\InquiryModel;
+use App\Models\User\MailModel;
+use App\Models\User\ConfigModel;
 
 class Inquiry extends BaseController
 {
@@ -23,6 +25,8 @@ class Inquiry extends BaseController
     public function update()
     {
         $inquiry_model = new InquiryModel();
+        $mail_model = new MailModel();
+        $config_model = new ConfigModel();
 
         $result = true;
         $message = '정상처리 되었습니다.';
@@ -62,6 +66,17 @@ class Inquiry extends BaseController
             $model_result = $inquiry_model->procInquiryInsert($data);
             $result = $model_result['result'];
             $message = $model_result['message'];
+
+            $model_result = $config_model->getConfigInfo();
+            $config_info = $model_result['info'];
+
+            $email_data = array();
+            // $email_data['receive_email'] = $email; // 문의한 사람에게 보내는 경우
+            $email_data['receive_email'] = $config_info->email; // 홈페이지 환경설정상의 메일
+            $email_data['title'] = '[문의하기] ' . $name . '님이 문의하셨습니다.';
+            $email_data['contents'] = nl2br($contents) . '<br><br>전화번호: ' . $phone;
+
+            $model_result = $mail_model->procMailSend($email_data);
         }
 
         $proc_result = array();
