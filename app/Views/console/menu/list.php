@@ -41,7 +41,6 @@
                             <td class="text-center"><?=$val2->order_no ?></td>
                             <td><?=$val2->url_link ?></td>
                             <td>
-                                <a href="/csl/menu/write/<?=$val2->menu_idx ?>" type="button" class="btn btn-sm btn-warning" id="info" name="info" value="<?=$val2->menu_idx ?>">하위추가</a>
                                 <a href="/csl/menu/edit/<?=$val2->menu_idx ?>" type="button" class="btn btn-sm btn-success" id="edit" name="edit" value="<?=$val2->menu_idx ?>">수정</a>
                                 <button type="button" class="btn btn-sm btn-danger" id="delete" name="delete" value="<?=$val2->menu_idx ?>" onclick="menuDelete(this.value)">삭제</button>
                             </td>
