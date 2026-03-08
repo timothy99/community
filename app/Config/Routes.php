@@ -93,6 +93,7 @@ $routes->get('/csl/inquiry', 'Console\Inquiry::index');
 $routes->get('/csl/inquiry/list', 'Console\Inquiry::list');
 $routes->get('/csl/inquiry/view/(:num)', 'Console\Inquiry::view/$1');
 $routes->post('/csl/inquiry/delete', 'Console\Inquiry::delete');
+$routes->get('/csl/inquiry/excel', 'Console\Inquiry::excel');
 
 $routes->get('/inquiry', 'User\Inquiry::index');
 $routes->get('/inquiry/write', 'User\Inquiry::write');
