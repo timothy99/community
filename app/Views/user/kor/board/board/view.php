@@ -53,7 +53,9 @@
                                             </div>
                                             <div class="col">
                                                 <small class="text-muted">원본파일명</small><br>
-                                                <?= $val->file_info->file_name_org ?>
+                                                <a href="/file/download/<?= $val->file_id ?>">
+                                                    <?= $val->file_info->file_name_org ?>
+                                                </a>
                                             </div>
                                             <div class="col">
                                                 <small class="text-muted">가로해상도</small><br>
@@ -85,7 +87,11 @@
                                     <div class="row g-3">
                                         <div class="col-auto">
                                             <small class="text-muted d-block">원본파일명</small>
-                                            <strong><?= $info->main_image_info->file_name_org ?></strong>
+                                            <strong>
+                                                <a href="/file/download/<?= $info->main_image_id ?>">
+                                                    <?= $info->main_image_info->file_name_org ?>
+                                                </a>
+                                            </strong>
                                         </div>
                                         <div class="col-auto">
                                             <small class="text-muted d-block">해상도</small>
@@ -145,7 +151,11 @@
                                     <div class="row g-3">
                                         <div class="col-auto">
                                             <small class="text-muted d-block">원본파일명</small>
-                                            <strong><?= $info->pdf_file_info->file_name_org ?></strong>
+                                            <strong>
+                                                <a href="/file/download/<?= $info->pdf_file_id ?>">
+                                                    <?= $info->pdf_file_info->file_name_org ?>
+                                                </a>
+                                            </strong>
                                         </div>
                                         <div class="col-auto">
                                             <small class="text-muted d-block">파일 크기</small>

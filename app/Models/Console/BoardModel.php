@@ -120,6 +120,18 @@ class BoardModel extends Model
             $info->pdf_file_info = null;
         }
 
+        // 유튜브 주소에서 유튜브 아이디 추출
+        if ($info->youtube_link) {
+            // 유튜브 비디오 ID 추출
+            $youtube_id = '';
+            if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/', $info->youtube_link, $matches)) {
+                $youtube_id = $matches[1];
+            }
+            $info->youtube_id = $youtube_id;
+        } else {
+            $info->youtube_id = null;
+        }
+
         $builder = $db->table('board_file');
         $builder->where('board_idx', $board_idx);
         $file_list = $builder->get()->getResult();

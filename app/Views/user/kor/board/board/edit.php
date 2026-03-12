@@ -76,7 +76,9 @@
                             </div>
                             <div class="col">
                                 <small class="text-muted">원본파일명</small><br>
-                                <?= $val->file_info->file_name_org ?>
+                                <a href="/file/download/<?= $val->file_id ?>">
+                                    <?= $val->file_info->file_name_org ?>
+                                </a>
                             </div>
                             <div class="col">
                                 <small class="text-muted">가로해상도</small><br>
@@ -125,6 +127,9 @@
                                 <small class="text-muted">사이즈</small><br>
                                 <?= $info->main_image_info->file_size_kb ?>KB
                             </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removeMainImage('<?= $info->main_image_id ?>')">삭제</button>
+                            </div>
                         </div>
 <?php       } ?>
                     </div>
@@ -155,6 +160,9 @@
                             <div class="col">
                                 <small class="text-muted">사이즈</small><br>
                                 <?= $info->pdf_file_info->file_size_kb ?>KB
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removePdfFile('<?= $info->pdf_file_id ?>')">삭제</button>
                             </div>
                         </div>
 <?php       } ?>
@@ -301,9 +309,9 @@
         if (result == true) {
             $('#pdf_file_hidden').val(info.file_id);
             var html = '<div class="row g-2 align-items-center">';
-            html += '<div class="col"><a href="/file/download/' + info.file_id + '">파일 받기</a></div>';
-            html += '<div class="col"><small class="text-muted">원본파일명</small><br>' + info.file_name_org + '</div>';
+            html += '<div class="col"><small class="text-muted">원본파일명</small><br><a href="/file/download/' + info.file_id + '">' + info.file_name_org + '</a></div>';
             html += '<div class="col"><small class="text-muted">사이즈</small><br>' + info.file_size_kb + 'KB</div>';
+            html += '<div class="col-auto"><button type="button" class="btn btn-sm btn-danger" onclick="removePdfFile(\'' + info.file_id + '\')">삭제</button></div>';
             html += '</div>';
             $('#pdf_file_view').html(html);
             $('#pdf_file_view').show();
@@ -337,7 +345,7 @@
             if (info.category === 'image') {
                 // 이미지 파일인 경우
                 html += '<div class="col-auto" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden;"><img src="/file/view/' + info.file_id + '" class="img-thumbnail" style="max-height: 100px; width: auto; max-width: 100%;"></div>';
-                html += '<div class="col"><small class="text-muted">원본파일명</small><br>' + info.file_name_org + '</div>';
+                html += '<div class="col"><small class="text-muted">원본파일명</small><br><a href="/file/download/' + info.file_id + '">' + info.file_name_org + '</a></div>';
                 html += '<div class="col"><small class="text-muted">가로해상도</small><br>' + info.image_width_txt + 'px</div>';
                 html += '<div class="col"><small class="text-muted">세로해상도</small><br>' + info.image_height_txt + 'px</div>';
                 html += '<div class="col"><small class="text-muted">사이즈</small><br>' + info.file_size_kb + 'KB</div>';
@@ -345,7 +353,7 @@
                 // 일반 파일인 경우 - 아이콘 표시
                 var iconClass = getFileIcon(info.file_ext);
                 html += '<div class="col-auto" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center;"><i class="' + iconClass + '" style="font-size: 80px;"></i></div>';
-                html += '<div class="col"><small class="text-muted">원본파일명</small><br>' + info.file_name_org + '</div>';
+                html += '<div class="col"><small class="text-muted">원본파일명</small><br><a href="/file/download/' + info.file_id + '">' + info.file_name_org + '</a></div>';
                 html += '<div class="col"><small class="text-muted">가로해상도</small><br>-</div>';
                 html += '<div class="col"><small class="text-muted">세로해상도</small><br>-</div>';
                 html += '<div class="col"><small class="text-muted">사이즈</small><br>' + info.file_size_kb + 'KB</div>';
@@ -425,6 +433,20 @@
             } else {
                 fileIdsInput.val(fileIds.join('||'));
             }
+        }
+    }
+
+    function removeMainImage(fileId) {
+        if (confirm('대표 이미지를 삭제하시겠습니까?')) {
+            $('#main_image_hidden').val('');
+            $('#main_image_view').hide();
+        }
+    }
+
+    function removePdfFile(fileId) {
+        if (confirm('PDF 파일을 삭제하시겠습니까?')) {
+            $('#pdf_file_hidden').val('');
+            $('#pdf_file_view').hide();
         }
     }
 </script>

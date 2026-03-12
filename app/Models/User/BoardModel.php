@@ -104,10 +104,14 @@ class BoardModel extends Model
             exit;
         }
 
-        $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
         $info->upd_date_txt = convertTextToDate($info->ins_date, 1, 1);
         $info->reg_date_txt = convertTextToDate($info->reg_date, 1, 1);
-        $info->contents = $info->contents;
+        // 등록일을 사용하면 입력을 등록일로 치환
+        if ($info->reg_date == 'Y') {
+            $info->ins_date_txt = convertTextToDate($info->reg_date, 1, 1);
+        } else {
+            $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
+        }
 
         if ($info->main_image_id) {
             $info->main_image_info = $file_model->getFileInfo($info->main_image_id);
