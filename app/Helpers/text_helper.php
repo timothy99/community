@@ -30,7 +30,7 @@ function create_meta($title, $description = '')
     $html_meta['og']['type'] = 'website';
     $html_meta['og']['title'] = $html_meta['meta']['title'];
     $html_meta['og']['description'] = $html_meta['meta']['description'];
-    $html_meta['og']['image'] = env('app.baseURL').'/resource/usr/image/logo.png';
+    $html_meta['og']['image'] = env('app.baseURL').'/resource/usr/images/logo.png';
     $html_meta['og']['url'] = current_url();
 
     return $html_meta;

@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-
 <form id="frm" name="frm">
 
 <input type="hidden" id="board_idx" name="board_idx" value="<?= $info->board_idx ?>">
@@ -62,8 +59,8 @@
 
                 <!-- 첨부파일 -->
                 <div class="mb-3">
-                    <label for="main_image" class="form-label">첨부파일</label>
-                    <input type="file" class="form-control" id="main_image" name="main_image" onchange="uploadFile(this.id, 'board', 'uploadFileAfter')">
+                    <label for="main_file" class="form-label">첨부파일</label>
+                    <input type="file" class="form-control" id="main_file" name="main_file" onchange="uploadFile(this.id, 'board', 'uploadFileAfter')">
                     <div class="mb-2 mt-2 ml-2 mr-2 p-3 border rounded" id="main_file_list" style="display:none;">
 <?php   foreach ($info->file_list as $no => $val) { ?>
                         <div class="row g-2 align-items-center mb-2" data-file-id="<?= $val->file_id ?>" style="padding: 8px; border-radius: 4px;">
