@@ -54,7 +54,7 @@
                 <!-- 내용 -->
                 <div class="mb-3">
                     <label for="contents" class="form-label">내용</label>
-                    <textarea class="form-control" id="contents" name="contents" rows="10" placeholder="내용을 입력하세요"><?= $info->contents ?></textarea>
+                    <textarea class="form-control" id="contents" name="contents" rows="10" placeholder="내용을 입력하세요"></textarea>
                 </div>
 
                 <!-- 첨부파일 -->
