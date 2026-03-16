@@ -206,7 +206,10 @@ class Member extends BaseController
     // 아이디 찾기
     public function findId()
     {
-        return uview('/user/member/findId');
+        $proc_result = array();
+        $proc_result['html_meta'] = create_meta('홈 > 회원가입');
+
+        return uview('/user/member/findId', $proc_result);
     }
 
     // 아이디 찾기 결과 이메일 발송 처리
@@ -256,7 +259,10 @@ class Member extends BaseController
     // 암호 찾기
     public function findPassword()
     {
-        return uview('/user/member/findPassword');
+        $proc_result = array();
+        $proc_result['html_meta'] = create_meta('홈 > 암호 찾기');
+
+        return uview('/user/member/findPassword', $proc_result);
     }
 
     // 암호 초기화 메일 보내기
