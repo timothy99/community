@@ -5,6 +5,7 @@ namespace App\Controllers\User;
 use App\Controllers\BaseController;
 use App\Models\User\BoardModel;
 use App\Models\User\BoardAuthorityModel;
+use App\Models\User\CommentModel;
 
 class Board extends BaseController
 {
@@ -45,6 +46,7 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
         $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         // 공지사항 표시가 안된 일반 데이터
         $data['notice_yn'] = 'N';
@@ -237,6 +239,7 @@ class Board extends BaseController
     {
         $board_model = new BoardModel();
         $authority_model = new BoardAuthorityModel();
+        $comment_model = new CommentModel();
 
         $result = true;
         $message = '정상';
@@ -248,6 +251,8 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
+        $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         // 게시판 권한관련
         $authority = $authority_model->getAuthorityInfo($data);
@@ -257,8 +262,6 @@ class Board extends BaseController
             redirect_alert("게시판 상세 권한이 없습니다.", getUserSessionInfo("previous_url"));
             exit;
         }
-
-        $board_config->category_arr = explode("||", $board_config->category);
 
         $model_result = $board_model->getBoardInfo($data);
         $result = $model_result['result'];
@@ -270,10 +273,15 @@ class Board extends BaseController
             $board_model->procBoardHitUpdate($data);
         }
 
+        // 댓글목록
+        $model_result = $comment_model->getCommentList($data);
+        $comment_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['comment_list'] = $comment_list;
         $proc_result['board_config'] = $board_config;
         $proc_result['authority'] = $authority;
         $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 보기 > '.$info->title);
@@ -297,6 +305,7 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
         $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         // 게시판 권한관련
         $authority = $authority_model->getAuthorityInfo($data);
