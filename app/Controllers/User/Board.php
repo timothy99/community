@@ -45,6 +45,7 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
         $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         // 공지사항 표시가 안된 일반 데이터
         $data['notice_yn'] = 'N';
@@ -248,6 +249,8 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
+        $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         // 게시판 권한관련
         $authority = $authority_model->getAuthorityInfo($data);
@@ -257,8 +260,6 @@ class Board extends BaseController
             redirect_alert("게시판 상세 권한이 없습니다.", getUserSessionInfo("previous_url"));
             exit;
         }
-
-        $board_config->category_arr = explode("||", $board_config->category);
 
         $model_result = $board_model->getBoardInfo($data);
         $result = $model_result['result'];
@@ -297,6 +298,7 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
         $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         // 게시판 권한관련
         $authority = $authority_model->getAuthorityInfo($data);

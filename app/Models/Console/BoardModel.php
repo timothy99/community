@@ -52,6 +52,9 @@ class BoardModel extends Model
         $category = $data['category'] ?? '';
         $notice_yn = $data['notice_yn'] ?? 'N';
 
+        $board_config = $data['board_config'];
+        $reg_date_yn = $board_config->reg_date_yn;
+
         $db = $this->db;
         $builder = $db->table('board');
         $builder->where('del_yn', 'N');
@@ -71,8 +74,11 @@ class BoardModel extends Model
         $list = $builder->get()->getResult();
         foreach ($list as $no => $val) {
             $list[$no]->list_no = $cnt-$no-(($page-1)*$rows);
-            $list[$no]->ins_date_txt = convertTextToDate($val->ins_date, 1, 1);
-            $list[$no]->reg_date_txt = $val->reg_date ? convertTextToDate($val->reg_date, 1, 2) : '';
+            if ($reg_date_yn == 'Y') {
+                $list[$no]->ins_date_txt = convertTextToDate($val->reg_date, 1, 2);
+            } else {
+                $list[$no]->ins_date_txt = convertTextToDate($val->ins_date, 1, 1);
+            }
         }
 
         $proc_result = array();
@@ -92,6 +98,7 @@ class BoardModel extends Model
         $message = '게시물 정보를 가져왔습니다.';
 
         $board_idx = $data['board_idx'];
+        $board_config = $data['board_config'];
 
         $db = $this->db;
         $builder = $db->table('board');
@@ -99,10 +106,14 @@ class BoardModel extends Model
         $builder->where('board_idx', $board_idx);
         $info = $builder->get()->getRow();
 
-        $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
         $info->upd_date_txt = convertTextToDate($info->ins_date, 1, 1);
         $info->reg_date_txt = convertTextToDate($info->reg_date, 1, 1);
-        $info->contents = $info->contents;
+        // 등록일을 사용하면 입력을 등록일로 치환
+        if ($board_config->reg_date_yn == 'Y') {
+            $info->ins_date_txt = convertTextToDate($info->reg_date, 1, 1);
+        } else {
+            $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
+        }
 
         if ($info->main_image_id) {
             $info->main_image_info = $file_model->getFileInfo($info->main_image_id);

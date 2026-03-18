@@ -199,13 +199,6 @@
                                 <td><?= number_format($info->hit_cnt) ?></td>
                             </tr>
 <?php   } ?>
-
-<?php   if ($board_config->reg_date_yn == 'Y') { ?>
-                            <tr>
-                                <th class="align-middle bg-light">등록일</th>
-                                <td><?= $info->reg_date_txt ?></td>
-                            </tr>
-<?php   } ?>
                             <tr>
                                 <th class="align-middle bg-light">등록자</th>
                                 <td><?= $info->ins_id ?></td>
@@ -214,15 +207,6 @@
                                 <th class="align-middle bg-light">입력일</th>
                                 <td><?= $info->ins_date_txt ?></td>
                             </tr>
-                            <tr>
-                                <th class="align-middle bg-light">수정자</th>
-                                <td><?= $info->upd_id ?></td>
-                            </tr>
-                            <tr>
-                                <th class="align-middle bg-light">수정일</th>
-                                <td><?= $info->upd_date_txt ?></td>
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>

@@ -34,6 +34,7 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
         $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         // 공지사항 표시가 안된 일반 데이터
         $data['notice_yn'] = 'N';
@@ -222,6 +223,7 @@ class Board extends BaseController
         $board_config = $config_result['config'];
 
         $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         $model_result = $board_model->getBoardInfo($data);
         $result = $model_result['result'];
@@ -252,6 +254,7 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
         $board_config->category_arr = explode("||", $board_config->category);
+        $data['board_config'] = $board_config;
 
         $model_result = $board_model->getBoardInfo($data);
         $info = $model_result['info'];

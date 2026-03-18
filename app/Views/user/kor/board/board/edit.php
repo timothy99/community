@@ -179,9 +179,9 @@
 <?php   } ?>
 
 <?php   if ($board_config->reg_date_yn == 'Y') { ?>
-                <!-- 등록일 -->
+                <!-- 입력일 수정 기능 -->
                 <div class="mb-3">
-                    <label for="reg_date" class="form-label">등록일</label>
+                    <label for="reg_date" class="form-label">입력일</label>
                     <input type="text" class="form-control w-25" id="reg_date" name="reg_date" value="<?= $info->reg_date_txt ?>">
                 </div>
 <?php   } ?>

@@ -195,12 +195,6 @@
                             </tr>
 <?php   } ?>
 
-<?php   if ($board_config->reg_date_yn == 'Y') { ?>
-                            <tr>
-                                <th class="align-middle bg-light">등록일</th>
-                                <td><?= $info->reg_date_txt ?></td>
-                            </tr>
-<?php   } ?>
                             <tr>
                                 <th class="align-middle bg-light">등록자</th>
                                 <td><?= $info->ins_id ?></td>
