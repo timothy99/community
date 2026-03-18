@@ -67,7 +67,7 @@ if (! defined('ENVIRONMENT')) {
     if (PHP_SAPI === 'cli') {
         define('ENVIRONMENT', 'development');
     } else {
-        $ip_arr = explode("||", env("development.ip"));
+        $ip_arr = explode("||", getenv("development.ip"));
         $ip_addr = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
         if (in_array($ip_addr, $ip_arr)) {
             define('ENVIRONMENT', 'development');
