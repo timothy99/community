@@ -4,6 +4,7 @@ namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
 use App\Models\Console\BoardModel;
+use App\Models\Console\CommentModel;
 
 class Board extends BaseController
 {
@@ -33,7 +34,7 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
-        $board_config->category_arr = explode("||", $board_config->category);
+        $board_config->category_arr = explode('||', $board_config->category);
         $data['board_config'] = $board_config;
 
         // 공지사항 표시가 안된 일반 데이터
@@ -87,7 +88,7 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
 
-        $board_config->category_arr = explode("||", $board_config->category);
+        $board_config->category_arr = explode('||', $board_config->category);
 
         $info = new \stdClass();
         $info->board_idx = 0;
@@ -148,7 +149,7 @@ class Board extends BaseController
         if ($file_idxs == '') {
             $file_arr = array();
         } else {
-            $file_arr = explode("||", $file_idxs);
+            $file_arr = explode('||', $file_idxs);
         }
 
         $contents = str_replace('<!--[if !supportEmptyParas]-->&nbsp;<!--[endif]-->', '', $contents);
@@ -210,6 +211,7 @@ class Board extends BaseController
     public function view($board_id, $board_idx)
     {
         $board_model = new BoardModel();
+        $comment_model = new CommentModel();
 
         $result = true;
         $message = '정상';
@@ -222,7 +224,7 @@ class Board extends BaseController
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
 
-        $board_config->category_arr = explode("||", $board_config->category);
+        $board_config->category_arr = explode('||', $board_config->category);
         $data['board_config'] = $board_config;
 
         $model_result = $board_model->getBoardInfo($data);
@@ -230,10 +232,15 @@ class Board extends BaseController
         $message = $model_result['message'];
         $info = $model_result['info'];
 
+        // 댓글목록
+        $model_result = $comment_model->getCommentList($data);
+        $comment_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['comment_list'] = $comment_list;
         $proc_result['board_config'] = $board_config;
 
         return aview('console/board/view', $proc_result);
@@ -253,7 +260,7 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
-        $board_config->category_arr = explode("||", $board_config->category);
+        $board_config->category_arr = explode('||', $board_config->category);
         $data['board_config'] = $board_config;
 
         $model_result = $board_model->getBoardInfo($data);

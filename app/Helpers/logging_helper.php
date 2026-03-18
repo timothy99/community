@@ -59,9 +59,6 @@ function logQuery($data)
     print_r($data);
 
     $data_log = ob_get_clean();
-    $data_log = str_replace('\n', ' ', $data_log);
-    $data_log = str_replace('\r', ' ', $data_log);
-    $data_log = str_replace('`', '', $data_log);
     $data_log = str_replace('SELECT ', 'select ', $data_log);
     $data_log = str_replace('UPDATE ', 'update ', $data_log);
     $data_log = str_replace('INSERT ', 'insert ', $data_log);
@@ -70,10 +67,13 @@ function logQuery($data)
     $data_log = str_replace(' FROM ', ' from ', $data_log);
     $data_log = str_replace(' JOIN ', ' join ', $data_log);
     $data_log = str_replace(' ON ', ' on ', $data_log);
-    $data_log = str_replace(' WHERE ', ' where ', $data_log);
+    $data_log = str_replace('WHERE', 'where', $data_log);
     $data_log = str_replace(' AND ', ' and ', $data_log);
     $data_log = str_replace(' INTO ', ' into ', $data_log);
     $data_log = str_replace(' VALUES ', ' values ', $data_log);
+    $data_log = str_replace('`', '', $data_log);
+    $data_log = str_replace(chr(10), ' ', $data_log);  // \n (줄바꿈)
+    $data_log = str_replace(chr(13), ' ', $data_log);  // \r (캐리지 리턴)
 
     log_message('error', $data_log);
 

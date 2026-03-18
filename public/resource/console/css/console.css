@@ -3,6 +3,41 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
 }
 
+/* 반응형 테이블 대체 레이아웃 */
+.tbl-label {
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    font-weight: 700;
+}
+
+.tbl-value {
+    padding: 0.5rem 1rem;
+}
+
+.tbl-action {
+    padding: 0.5rem 1rem;
+}
+
+@media (min-width: 768px) {
+    .tbl-label {
+        flex: 0 0 auto;
+        width: 16.66667%;
+        border-right: 1px solid #dee2e6;
+    }
+    .tbl-value {
+        flex: 0 0 auto;
+        width: 83.33333%;
+    }
+    .tbl-action {
+        flex: 0 0 auto;
+        width: 16.66667%;
+        text-align: right;
+    }
+    .tbl-row--with-action .tbl-value {
+        width: 66.66667%;
+    }
+}
+
 a {
     text-decoration: none;
 }
@@ -196,8 +231,8 @@ dl.row dd {
     --custom-secondary-rgb: 108, 117, 125;
     --custom-success: #198754;
     --custom-success-rgb: 25, 135, 84;
-    --custom-info: #47daff;
-    --custom-info-rgb: 71, 218, 255;
+    --custom-info: #47b5ff;
+    --custom-info-rgb: 71, 181, 255;
     --custom-warning: #ffc107;
     --custom-warning-rgb: 255, 193, 7;
     --custom-danger: #dc3545;

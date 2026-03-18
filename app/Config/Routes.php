@@ -121,3 +121,8 @@ $routes->get('/board/(:alphanum)/edit/(:num)', 'User\Board::edit/$1/$2');
 $routes->post('/board/(:alphanum)/delete', 'User\Board::delete');
 
 $routes->post("/main/popup/block", "User\Home::popupBlock");
+
+$routes->post("/csl/comment/insert", "Console\Comment::insert");
+$routes->post("/csl/comment/delete", "Console\Comment::delete");
+$routes->post("/csl/comment/edit/(:num)", "Console\Comment::edit");
+$routes->post("/csl/comment/update", "Console\Comment::update");
