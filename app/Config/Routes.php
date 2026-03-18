@@ -126,3 +126,8 @@ $routes->post("/csl/comment/insert", "Console\Comment::insert");
 $routes->post("/csl/comment/delete", "Console\Comment::delete");
 $routes->post("/csl/comment/edit/(:num)", "Console\Comment::edit");
 $routes->post("/csl/comment/update", "Console\Comment::update");
+
+$routes->post("/comment/insert", "User\Comment::insert");
+$routes->post("/comment/delete", "User\Comment::delete");
+$routes->post("/comment/edit/(:num)", "User\Comment::edit/$1");
+$routes->post("/comment/update", "User\Comment::update");

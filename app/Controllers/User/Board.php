@@ -5,6 +5,7 @@ namespace App\Controllers\User;
 use App\Controllers\BaseController;
 use App\Models\User\BoardModel;
 use App\Models\User\BoardAuthorityModel;
+use App\Models\User\CommentModel;
 
 class Board extends BaseController
 {
@@ -238,6 +239,7 @@ class Board extends BaseController
     {
         $board_model = new BoardModel();
         $authority_model = new BoardAuthorityModel();
+        $comment_model = new CommentModel();
 
         $result = true;
         $message = '정상';
@@ -271,10 +273,15 @@ class Board extends BaseController
             $board_model->procBoardHitUpdate($data);
         }
 
+        // 댓글목록
+        $model_result = $comment_model->getCommentList($data);
+        $comment_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['comment_list'] = $comment_list;
         $proc_result['board_config'] = $board_config;
         $proc_result['authority'] = $authority;
         $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 보기 > '.$info->title);

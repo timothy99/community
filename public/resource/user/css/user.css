@@ -3,6 +3,41 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
 }
 
+/* 반응형 테이블 대체 레이아웃 */
+.tbl-label {
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    font-weight: 700;
+}
+
+.tbl-value {
+    padding: 0.5rem 1rem;
+}
+
+.tbl-action {
+    padding: 0.5rem 1rem;
+}
+
+@media (min-width: 768px) {
+    .tbl-label {
+        flex: 0 0 auto;
+        width: 16.66667%;
+        border-right: 1px solid #dee2e6;
+    }
+    .tbl-value {
+        flex: 0 0 auto;
+        width: 83.33333%;
+    }
+    .tbl-action {
+        flex: 0 0 auto;
+        width: 16.66667%;
+        text-align: right;
+    }
+    .tbl-row--with-action .tbl-value {
+        width: 66.66667%;
+    }
+}
+
 /* Loading Screen */
 #progress_loading {
     height: 100%;
