@@ -41,6 +41,27 @@
             <a class="btn btn-sm btn-outline-secondary" href="/member/register">회원가입</a>
         </li>
 <?php   } ?>
-
+        <li class="nav-item">
+            <span class="nav-link">|</span>
+        </li> 
+        <li class="nav-item align-self-center ms-2">
+            <select class="form-select form-select-sm" id="select-language" name="select-language" onchange="change_language(this.value)">
+                <option value="kor">한국어</option>
+                <option value="eng">English</option>
+                <option value="chn">中文</option>
+            </select>
+        </li>
     </ul>
 </header>
+
+<script>
+    // 메뉴강조
+    $(window).on('load', function() {
+        $('#select-language').val(document.cookie.replace(/(?:(?:^|.*;\s*)language\s*=\s*([^;]*).*$)|^.*$/, "$1"));
+    });
+
+    function change_language(lang) {
+        document.cookie = "language=" + lang + "; path=/; max-age=" + (60 * 60 * 24 * 30);
+        location.reload();
+    }
+</script>
