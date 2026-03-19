@@ -286,8 +286,6 @@ create table mng_config (
     smtp_mail varchar(200) null comment 'SMTP 발송자 메일'
 ) comment '설정 관리' collate='utf8mb4_unicode_ci';
 
-INSERT INTO mng_config (title, description, phone, fax, email, work_hour, post_code, addr1, addr2, biz_no, company_logo, program_ver, smtp_yn, smtp_host, smtp_user, smtp_pass, smtp_port, smtp_name, smtp_mail) VALUES ('회사', '회사 소개', '000-111-2222', '', 'email@test.com', '평일 9:00 ~ 18:00 토요일/공휴일 휴무', '00000', '서울 중구 세종로', '', '123-45-67890', '', '1', 'Y', '', '', '', '', '', '');
-
 drop table if exists mng_board_authority;
 create table mng_board_authority (
     board_authority_idx int not null auto_increment comment '인덱스',
