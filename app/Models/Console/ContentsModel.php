@@ -20,8 +20,17 @@ class ContentsModel extends Model
         $db = $this->db;
         $builder = $db->table('contents');
         $builder->where('del_yn', 'N');
-        if ($search_text != null) {
-            $builder->like($search_condition, $search_text);
+        if ($search_text != null && $search_text !== '') {
+            $allowed = ['title', 'contents'];
+            $conditions = array_filter(explode(',', $search_condition), fn($c) => in_array(trim($c), $allowed));
+            if (empty($conditions)) {
+                $conditions = ['title'];
+            }
+            $builder->groupStart();
+            foreach ($conditions as $condition) {
+                $builder->orLike(trim($condition), $search_text);
+            }
+            $builder->groupEnd();
         }
         $builder->orderBy('contents_idx', 'desc');
         $builder->limit($rows, getOffset($page, $rows));

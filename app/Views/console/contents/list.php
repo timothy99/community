@@ -26,7 +26,7 @@
                     </div>
                     <div class="col-md-4">
                         <label for="search_condition" class="form-label mb-1">조건</label>
-                        <select class="form-select" id="search_condition" name="search_condition">
+                        <select class="form-select" id="search_condition" name="search_condition" multiple>
                             <option value="title">제목</option>
                             <option value="contents">내용</option>
                         </select>
@@ -94,10 +94,19 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
-        // $('#li-slide').addClass('active-level-1').attr({'data-bs-toggle': 'collapse', 'aria-expanded': 'true'});
         $('#li-contents').addClass('active-level-1');
 
-        $("#search_condition").val("<?= $data['search_condition'] ?>").prop("selected", true);
+        $('#search_condition').select2({
+            theme: 'bootstrap-5',
+            placeholder: '조건 선택',
+            allowClear: true,
+            width: '100%',
+        });
+
+        var savedCondition = "<?= $data['search_condition'] ?>";
+        var conditions = savedCondition ? savedCondition.split(',').filter(Boolean) : ['title'];
+        $('#search_condition').val(conditions).trigger('change');
+
         $("#search_rows").val("<?= $data['search_rows'] ?>").prop("selected", true);
     });
 
@@ -112,7 +121,8 @@
 
     function search() {
         var search_text = $('#search_text').val();
-        var search_condition = $('#search_condition').val();
+        var selected = $('#search_condition').val();
+        var search_condition = (selected && selected.length > 0) ? selected.join(',') : 'title';
         var search_rows = $('#search_rows').val();
         var search_page = $('#search_page').val();
         location.href = '/csl/contents/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows;
