@@ -1,0 +1,77 @@
+
+/* 모바일 반응형 사이드바 */
+@media (max-width: 992px) {
+    .app-header {
+        margin-left: 0 !important;
+    }
+    
+    #sidebar {
+        transform: translateX(100%);
+        z-index: 1040;
+        border-left: 1px solid #b8b8b8;
+        border-right: none;
+    }
+    
+    #sidebar.show-mobile {
+        transform: translateX(0);
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    #main-content {
+        margin-left: 0 !important;
+    }
+}
+
+@media (min-width: 992px) {
+    #sidebar {
+        transform: translateX(0);
+        right: auto;
+        left: 0;
+        border-right: 1px solid #b8b8b8;
+        border-left: none;
+    }
+}
+
+/* Show main dropdown on hover for desktop */
+@media (min-width: 768px) {
+    .nav-item.dropdown:hover > .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+    
+    /* Hide all submenus by default */
+    .dropdown-submenu .dropdown-menu {
+        display: none !important;
+    }
+    
+    /* Only show submenu when hovering directly over the submenu parent */
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+    }
+
+    .tbl-label {
+        flex: 0 0 auto;
+        width: 16.66667%;
+        border-right: 1px solid #dee2e6;
+    }
+    .tbl-value {
+        flex: 0 0 auto;
+        width: 83.33333%;
+    }
+    .tbl-action {
+        flex: 0 0 auto;
+        width: 16.66667%;
+        text-align: right;
+    }
+    .tbl-row--with-action .tbl-value {
+        width: 66.66667%;
+    }
+}
+
+/* 모바일에서 dd가 dt 바로 아래 올 때 상단 border 제거 */
+@media (max-width: 575px) {
+    dl.row dd {
+        border-top: none;
+        padding-top: 0.5rem;
+    }
+}

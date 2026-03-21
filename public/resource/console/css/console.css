@@ -18,25 +18,7 @@ body {
     padding: 0.5rem 1rem;
 }
 
-@media (min-width: 768px) {
-    .tbl-label {
-        flex: 0 0 auto;
-        width: 16.66667%;
-        border-right: 1px solid #dee2e6;
-    }
-    .tbl-value {
-        flex: 0 0 auto;
-        width: 83.33333%;
-    }
-    .tbl-action {
-        flex: 0 0 auto;
-        width: 16.66667%;
-        text-align: right;
-    }
-    .tbl-row--with-action .tbl-value {
-        width: 66.66667%;
-    }
-}
+
 
 a {
     text-decoration: none;
@@ -211,17 +193,9 @@ dl.row dd {
     margin-bottom: 0;
 }
 
-/* 모바일에서 dd가 dt 바로 아래 올 때 상단 border 제거 */
-@media (max-width: 575.98px) {
-    dl.row dd {
-        border-top: none;
-        padding-top: 0.5rem;
-    }
-}
-
 /* ========================================
-   커스텀 색상표 (Custom Color Palette)
-   ======================================== */
+    커스텀 색상표 (Custom Color Palette)
+    ======================================== */
 
 /* CSS 변수로 색상 정의 */
 :root {
@@ -333,53 +307,41 @@ dl.row dd {
     font-family: 'Noto Sans', sans-serif;
 }
 
-/* 모바일 반응형 사이드바 */
-@media (max-width: 991.98px) {
-    .app-header {
-        margin-left: 0 !important;
-    }
-    
-    #sidebar {
-        transform: translateX(100%);
-        z-index: 1040;
-        border-left: 1px solid #b8b8b8;
-        border-right: none;
-    }
-    
-    #sidebar.show-mobile {
-        transform: translateX(0);
-        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    #main-content {
-        margin-left: 0 !important;
-    }
+/* Select2 multi-select 한 줄 고정 */
+.select2-container--bootstrap-5 .select2-selection--multiple {
+    height: 38px !important;
+    overflow: hidden !important;
+    padding: 0 8px !important;
+    display: flex !important;
+    align-items: center !important;
 }
-
-@media (min-width: 992px) {
-    #sidebar {
-        transform: translateX(0);
-        right: auto;
-        left: 0;
-        border-right: 1px solid #b8b8b8;
-        border-left: none;
-    }
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 4px !important;
 }
-
-/* Show main dropdown on hover for desktop */
-@media (min-width: 768px) {
-    .nav-item.dropdown:hover > .dropdown-menu {
-        display: block;
-        margin-top: 0;
-    }
-    
-    /* Hide all submenus by default */
-    .dropdown-submenu .dropdown-menu {
-        display: none !important;
-    }
-    
-    /* Only show submenu when hovering directly over the submenu parent */
-    .dropdown-submenu:hover > .dropdown-menu {
-        display: block !important;
-    }
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+    margin: 0 !important;
+    padding: 2px 8px !important;
+    background-color: #9133e0 !important;
+    border: 1px solid #7a1fcf !important;
+    border-radius: 4px !important;
+    color: #fff !important;
+}
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff !important;
+    margin-right: 4px !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") !important;
+}
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #fff !important;
+    background-color: transparent !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") !important;
+}
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-search {
+    display: none !important;
 }
