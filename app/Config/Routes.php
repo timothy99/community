@@ -49,6 +49,10 @@ $routes->post('/csl/member/delete', 'Console\Member::delete');
 $routes->get('/csl/member/excel', 'Console\Member::excel');
 $routes->get('/csl/member/password/(:any)', 'Console\Member::password/$1');
 $routes->post('/csl/member/password/update', 'Console\Member::passwordUpdate');
+$routes->post('/csl/member/memo/update', 'Console\Member::memoUpdate');
+$routes->post('/csl/member/memo/insert', 'Console\Member::memoInsert');
+$routes->get('/csl/member/memo/view/(:num)', 'Console\Member::memoView/$1');
+$routes->post('/csl/member/memo/delete', 'Console\Member::memoDelete');
 
 $routes->post('/file/upload/general', 'User\File::uploadGeneral');
 $routes->post('/file/upload/board', 'User\File::uploadBoard');

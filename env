@@ -7,7 +7,7 @@ app.appTimezone = "Asia/Seoul"
 logger.threshold = 4
 
 encryption.key = "32자리의 암호화 키를 입력해주세요"
-encryption.iv = "32자리의 암호화 iv를 입력해주세요"
+encryption.iv = "8자리의 암호화 iv를 입력해주세요"
 encryption.way = "aes-256-cbc"
 
 database.default.hostname = "호스트"

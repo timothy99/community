@@ -4,6 +4,7 @@ namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
 use App\Models\Console\MemberModel;
+use App\Models\Console\MemoModel;
 
 class Member extends BaseController
 {
@@ -108,6 +109,7 @@ class Member extends BaseController
     public function view($member_id)
     {
         $member_model = new MemberModel();
+        $memo_model = new MemoModel();
 
         $result = true;
         $message = '정상';
@@ -120,10 +122,14 @@ class Member extends BaseController
         $message = $model_result['message'];
         $info = $model_result['info'];
 
+        $model_result = $memo_model->getMemoList($data);
+        $list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['list'] = $list;
 
         return aview('console/member/view', $proc_result);
     }
@@ -241,6 +247,92 @@ class Member extends BaseController
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/csl/member/view/'.$member_id;
+
+        return $this->response->setJSON($proc_result);
+    }
+
+    public function memoUpdate()
+    {
+        $memo_model = new MemoModel();
+
+        $result = true;
+        $message = '메모가 변경되었습니다.';
+
+        $member_memo_idx = $this->request->getPost('member_memo_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+        $memo = $this->request->getPost('memo', FILTER_SANITIZE_SPECIAL_CHARS);
+        $member_id = $this->request->getPost('member_id', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($memo == null) {
+            $result = false;
+            $message = '메모를 입력해주세요.';
+        }
+
+        $data = array();
+        $data['member_memo_idx'] = $member_memo_idx;
+        $data['memo'] = $memo;
+        $data['member_id'] = $member_id;
+
+        if ($result == true) {
+            if ($member_memo_idx == 0) {
+                $model_result = $memo_model->procMemoInsert($data);
+            } else {
+                $model_result = $memo_model->procMemoUpdate($data);
+            }
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+
+        return $this->response->setJSON($proc_result);
+    }
+
+    public function memoView($member_memo_idx)
+    {
+        $memo_model = new MemoModel();
+
+        $result = true;
+        $message = '정상';
+
+        $data = array();
+        $data['member_memo_idx'] = $member_memo_idx;
+
+        $model_result = $memo_model->getMemoInfo($data);
+        $result = $model_result['result'];
+        $message = $model_result['message'];
+        $info = $model_result['info'];
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['info'] = $info;
+
+        return aview('console/member/memo_edit', $proc_result);
+    }
+
+    public function memoDelete()
+    {
+        $memo_model = new MemoModel();
+
+        $result = true;
+        $message = '메모가 삭제되었습니다.';
+
+        $member_memo_idx = $this->request->getPost('member_memo_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        $data = array();
+        $data['member_memo_idx'] = $member_memo_idx;
+
+        if ($result == true) {
+            $model_result = $memo_model->procMemoDelete($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
 
         return $this->response->setJSON($proc_result);
     }
