@@ -574,14 +574,10 @@ class FileModel extends Model
         $builder->set('upd_date', $today);
         $result = $builder->insert();
 
+        $db->transComplete();
         if ($result === false) {
-            $db->transRollback();
             $result = false;
             $message = '파일정보 입력에 실패하였습니다.';
-        } else {
-            $db->transComplete();
-            $result = true;
-            $message = '파일정보 입력이 완료되었습니다.';
         }
 
         $model_result = array();

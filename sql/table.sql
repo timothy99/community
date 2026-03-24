@@ -25,6 +25,31 @@ create table mng_member (
     primary key (member_idx)
 ) comment='회원정보' collate='utf8mb4_unicode_ci';
 
+drop table if exists mng_member_reset;
+create table mng_member_reset (
+    member_reset_idx int not null auto_increment comment '인덱스',
+    member_id varchar(64) not null comment '사용자 아이디',
+    email varchar(100) default null comment '이메일',
+    reset_key varchar(32) default null comment '리셋키',
+    expire_date varchar(14) not null comment '암호화 변경 만료 시간(현재 시간으로부터 15분)',
+    key mng_member_reset_reset_key (reset_key),
+    primary key (member_reset_idx)
+) comment='암호를 초기화 하기 위한 정보' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_member_memo;
+create table mng_member_memo (
+    member_memo_idx int not null auto_increment comment '인덱스',
+    member_id varchar(64) not null comment '사용자 아이디',
+    memo varchar(4000) not null comment '메모 내용',
+    del_yn enum ('Y', 'N') default 'N' not null comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    primary key (member_memo_idx),
+    key index1 (member_id)
+) comment='회원 메모' collate='utf8mb4_unicode_ci';
+
 create table mng_admin (
     admin_idx int not null auto_increment comment '관리자 번호',
     member_id int not null comment '회원 번호',
@@ -99,6 +124,21 @@ create table mng_board_comment (
     key board_comment_index1 (board_idx),
     primary key (board_comment_idx)
 ) comment='게시판 댓글' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_board_authority;
+create table mng_board_authority (
+    board_authority_idx int not null auto_increment comment '인덱스',
+    board_id varchar(20) default null comment '게시판 아이디',
+    auth_group varchar(20) default null comment '권한 그룹',
+    authority_role varchar(20) not null comment '권한 역할(list-목록, view-상세, write-쓰기)',
+    del_yn varchar(1) not null default 'N' comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key index1 (board_id),
+    primary key (board_authority_idx)
+) comment='게시판 권한 설정' collate='utf8mb4_unicode_ci';
 
 drop table if exists mng_board_file;
 create table mng_board_file (
@@ -181,17 +221,6 @@ create table mng_file (
     unique key file_index1 (file_id),
     primary key (file_idx)
 ) comment='파일 정보' collate='utf8mb4_unicode_ci';
-
-drop table if exists mng_member_reset;
-create table mng_member_reset (
-    member_reset_idx int not null auto_increment comment '인덱스',
-    member_id varchar(64) not null comment '사용자 아이디',
-    email varchar(100) default null comment '이메일',
-    reset_key varchar(32) default null comment '리셋키',
-    expire_date varchar(14) not null comment '암호화 변경 만료 시간(현재 시간으로부터 15분)',
-    key mng_member_reset_reset_key (reset_key),
-    primary key (member_reset_idx)
-) comment='암호를 초기화 하기 위한 정보' collate='utf8mb4_unicode_ci';
 
 drop table if exists mng_contents;
 create table mng_contents (
@@ -285,18 +314,3 @@ create table mng_config (
     smtp_name varchar(200) null comment 'SMTP 발송자 이름',
     smtp_mail varchar(200) null comment 'SMTP 발송자 메일'
 ) comment '설정 관리' collate='utf8mb4_unicode_ci';
-
-drop table if exists mng_board_authority;
-create table mng_board_authority (
-    board_authority_idx int not null auto_increment comment '인덱스',
-    board_id varchar(20) default null comment '게시판 아이디',
-    auth_group varchar(20) default null comment '권한 그룹',
-    authority_role varchar(20) not null comment '권한 역할(list-목록, view-상세, write-쓰기)',
-    del_yn varchar(1) not null default 'N' comment '삭제 여부',
-    ins_id varchar(70) not null comment '입력자',
-    ins_date varchar(14) not null comment '입력일',
-    upd_id varchar(70) not null comment '수정자',
-    upd_date varchar(14) not null comment '수정일',
-    key index1 (board_id),
-    primary key (board_authority_idx)
-) comment='게시판 권한 설정' collate='utf8mb4_unicode_ci';
