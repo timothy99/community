@@ -199,7 +199,7 @@
             alert('메모를 입력하세요.');
             return;
         }
-        ajax1('/csl/member/memo/insert', 'frm', 'memoInsertAfter');
+        ajax1('/csl/member/memo/update', 'frm', 'memoInsertAfter');
     }
 
     function memoInsertAfter(proc_result) {
