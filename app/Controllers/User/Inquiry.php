@@ -72,7 +72,7 @@ class Inquiry extends BaseController
 
             $email_data = array();
             // $email_data['receive_email'] = $email; // 문의한 사람에게 보내는 경우
-            $email_data['receive_email'] = $config_info->email; // 홈페이지 환경설정상의 메일
+            $email_data['receive_email'] = $config_info->manager_email; // 홈페이지 환경설정상의 담당자 이메일
             $email_data['title'] = '[문의하기] ' . $name . '님이 문의하셨습니다.';
             $email_data['contents'] = nl2br($contents) . '<br><br>전화번호: ' . $phone;
 

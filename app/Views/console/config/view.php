@@ -90,6 +90,10 @@
                                 <td><?= $info->smtp_yn ?></td>
                             </tr>
                             <tr>
+                                <th class="align-middle bg-light">담당자 이메일</th>
+                                <td><?= $info->manager_email ?></td>
+                            </tr>
+                            <tr>
                                 <th class="align-middle bg-light">SMTP 호스트</th>
                                 <td><?= $info->smtp_host ?></td>
                             </tr>
