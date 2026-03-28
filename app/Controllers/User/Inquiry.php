@@ -35,6 +35,7 @@ class Inquiry extends BaseController
         $contents = $this->request->getPost('contents', FILTER_SANITIZE_SPECIAL_CHARS);
         $phone = $this->request->getPost('phone', FILTER_SANITIZE_SPECIAL_CHARS);
         $email = $this->request->getPost('email', FILTER_SANITIZE_SPECIAL_CHARS);
+        $send_to_me_yn = $this->request->getPost('send_to_me_yn', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($name == null || trim($name) == '') {
             $result = false;
@@ -71,12 +72,16 @@ class Inquiry extends BaseController
             $config_info = $model_result['info'];
 
             $email_data = array();
-            // $email_data['receive_email'] = $email; // 문의한 사람에게 보내는 경우
             $email_data['receive_email'] = $config_info->manager_email; // 홈페이지 환경설정상의 담당자 이메일
-            $email_data['title'] = '[문의하기] ' . $name . '님이 문의하셨습니다.';
-            $email_data['contents'] = nl2br($contents) . '<br><br>전화번호: ' . $phone;
+            $email_data['title'] = '[문의하기] '.$name.'님이 문의하셨습니다.';
+            $email_data['contents'] = nl2br($contents).'<br><br>전화번호: '.$phone.'<br><br>이메일: '.$email;
 
             $model_result = $mail_model->procMailSend($email_data);
+
+            if ($send_to_me_yn == 'Y') {
+                $email_data['receive_email'] = $email; // 문의한 사람의 이메일로도 발송
+                $model_result = $mail_model->procMailSend($email_data);
+            }
         }
 
         $proc_result = array();
