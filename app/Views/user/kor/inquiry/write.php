@@ -29,9 +29,10 @@
 
                         <!-- 이메일 입력 -->
                         <div class="mb-3">
-                            <label for="email" class="form-label">이메일 <span class="text-danger">*</span></label>
+                            <label for="email" class="form-label">답변 받을 이메일 <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="email" name="email" placeholder="example@email.com" required>
-                            <small class="form-text text-muted">답변받으실 이메일 주소를 입력하세요.</small>
+                            <input type="checkbox" id="send_to_me_yn" name="send_to_me_yn" value="Y">
+                            <label for="send_to_me_yn" class="form-check-label">지금의 문의 내용을 내 메일로도 받겠습니다.</label>
                         </div>
 
                         <!-- 내용 입력 -->
