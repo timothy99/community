@@ -74,6 +74,7 @@ class Config extends BaseController
         $addr2 = $this->request->getPost('addr2', FILTER_SANITIZE_SPECIAL_CHARS);
         $biz_no = $this->request->getPost('biz_no', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_yn = $this->request->getPost('smtp_yn', FILTER_SANITIZE_SPECIAL_CHARS);
+        $manager_email = $this->request->getPost('manager_email', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_mail = $this->request->getPost('smtp_mail', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_user = $this->request->getPost('smtp_user', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_pass = $this->request->getPost('smtp_pass', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -87,6 +88,7 @@ class Config extends BaseController
         if ($post_code == null) { $result = false; $message = '우편번호를 입력해주세요.'; }
         if ($biz_no == null) { $result = false; $message = '사업자등록번호를 입력해주세요.'; }
         if ($smtp_yn == null) { $result = false; $message = '메일발송기능 사용여부를 입력해주세요.'; }
+        if ($manager_email == null) { $result = false; $message = '담당자 이메일을 입력해주세요.'; }
 
         $data = array();
         $data['title'] = $title;
@@ -101,6 +103,7 @@ class Config extends BaseController
         $data['addr2'] = $addr2;
         $data['biz_no'] = $biz_no;
         $data['smtp_yn'] = $smtp_yn;
+        $data['manager_email'] = $manager_email;
         $data['smtp_mail'] = $smtp_mail;
         $data['smtp_user'] = $smtp_user;
         $data['smtp_pass'] = $smtp_pass;

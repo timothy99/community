@@ -119,6 +119,13 @@
                     <input type="text" class="form-control" id="biz_no" name="biz_no" value="<?= $info->biz_no ?>">
                 </div>
 
+                <!-- 담당자 이메일 -->
+                <div class="mb-3">
+                    <label for="manager_email" class="form-label">담당자 이메일</label>
+                    <input type="text" class="form-control" id="manager_email" name="manager_email" value="<?= $info->manager_email ?>">
+                    <small class="text-muted">담당자 이메일을 입력하세요. 이 메일 주소로 문의사항이 전달됩니다.</small>
+                </div>
+
                 <!-- 메일발송기능 사용여부 -->
                 <div class="mb-3">
                     <label for="smtp_yn" class="form-label">메일발송기능 사용여부</label>

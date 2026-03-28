@@ -67,6 +67,7 @@ class MailModel extends Model
             $email->setSubject($title);
             $email->setMessage($contents);
             $result = $email->send();
+            logMessage($result);
         } catch (Throwable $t) {
             $result = false;
             $message = '메일발송에 오류가 발생했습니다.';

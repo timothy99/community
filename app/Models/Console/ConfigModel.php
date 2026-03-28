@@ -47,6 +47,7 @@ class ConfigModel extends Model
         $addr2 = $data['addr2'];
         $biz_no = $data['biz_no'];
         $smtp_yn = $data['smtp_yn'];
+        $manager_email = $data['manager_email'];
         $smtp_mail = $data['smtp_mail'];
         $smtp_user = $data['smtp_user'];
         $smtp_pass = $data['smtp_pass'];
@@ -69,6 +70,7 @@ class ConfigModel extends Model
         $builder->set('addr2', $addr2);
         $builder->set('biz_no', $biz_no);
         $builder->set('smtp_yn', $smtp_yn);
+        $builder->set('manager_email', $manager_email);
         $builder->set('smtp_mail', $smtp_mail);
         $builder->set('smtp_user', $smtp_user);
         $builder->set('smtp_pass', $smtp_pass);
