@@ -16,32 +16,35 @@
                                 <th>순서1</th>
                                 <th>순서2</th>
                                 <th>링크</th>
+                                <th>타겟</th>
                                 <th>작업</th>
                             </tr>
                         </thead>
                         <tbody>
 <?php   foreach($list as $no => $val) { ?>
                         <tr>
-                            <td><?=$val->menu_name ?></td>
+                            <td><?= $val->menu_name ?></td>
                             <td></td>
-                            <td class="text-center"><?=$val->order_no ?></td>
+                            <td class="text-center"><?= $val->order_no ?></td>
                             <td class="text-center"></td>
-                            <td><?=$val->url_link ?></td>
+                            <td><?= $val->url_link ?></td>
+                            <td><?= code_replace('url_target', $val->url_target) ?></td>
                             <td>
-                                <a href="/csl/menu/write/<?=$val->menu_idx ?>" type="button" class="btn btn-sm btn-warning" id="info" name="info" value="<?=$val->menu_idx ?>">하위추가</a>
-                                <a href="/csl/menu/edit/<?=$val->menu_idx ?>" type="button" class="btn btn-sm btn-success" id="edit" name="edit" value="<?=$val->menu_idx ?>">수정</a>
+                                <a href="/csl/menu/write/<?= $val->menu_idx ?>" type="button" class="btn btn-sm btn-warning" id="info" name="info" value="<?=$val->menu_idx ?>">하위추가</a>
+                                <a href="/csl/menu/edit/<?= $val->menu_idx ?>" type="button" class="btn btn-sm btn-success" id="edit" name="edit" value="<?=$val->menu_idx ?>">수정</a>
                                 <button type="button" class="btn btn-sm btn-danger" id="delete" name="delete" value="<?=$val->menu_idx ?>" onclick="menuDelete(this.value)">삭제</button>
                             </td>
                         </tr>
 <?php       foreach($val->list as $no2 => $val2) { // 2차 메뉴 ?>
                         <tr>
                             <td></td>
-                            <td><?=$val2->menu_name ?></td>
+                            <td><?= $val2->menu_name ?></td>
                             <td class="text-center"></td>
-                            <td class="text-center"><?=$val2->order_no ?></td>
-                            <td><?=$val2->url_link ?></td>
+                            <td class="text-center"><?= $val2->order_no ?></td>
+                            <td><?= $val2->url_link ?></td>
+                            <td><?= code_replace('url_target', $val2->url_target) ?></td>
                             <td>
-                                <a href="/csl/menu/edit/<?=$val2->menu_idx ?>" type="button" class="btn btn-sm btn-success" id="edit" name="edit" value="<?=$val2->menu_idx ?>">수정</a>
+                                <a href="/csl/menu/edit/<?= $val2->menu_idx ?>" type="button" class="btn btn-sm btn-success" id="edit" name="edit" value="<?=$val2->menu_idx ?>">수정</a>
                                 <button type="button" class="btn btn-sm btn-danger" id="delete" name="delete" value="<?=$val2->menu_idx ?>" onclick="menuDelete(this.value)">삭제</button>
                             </td>
                         </tr>
@@ -49,7 +52,7 @@
 <?php   } ?>
 <?php   if (count($list) == 0) { ?>
                             <tr>
-                                <td colspan="6" class="text-center">데이터가 없습니다.</td>
+                                <td colspan="7" class="text-center">데이터가 없습니다.</td>
                             </tr>
 <?php   } ?>
                         </tbody>

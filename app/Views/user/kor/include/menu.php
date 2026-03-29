@@ -7,14 +7,14 @@
     <ul class="nav nav-pills">
 <?php   foreach ($menu_list as $no => $val) { ?>
         <li class="nav-item <?= $val->dropdown ?>">
-            <a class="nav-link <?= $val->dropdown_toggle ?>" href="<?= $val->url_link ?>" role="button" data-bs-toggle="<?= $val->data_bs_toggle ?>" aria-expanded="false">
+            <a class="nav-link <?= $val->dropdown_toggle ?>" href="<?= $val->url_link ?>" target="<?= $val->url_target ?>" role="button" data-bs-toggle="<?= $val->data_bs_toggle ?>" aria-expanded="false">
                 <?= $val->menu_name ?>
             </a>
 <?php       if (count($val->sub_list) > 0) { ?>
             <ul class="<?= $val->dropdown_menu ?>">
 <?php           foreach ($val->sub_list as $no2 => $val2) { ?>
                 <li class="<?= $val->dropdown_submenu ?>">
-                    <a class="<?= $val->dropdown_item ?>" href="<?= $val2->url_link ?>"><?= $val2->menu_name ?></a>
+                    <a class="<?= $val->dropdown_item ?>" href="<?= $val2->url_link ?>" target="<?= $val2->url_target ?>"><?= $val2->menu_name ?></a>
                 </li>
 <?php           } ?>
             </ul>

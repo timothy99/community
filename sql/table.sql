@@ -74,6 +74,7 @@ create table mng_menu (
     menu_position int not null default 0 comment '메뉴 위치',
     menu_name varchar(500) null comment '메뉴명',
     url_link varchar(500) null comment '링크',
+    url_target varchar(10) default '_blank' null comment '링크 타겟',
     del_yn enum('Y', 'N') not null comment '삭제 여부',
     ins_id varchar(70) default null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
