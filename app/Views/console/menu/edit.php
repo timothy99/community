@@ -31,6 +31,15 @@
                     <label for="url_link" class="form-label">링크 URL</label>
                     <input type="text" class="form-control" id="url_link" name="url_link" placeholder="http로 시작하는 주소 전체. 내부 링크는 /부터 입력도 가능합니다." value="<?= $info->url_link ?>">
                 </div>
+
+                <!-- URL 타겟 -->
+                <div class="mb-3">
+                    <label for="url_target" class="form-label">링크 타겟</label>
+                    <select class="form-select w-25" id="url_target" name="url_target">
+                        <option value="_self">현재창</option>
+                        <option value="_blank">새창</option>
+                    </select>
+                </div>
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
@@ -49,6 +58,7 @@
     // 메뉴강조
     $(window).on('load', function() {
         $('#li-menu').addClass('active-level-1');
+        $('#url_target').val('<?=$info->url_target ?>');
     });
 
     function menuUpdate() {

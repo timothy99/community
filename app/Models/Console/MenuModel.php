@@ -71,6 +71,7 @@ class MenuModel extends Model
         $menu_position = $data["menu_position"];
         $menu_name = $data["menu_name"];
         $url_link = $data["url_link"];
+        $url_target = $data["url_target"];
         $order_no = $data["order_no"];
 
         $menu_position = 1;
@@ -98,6 +99,7 @@ class MenuModel extends Model
         $builder->set('menu_position', $new_menu_position);
         $builder->set('menu_name', $menu_name);
         $builder->set('url_link', $url_link);
+        $builder->set('url_target', $url_target);
         $builder->set('order_no', $order_no);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $user_id);
@@ -140,6 +142,7 @@ class MenuModel extends Model
         $menu_name = $data['menu_name'];
         $order_no = $data['order_no'];
         $url_link = $data['url_link'];
+        $url_target = $data['url_target'];
 
         $db = $this->db;
         $db->transStart();
@@ -148,6 +151,7 @@ class MenuModel extends Model
         $builder->set('menu_name', $menu_name);
         $builder->set('order_no', $order_no);
         $builder->set('url_link', $url_link);
+        $builder->set('url_target', $url_target);
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
         $builder->where('menu_idx', $menu_idx);

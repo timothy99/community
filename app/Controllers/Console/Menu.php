@@ -42,6 +42,7 @@ class Menu extends BaseController
         $info->menu_position = 0;
         $info->menu_name = '';
         $info->url_link = '';
+        $info->url_target = '_blank';
         $info->order_no = '';
 
         $proc_result = array();
@@ -66,6 +67,7 @@ class Menu extends BaseController
         $menu_position = $this->request->getPost("menu_position", FILTER_SANITIZE_SPECIAL_CHARS);
         $menu_name = $this->request->getPost("menu_name", FILTER_SANITIZE_SPECIAL_CHARS);
         $url_link = $this->request->getPost("url_link", FILTER_SANITIZE_SPECIAL_CHARS);
+        $url_target = $this->request->getPost("url_target", FILTER_SANITIZE_SPECIAL_CHARS);
         $order_no = $this->request->getPost("order_no", FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($menu_name == null) { $result = false; $message = '메뉴명을 입력해주세요.'; }
@@ -80,6 +82,7 @@ class Menu extends BaseController
         $data['menu_position'] = $menu_position;
         $data['menu_name'] = $menu_name;
         $data['url_link'] = $url_link;
+        $data['url_target'] = $url_target;
         $data['order_no'] = $order_no;
 
         if ($result == true) {
