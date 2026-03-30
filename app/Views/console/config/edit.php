@@ -58,7 +58,7 @@
                 <!-- 프로그램 버전 -->
                 <div class="mb-3">
                     <label for="program_ver" class="form-label">프로그램 버전</label>
-                    <input type="text" id="program_ver" class="form-control" value="<?= $info->program_ver ?>">
+                    <input type="text" id="program_ver" name="program_ver" class="form-control" value="<?= $info->program_ver ?>">
                 </div>
 
                 <!-- 전화번호 -->
