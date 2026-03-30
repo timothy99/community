@@ -81,6 +81,7 @@ class Config extends BaseController
         $smtp_pass = $this->request->getPost('smtp_pass', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_port = $this->request->getPost('smtp_port', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_name = $this->request->getPost('smtp_name', FILTER_SANITIZE_SPECIAL_CHARS);
+        $program_ver = $this->request->getPost('program_ver', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($title == null) { $result = false; $message = '회사명을 입력해주세요.'; }
         if ($phone == null) { $result = false; $message = '전화번호를 입력해주세요.'; }
@@ -115,6 +116,7 @@ class Config extends BaseController
         $data['smtp_pass'] = $smtp_pass;
         $data['smtp_port'] = $smtp_port;
         $data['smtp_name'] = $smtp_name;
+        $data['program_ver'] = $program_ver;
 
         if ($result == true) {
             $model_result = $config_model->procConfigUpdate($data);

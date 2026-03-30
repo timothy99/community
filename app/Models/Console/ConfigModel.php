@@ -54,6 +54,7 @@ class ConfigModel extends Model
         $smtp_pass = $data['smtp_pass'];
         $smtp_port = $data['smtp_port'];
         $smtp_name = $data['smtp_name'];
+        $program_ver = $data['program_ver'];
 
         $db = $this->db;
         $db->transStart();
@@ -78,6 +79,7 @@ class ConfigModel extends Model
         $builder->set('smtp_pass', $smtp_pass);
         $builder->set('smtp_port', $smtp_port);
         $builder->set('smtp_name', $smtp_name);
+        $builder->set('program_ver', $program_ver);
         $result = $builder->update();
 
         $db->transComplete();
