@@ -35,6 +35,8 @@ $routes->get('/member/mypage', 'User\Member::mypage');
 $routes->post('/member/mypage/update', 'User\Member::mypageUpdate');
 $routes->get('/member/password/change', 'User\Member::passwordChange');
 $routes->post('/member/password/change/update', 'User\Member::passwordChangeUpdate');
+$routes->get('/member/authenticate', 'User\Member::authenticate');
+$routes->post('/member/authenticate/confirm', 'User\Member::authenticateConfirm');
 
 $routes->get('/csl/config/view', 'Console\Config::view');
 $routes->get('/csl/config/edit', 'Console\Config::edit');

@@ -301,6 +301,7 @@ create table mng_config (
     fax varchar(13) null comment '팩스',
     email varchar(200) null comment '이메일',
     manager_email varchar(200) null comment '담당자 이메일',
+    admin_two_factor_yn enum('Y', 'N') default 'N' null comment '관리자 접속시 2차 인증 사용 여부',
     work_hour varchar(300) null comment '업무시간',
     post_code varchar(5) null comment '우편번호',
     addr1 varchar(200) null comment '주소1',
