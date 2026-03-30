@@ -119,6 +119,15 @@
                     <input type="text" class="form-control" id="biz_no" name="biz_no" value="<?= $info->biz_no ?>">
                 </div>
 
+                <!-- 관리자 접속시 이메일 인증 -->
+                <div class="mb-3">
+                    <label for="admin_two_factor_yn" class="form-label">관리자 접속시 이메일 인증</label>
+                    <select class="form-select" id="admin_two_factor_yn" name="admin_two_factor_yn">
+                        <option value="Y">사용</option>
+                        <option value="N">사용안함</option>
+                    </select>
+                </div>
+
                 <!-- 담당자 이메일 -->
                 <div class="mb-3">
                     <label for="manager_email" class="form-label">담당자 이메일</label>
@@ -129,7 +138,10 @@
                 <!-- 메일발송기능 사용여부 -->
                 <div class="mb-3">
                     <label for="smtp_yn" class="form-label">메일발송기능 사용여부</label>
-                    <input type="text" class="form-control" id="smtp_yn" name="smtp_yn" value="<?= $info->smtp_yn ?>">
+                    <select class="form-select" id="smtp_yn" name="smtp_yn">
+                        <option value="Y">사용</option>
+                        <option value="N">사용안함</option>
+                    </select>
                 </div>
 
                 <!-- SMTP 호스트 -->
@@ -185,6 +197,8 @@
     // 메뉴강조
     $(window).on('load', function() {
         $('#li-config').addClass('active-level-1');
+        $('#admin_two_factor_yn').val('<?= $info->admin_two_factor_yn ?>');
+        $('#smtp_yn').val('<?= $info->smtp_yn ?>');
     });
 
     function configUpdate() {

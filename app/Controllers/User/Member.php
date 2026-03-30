@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 
 use App\Models\User\MemberModel;
 use App\Models\User\MailModel;
+use App\Models\Console\ConfigModel;
 
 class Member extends BaseController
 {
@@ -31,6 +32,7 @@ class Member extends BaseController
     public function signin()
     {
         $member_model = new MemberModel();
+        $config_model = new ConfigModel();
 
         $result = true;
         $message = '정상처리';
@@ -67,22 +69,32 @@ class Member extends BaseController
                 $member_info = new \stdClass();
                 $auth_group = 'guest';
             } else {
+                $auth_group = $member_info->auth_group;
                 setUserSessionInfo('member_idx', $member_info->member_idx);
                 setUserSessionInfo('member_id', $member_info->member_id);
                 setUserSessionInfo('member_nickname', $member_info->member_nickname);
-                setUserSessionInfo('auth_group', $member_info->auth_group);
-
-                $auth_group = $member_info->auth_group;
             }
 
-            $auth_group = getUserSessionInfo('auth_group');
             if (in_array($auth_group, ['관리자', '최고관리자']) == true) {
-                $return_url = '/csl';
+                $config_info = $config_model->getConfigInfo()['info'];
+                $admin_two_factor_yn = $config_info->admin_two_factor_yn;
+
+                if ($admin_two_factor_yn == 'Y') {
+                    setUserSessionInfo('auth_group', '2차인증전');
+
+                    $return_url = '/member/authenticate';
+                } else {
+                    $return_url = '/csl';
+                    setUserSessionInfo('auth_group', $auth_group);
+                }
+            } else {
+                setUserSessionInfo('auth_group', $auth_group);
             }
         } else {
             $result = false;
             $message = '회원정보가 없습니다. 회원정보를 확인하세요.';
             $member_info = new \stdClass();
+            setUserSessionInfo('auth_group', 'guest');
         }
 
         $proc_result = array();
@@ -589,6 +601,109 @@ class Member extends BaseController
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['return_url'] = '/member/mypage';
+
+        return $this->response->setJSON($proc_result);
+    }
+
+    // 2차 인증 페이지
+    public function authenticate()
+    {
+        $mail_model = new MailModel();
+        $member_model = new MemberModel();
+        $config_info = new ConfigModel();
+
+        // 로그인 체크
+        $auth_group = getUserSessionInfo('auth_group');
+        if ($auth_group != '2차인증전') {
+            return redirect()->to('/');
+        }
+
+        $member_id = getUserSessionInfo('member_id');
+        $data = array();
+        $data['member_id'] = $member_id;
+        $model_result = $member_model->getMemberInfo($data);
+        $member_info = $model_result['info'];
+        $member_email = $member_info->email;
+
+        $session_auth_number = getUserSessionInfo('auth_number');
+        if ($session_auth_number == null) {
+            $auth_number = getRandomString(1, 6);
+            setUserSessionInfo('auth_number', $auth_number);
+            setUserSessionInfo('auth_number_generated_time', date('YmdHis'));
+
+            $config_info = $config_info->getConfigInfo()['info'];
+            $site_name = $config_info->title;
+
+            $data = array();
+            $data['receive_email'] = $member_email;
+            $data['title'] = $site_name.'에서 관리자 2차 인증 요청이 있습니다';
+            $data['contents'] = '관리자 2차 인증을 위한 인증번호는 ['.$auth_number.'] 입니다. <br> 인증번호 입력 페이지로 돌아가서 인증번호를 입력해주세요.';
+            $model_result = $mail_model->procMailSend($data);
+        } else {
+            $auth_number = $session_auth_number;
+        }
+
+        $proc_result = array();
+        $proc_result['html_meta'] = create_meta('홈 > 2차 인증');
+
+        return uview('/user/member/authenticate', $proc_result);
+    }
+
+    // 인증 번호 확인
+    public function authenticateConfirm()
+    {
+        $member_model = new MemberModel();
+
+        // 로그인 체크
+        $auth_group = getUserSessionInfo('auth_group');
+        if ($auth_group != '2차인증전') {
+            $proc_result = array();
+            $proc_result['result'] = false;
+            $proc_result['message'] = '잘못된 접근입니다.';
+            $proc_result['return_url'] = '/';
+            return $this->response->setJSON($proc_result);
+        }
+
+        $session_auth_number = getUserSessionInfo('auth_number');
+        if ($session_auth_number == null) {
+            $proc_result = array();
+            $proc_result['result'] = false;
+            $proc_result['message'] = '인증번호가 없습니다. 다시 시도해주세요.';
+            $proc_result['return_url'] = '/member/authenticate';
+            return $this->response->setJSON($proc_result);
+        }
+
+        $auth_number = trim($this->request->getPost('auth_number', FILTER_SANITIZE_SPECIAL_CHARS));
+
+        if ($auth_number == null) {
+            $result = false;
+            $message = '인증번호를 입력해주세요.';
+        } else if ($auth_number != $session_auth_number) {
+            $result = false;
+            $message = '인증번호가 일치하지 않습니다. 다시 시도해주세요.';
+        } else if (getUserSessionInfo('auth_number_generated_time') < date('YmdHis', strtotime('-5 minutes'))) {
+            $result = false;
+            $message = '인증번호의 유효기간이 만료되었습니다. 다시 시도해주세요.';
+        } else {
+            $member_id = getUserSessionInfo('member_id');
+            $data = array();
+            $data['member_id'] = $member_id;
+
+            $model_result = $member_model->getMemberInfo($data);
+            $member_info = $model_result['info'];
+            $auth_group = $member_info->auth_group;
+            setUserSessionInfo('auth_group', $auth_group);
+            setUserSessionInfo('auth_number', null);
+            setUserSessionInfo('auth_number_generated_time', null);
+
+            $result = true;
+            $message = '인증이 완료되었습니다.';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/csl';
 
         return $this->response->setJSON($proc_result);
     }

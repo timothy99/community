@@ -75,6 +75,7 @@ class Config extends BaseController
         $biz_no = $this->request->getPost('biz_no', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_yn = $this->request->getPost('smtp_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $manager_email = $this->request->getPost('manager_email', FILTER_SANITIZE_SPECIAL_CHARS);
+        $admin_two_factor_yn = $this->request->getPost('admin_two_factor_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_mail = $this->request->getPost('smtp_mail', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_user = $this->request->getPost('smtp_user', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_pass = $this->request->getPost('smtp_pass', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -89,6 +90,10 @@ class Config extends BaseController
         if ($biz_no == null) { $result = false; $message = '사업자등록번호를 입력해주세요.'; }
         if ($smtp_yn == null) { $result = false; $message = '메일발송기능 사용여부를 입력해주세요.'; }
         if ($manager_email == null) { $result = false; $message = '담당자 이메일을 입력해주세요.'; }
+        if ($admin_two_factor_yn == null) { $result = false; $message = '관리자 접속시 이메일 인증 여부를 입력해주세요.'; }
+        if ($admin_two_factor_yn == 'Y') {
+            if ($smtp_pass == null) { $result = false; $message = '관리자 접속시 이메일 인증 기능 활성화를 위해 SMTP정보를 입력해주세요.'; }
+        }
 
         $data = array();
         $data['title'] = $title;
@@ -104,6 +109,7 @@ class Config extends BaseController
         $data['biz_no'] = $biz_no;
         $data['smtp_yn'] = $smtp_yn;
         $data['manager_email'] = $manager_email;
+        $data['admin_two_factor_yn'] = $admin_two_factor_yn;
         $data['smtp_mail'] = $smtp_mail;
         $data['smtp_user'] = $smtp_user;
         $data['smtp_pass'] = $smtp_pass;
