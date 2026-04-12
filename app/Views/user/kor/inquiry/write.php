@@ -31,8 +31,10 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">답변 받을 이메일 <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="email" name="email" placeholder="example@email.com" required>
+<?php   if ($config_info->smtp_yn == 'Y') { ?>
                             <input type="checkbox" id="send_to_me_yn" name="send_to_me_yn" value="Y">
                             <label for="send_to_me_yn" class="form-check-label">지금의 문의 내용을 내 메일로도 받겠습니다.</label>
+<?php   } ?>
                         </div>
 
                         <!-- 내용 입력 -->
