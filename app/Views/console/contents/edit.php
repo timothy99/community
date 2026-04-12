@@ -27,12 +27,6 @@
                     <label for="meta_title" class="form-label">메타 제목</label>
                     <input type="text" class="form-control" id="meta_title" name="meta_title" placeholder="메타 제목을 입력하세요" value="<?= $info->meta_title ?>">
                 </div>
-
-                <!-- 내용 -->
-                <div class="mb-3">
-                    <label for="contents" class="form-label">내용</label>
-                    <textarea class="form-control" id="contents" name="contents" rows="10" placeholder="내용을 입력하세요"><?= $info->contents ?></textarea>
-                </div>
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">

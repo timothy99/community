@@ -29,11 +29,6 @@
                                 <th class="align-middle bg-light">메타 제목</th>
                                 <td><?= $info->meta_title ?></td>
                             </tr>
-                            <tr>
-                                <th class="align-middle bg-light">내용</th>
-                                <td><?= nl2br($info->contents) ?></td>
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>

@@ -28,7 +28,7 @@
                         <label for="search_condition" class="form-label mb-1">조건</label>
                         <select class="form-select" id="search_condition" name="search_condition" multiple>
                             <option value="title">제목</option>
-                            <option value="contents">내용</option>
+                            <option value="meta_title">메타</option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -94,6 +94,7 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
+        // $('#li-slide').addClass('active-level-1').attr({'data-bs-toggle': 'collapse', 'aria-expanded': 'true'});
         $('#li-contents').addClass('active-level-1');
 
         $('#search_condition').select2({
