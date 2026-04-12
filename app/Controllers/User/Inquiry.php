@@ -35,7 +35,7 @@ class Inquiry extends BaseController
         $contents = $this->request->getPost('contents', FILTER_SANITIZE_SPECIAL_CHARS);
         $phone = $this->request->getPost('phone', FILTER_SANITIZE_SPECIAL_CHARS);
         $email = $this->request->getPost('email', FILTER_SANITIZE_SPECIAL_CHARS);
-        $send_to_me_yn = $this->request->getPost('send_to_me_yn', FILTER_SANITIZE_SPECIAL_CHARS);
+        $send_to_me_yn = $this->request->getPost('send_to_me_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
 
         if ($name == null || trim($name) == '') {
             $result = false;
@@ -76,7 +76,10 @@ class Inquiry extends BaseController
             $email_data['title'] = '[문의하기] '.$name.'님이 문의하셨습니다.';
             $email_data['contents'] = nl2br($contents).'<br><br>전화번호: '.$phone.'<br><br>이메일: '.$email;
 
-            $model_result = $mail_model->procMailSend($email_data);
+            $smtp_yn = $config_info->smtp_yn;
+            if ($smtp_yn == 'Y') {
+                $model_result = $mail_model->procMailSend($email_data);
+            }
 
             if ($send_to_me_yn == 'Y') {
                 $email_data['receive_email'] = $email; // 문의한 사람의 이메일로도 발송
