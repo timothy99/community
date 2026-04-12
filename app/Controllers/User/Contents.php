@@ -32,9 +32,8 @@ class Contents extends BaseController
         $proc_result["result"] = $result;
         $proc_result["message"] = $message;
         $proc_result["html_meta"] = create_meta($info->meta_title);
-        $proc_result["contents"] = $info->contents;
 
-        $view_file = "/user/contents/view";
+        $view_file = "/user/contents/".$info->contents_id;
 
         return uview($view_file, $proc_result);
     }

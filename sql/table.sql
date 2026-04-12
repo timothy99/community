@@ -229,7 +229,6 @@ create table mng_contents (
     contents_id varchar(50) null comment '콘텐츠 아이디',
     meta_title varchar(500) null comment '메타 제목',
     title varchar(1000) not null comment '제목',
-    contents longtext not null comment '내용',
     del_yn varchar(1) default 'N' not null comment '삭제 여부',
     ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',

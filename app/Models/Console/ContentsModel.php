@@ -3,7 +3,6 @@
 namespace App\Models\Console;
 
 use CodeIgniter\Model;
-use App\Models\Common\DownloadModel;
 
 class ContentsModel extends Model
 {
@@ -62,7 +61,6 @@ class ContentsModel extends Model
         $info = $builder->get()->getRow();
 
         $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
-        $info->contents = nl2br_only($info->contents);
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -82,7 +80,6 @@ class ContentsModel extends Model
         $insert_id = 0;
 
         $title = $data['title'];
-        $contents = $data['contents'];
         $meta_title = $data['meta_title'];
         $contents_id = $data['contents_id'];
 
@@ -90,7 +87,6 @@ class ContentsModel extends Model
         $db->transStart();
         $builder = $db->table('contents');
         $builder->set('title', $title);
-        $builder->set('contents', $contents);
         $builder->set('meta_title', $meta_title);
         $builder->set('contents_id', $contents_id);
         $builder->set('del_yn', 'N');
@@ -127,7 +123,6 @@ class ContentsModel extends Model
 
         $contents_idx = $data['contents_idx'];
         $title = $data['title'];
-        $contents = $data['contents'];
         $meta_title = $data['meta_title'];
         $contents_id = $data['contents_id'];
 
@@ -135,7 +130,6 @@ class ContentsModel extends Model
         $db->transStart();
         $builder = $db->table('contents');
         $builder->set('title', $title);
-        $builder->set('contents', $contents);
         $builder->set('meta_title', $meta_title);
         $builder->set('contents_id', $contents_id);
         $builder->set('upd_id', $user_id);

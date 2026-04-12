@@ -154,3 +154,4 @@ public/.htaccess
 # 사용자 추가로 없어진것중 다시 넣어야 할거
 !app/Config/Routes.php
 !app/Config/Events.php
+contents/
