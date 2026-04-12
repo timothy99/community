@@ -16,6 +16,7 @@ class MainModel extends Model
         $db = $this->db;
         $builder = $db->table('slide');
         $builder->where('del_yn', 'N');
+        $builder->where('display_yn', 'Y');
         $builder->where('start_date <=', $today);
         $builder->where('end_date >=', $today);
         $list = $builder->get()->getResult();
@@ -43,6 +44,7 @@ class MainModel extends Model
         $db = $this->db;
         $builder = $db->table('popup');
         $builder->where('del_yn', 'N');
+        $builder->where('display_yn', 'Y');
         $builder->where('start_date <=', $today);
         $builder->where('end_date >=', $today);
         $list = $builder->get()->getResult();
