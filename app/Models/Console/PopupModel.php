@@ -150,10 +150,6 @@ class PopupModel extends Model
         $title = $data['title'];
         $popup_file = $data['popup_file'];
         $url_link = $data['url_link'];
-        $position_left = $data['position_left'];
-        $position_top = $data['position_top'];
-        $popup_width = $data['popup_width'];
-        $popup_height = $data['popup_height'];
         $disabled_hours = $data['disabled_hours'];
         $start_date = $data['start_date'];
         $end_date = $data['end_date'];
@@ -166,10 +162,6 @@ class PopupModel extends Model
         $builder->set('title', $title);
         $builder->set('popup_file', $popup_file);
         $builder->set('url_link', $url_link);
-        $builder->set('position_left', $position_left);
-        $builder->set('position_top', $position_top);
-        $builder->set('popup_width', $popup_width);
-        $builder->set('popup_height', $popup_height);
         $builder->set('disabled_hours', $disabled_hours);
         $builder->set('start_date', $start_date);
         $builder->set('end_date', $end_date);

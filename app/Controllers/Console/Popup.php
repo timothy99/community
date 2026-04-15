@@ -62,10 +62,6 @@ class Popup extends BaseController
         $info->title = '';
         $info->popup_file = '';
         $info->url_link = '';
-        $info->position_left = 100;
-        $info->position_top = 100;
-        $info->popup_width = 400;
-        $info->popup_height = 500;
         $info->disabled_hours = 24;
         $info->display_yn = 'Y';
         $info->start_date_txt = '2000-01-01';
@@ -91,10 +87,6 @@ class Popup extends BaseController
         $title = $this->request->getPost('title', FILTER_SANITIZE_SPECIAL_CHARS);
         $url_link = $this->request->getPost('url_link', FILTER_SANITIZE_SPECIAL_CHARS);
         $popup_file = $this->request->getPost('popup_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
-        $position_left = $this->request->getPost('position_left', FILTER_SANITIZE_SPECIAL_CHARS);
-        $position_top = $this->request->getPost('position_top', FILTER_SANITIZE_SPECIAL_CHARS);
-        $popup_width = $this->request->getPost('popup_width', FILTER_SANITIZE_SPECIAL_CHARS);
-        $popup_height = $this->request->getPost('popup_height', FILTER_SANITIZE_SPECIAL_CHARS);
         $disabled_hours = $this->request->getPost('disabled_hours', FILTER_SANITIZE_SPECIAL_CHARS);
         $display_yn = $this->request->getPost('display_yn');
         $start_date_txt = $this->request->getPost('start_date').' 00:00:00';
@@ -118,16 +110,6 @@ class Popup extends BaseController
             $message = '링크를 입력해주세요.';
         }
 
-        if ($position_left == null || $position_top == null) {
-            $result = false;
-            $message = '팝업 위치를 입력해주세요.';
-        }
-
-        if ($popup_width == null || $popup_height == null) {
-            $result = false;
-            $message = '팝업 크기를 입력해주세요.';
-        }
-
         if ($disabled_hours == null) {
             $result = false;
             $message = '다시 보지 않음 시간을 입력해주세요.';
@@ -138,10 +120,6 @@ class Popup extends BaseController
         $data['title'] = $title;
         $data['popup_file'] = $popup_file;
         $data['url_link'] = $url_link;
-        $data['position_left'] = $position_left;
-        $data['position_top'] = $position_top;
-        $data['popup_width'] = $popup_width;
-        $data['popup_height'] = $popup_height;
         $data['disabled_hours'] = $disabled_hours;
         $data['start_date'] = $start_date;
         $data['end_date'] = $end_date;

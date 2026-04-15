@@ -26,14 +26,6 @@
                                 <td><a href="<?= $info->url_link ?>" target="_blank"><?= $info->url_link ?></a></td>
                             </tr>
                             <tr>
-                                <th class="align-middle bg-light">팝업 위치</th>
-                                <td>좌측: <?= $info->position_left ?>px / 상단: <?= $info->position_top ?>px</td>
-                            </tr>
-                            <tr>
-                                <th class="align-middle bg-light">팝업 크기</th>
-                                <td>가로: <?= $info->popup_width ?>px / 세로: <?= $info->popup_height ?>px</td>
-                            </tr>
-                            <tr>
                                 <th class="align-middle bg-light">다시 보지 않음 시간</th>
                                 <td><?= $info->disabled_hours ?>시간</td>
                             </tr>
