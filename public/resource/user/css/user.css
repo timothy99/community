@@ -62,63 +62,250 @@ body {
     z-index: 999999;
 }
 
-/* 레이어 Popup */
-#hd_pop {
-    z-index: 1000;
-    position: relative;
-    margin: 0 auto;
-    width: auto;
-    height: 0
-}
+/* 레이어 팝업 (신규 디자인) */
 
-#hd_pop h2 {
-    position:absolute;
-    font-size: 0;
-    line-height: 0;
-    overflow: hidden
-}
-
-.hd_pops {
-    position: absolute;
-    border: 1px solid #e9e9e9;
-    background:#fff;
-}
-
-.hd_pops img{
-    max-width: 100%
-}
-
-.hd_pops_footer {
-    padding: 0;
-    background: #000;
-    color: #fff;
-    text-align: left;
-    position: relative;
-}
-
-.hd_pops_footer:after {
+/* dim 오버레이 */
+.hd_pop_dim {
     display: block;
-    visibility: hidden;
-    clear: both;
-    content: ""
-
-}
-.hd_pops_footer button {
-    padding: 10px;
-    border: 0;
-    color: #fff
-}
-
-.hd_pops_footer .hd_pops_reject{
-    background: #000;
-    text-align: left
-}
-
-.hd_pops_footer .hd_pops_close{
-    background: #393939;
-    position: absolute;
+    position: fixed;
     top: 0;
-    right: 0
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 8999;
+}
+
+/* 팝업 전체 래퍼 */
+.hd_pop_wrap {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9000;
+    pointer-events: all;
+}
+
+/* 팝업 상단 바 (PC 전용) */
+.hd_pop_topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 8px 0;
+}
+
+.hd_pop_counter {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.hd_pop_pc_nav {
+    display: flex;
+    gap: 8px;
+}
+
+.hd_pop_pc_nav_btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    border: 2px solid rgba(255,255,255,0.7);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    padding: 0;
+}
+
+.hd_pop_pc_nav_btn i {
+    font-size: 2rem;
+    line-height: 1;
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hd_pop_pc_nav_btn:hover {
+    background: rgba(0,0,0,0.65);
+}
+
+.hd_pop_pc_nav_btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+/* 슬라이더 래퍼 (PC: 3개 너비로 overflow:hidden) */
+.hd_pop_slider {
+    overflow: hidden;
+    width: 1376px; /* 452 × 3 + 10 × 2 */
+}
+
+/* 팝업 트랙: 가로 나열 + 슬라이드 트랜지션 */
+.hd_pop_track {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0;
+    pointer-events: all;
+    transition: transform 0.4s ease;
+    will-change: transform;
+}
+
+/* 개별 팝업 박스 */
+.hd_pop_item {
+    width: 452px; /* box-sizing:border-box + border 1px×2 = 이미지 정확히 450px */
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    pointer-events: all;
+}
+
+.hd_pop_body a {
+    display: block;
+}
+
+.hd_pop_body img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 팝업 전체 공유 버튼 바 */
+.hd_pop_global_footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    padding: 4px 4px 0;
+    background : rgba(0, 0, 0, 0.7);
+}
+
+.hd_pop_reject_all {
+    background: transparent;
+    border: 0;
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 0;
+    line-height: 1.4;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.hd_pop_reject_all:hover {
+    color: #fff;
+}
+
+.hd_pop_close_all {
+    background: transparent;
+    border: 0;
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 0;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.hd_pop_close_all:hover {
+    color: #fff;
+}
+
+/* 모바일 내비게이션 (PC에서 숨김) */
+.hd_pop_nav_wrap {
+    display: none;
+}
+
+/* ================================= */
+/* 모바일 반응형 (767px 이하)         */
+/* ================================= */
+@media (max-width: 767.98px) {
+    /* 팝업 래퍼: 모바일 단일 팝업 너비 제한 */
+    .hd_pop_wrap {
+        width: 90%;
+        max-width: 320px;
+    }
+
+    /* 상단 바 숨김 */
+    .hd_pop_topbar {
+        display: none;
+    }
+
+    /* 슬라이더 오버플로우 해제 */
+    .hd_pop_slider {
+        overflow: visible;
+        width: auto;
+    }
+
+    /* 트랙: 모바일은 block + transition 없음 */
+    .hd_pop_track {
+        display: block;
+        transition: none;
+        padding: 0;
+    }
+
+    /* 모든 팝업 아이템 기본 숨김 */
+    .hd_pop_item {
+        display: none;
+        width: 100%;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    /* 활성 팝업만 표시 */
+    .hd_pop_item.mobile-active {
+        display: block;
+    }
+
+    /* 모바일 내비게이션 */
+    .hd_pop_nav_wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #111;
+        padding: 6px 10px;
+    }
+
+    .hd_pop_nav_btn {
+        background: transparent;
+        border: 0;
+        color: #aaa;
+        font-size: 15px;
+        cursor: pointer;
+        padding: 4px 8px;
+        line-height: 1;
+    }
+
+    .hd_pop_nav_btn:hover {
+        color: #fff;
+    }
+
+    .hd_pop_indicators {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+    }
+
+    .hd_pop_dot {
+        width: 8px;
+        height: 8px;
+        background: #555;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .hd_pop_dot.active {
+        background: #fff;
+    }
 }
 
 .carousel-item {

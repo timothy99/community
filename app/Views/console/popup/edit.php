@@ -23,48 +23,6 @@
                     <input type="text" class="form-control" id="url_link" name="url_link" placeholder="http로 시작하는 주소 전체. 내부 링크는 /부터 입력도 가능합니다." value="<?= $info->url_link ?>">
                 </div>
 
-                <!-- 팝업 위치 -->
-                <div class="mb-3">
-                    <label class="form-label">팝업 위치</label>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">좌측</span>
-                                <input type="number" class="form-control" id="position_left" name="position_left" placeholder="100" value="<?= $info->position_left ?>">
-                                <span class="input-group-text">px</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">상단</span>
-                                <input type="number" class="form-control" id="position_top" name="position_top" placeholder="100" value="<?= $info->position_top ?>">
-                                <span class="input-group-text">px</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 팝업 크기 -->
-                <div class="mb-3">
-                    <label class="form-label">팝업 크기</label>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">가로</span>
-                                <input type="number" class="form-control" id="popup_width" name="popup_width" placeholder="400" value="<?= $info->popup_width ?>">
-                                <span class="input-group-text">px</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">세로</span>
-                                <input type="number" class="form-control" id="popup_height" name="popup_height" placeholder="500" value="<?= $info->popup_height ?>">
-                                <span class="input-group-text">px</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- 다시 보지 않음 시간 -->
                 <div class="mb-3">
                     <label for="disabled_hours" class="form-label">다시 보지 않음 시간</label>
@@ -108,6 +66,7 @@
                 <div class="mb-3">
                     <label for="popup_file" class="form-label">팝업 이미지</label>
                     <input type="file" class="form-control" id="popup_file" name="popup_file" onchange="uploadFile(this.id, 'image', 'uploadAfter')">
+                    <small class="text-muted">이미지는 900px × 900px 로 올려주세요.</small>
                     <div class="mb-2 mt-2" id="popup_file_view">
 <?php   if ($info->popup_file_info != null) { ?>
                         <div class="row g-2 align-items-center">

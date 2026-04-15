@@ -58,17 +58,6 @@ class MainModel extends Model
             }
         }
 
-        // 현재 접속한 기기가 모바일인 경우 목록을 돌면서 width, height를 1/2로 줄임
-        if ($is_mobile) {
-            foreach ($list as $no => $val) {
-                $list[$no]->popup_width = intval($val->popup_width / 2);
-                $list[$no]->popup_height = intval($val->popup_height / 2);
-                $list[$no]->position_left = intval($val->position_left / 2);
-                $list[$no]->position_top = intval($val->position_top / 2);
-            }
-        }
-
-
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;

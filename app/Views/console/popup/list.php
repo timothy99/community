@@ -52,8 +52,6 @@
                             <tr>
                                 <th>번호</th>
                                 <th>제목</th>
-                                <th>팝업크기(가로x세로)</th>
-                                <th>팝업위치(좌/상)</th>
                                 <th>게시기간</th>
                                 <th>노출여부</th>
                                 <th>입력자</th>
@@ -65,8 +63,6 @@
                             <tr>
                                 <td><?=$val->list_no ?></td>
                                 <td><a href="/csl/popup/view/<?=$val->popup_idx ?>"><?=$val->title ?></a></td>
-                                <td><?=$val->popup_width ?>px × <?=$val->popup_height ?>px</td>
-                                <td><?=$val->position_left ?>px / <?=$val->position_top ?>px</td>
                                 <td><?=$val->start_date_txt ?> ~ <?=$val->end_date_txt ?></td>
                                 <td><?=$val->display_yn ?></td>
                                 <td><?=$val->ins_id ?></td>
