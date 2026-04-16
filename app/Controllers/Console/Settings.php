@@ -169,6 +169,9 @@ class Settings extends BaseController
         if ($url_link_yn == null || $url_link_yn == '') { $result = false; $message = '링크 기능 사용 여부를 선택해주세요.'; }
         if ($main_image_yn == null || $main_image_yn == '') { $result = false; $message = '대표 이미지 사용 여부를 선택해주세요.'; }
 
+        $meta_title = str_replace('&#62;', '>', $meta_title);
+        $meta_title = $meta_title.' ';// 메타 타이틀 끝에 공백을 하나 추가해서 제목이 공백으로 끝나도록 해서, og 태그의 제목이 공백으로 끝나도록 해서, 페이스북 등에서 제목이 짤리는 현상을 방지
+
         $data = array();
         $data['board_config_idx'] = $board_config_idx;
         $data['board_id'] = $board_id;

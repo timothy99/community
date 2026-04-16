@@ -737,9 +737,30 @@ class FileModel extends Model
     public function getRawFile($response, $file_path)
     {
         try {
-            $raw_file = $response->download($file_path, null); // 파일 다운로드
+            if ($file_path === null || !file_exists($file_path)) {
+                $file_path = "resource/community/image/no_image.png";
+            }
+
+            $mime = mime_content_type($file_path);
+
+            // 이미지 또는 PDF인 경우 브라우저에서 바로 보기 (inline)
+            if (strpos($mime, 'image/') === 0 || $mime === 'application/pdf') {
+                $response->setHeader('Content-Type', $mime);
+                $response->setHeader('Content-Disposition', 'inline; filename="' . basename($file_path) . '"');
+                $response->setHeader('Content-Length', (string)filesize($file_path));
+                $response->setBody(file_get_contents($file_path));
+                $raw_file = $response;
+            } else {
+                $raw_file = $response->download($file_path, null); // 그 외 파일은 다운로드
+            }
         } catch (\Throwable $t) {
-            $raw_file = $response->download("resource/community/image/no_image.png", null); // 기본 이미지로 다운로드
+            $fallback = "resource/community/image/no_image.png";
+            $mime = mime_content_type($fallback);
+            $response->setHeader('Content-Type', $mime);
+            $response->setHeader('Content-Disposition', 'inline; filename="no_image.png"');
+            $response->setHeader('Content-Length', (string)filesize($fallback));
+            $response->setBody(file_get_contents($fallback));
+            $raw_file = $response;
         }
 
         return $raw_file;
