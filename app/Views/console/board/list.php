@@ -63,6 +63,7 @@
                     <table class="table table-bordered table-hover bg-white align-middle text-center mb-0 text-nowrap">
                         <thead class="table-primary">
                             <tr>
+                                <th><input type="checkbox" id="chk_all"></th>
                                 <th>번호</th>
 <?php   if ($board_config->category_yn == 'Y') { ?>
                                 <th>카테고리</th>
@@ -78,6 +79,7 @@
                         <tbody>
 <?php   foreach($notice_list as $no => $val) { ?>
                             <tr>
+                                <td><input type="checkbox" class="chk_item" name="chk[]" value="<?=$val->board_idx ?>"></td>
                                 <td>공지</td>
 <?php       if ($board_config->category_yn == 'Y') { ?>
                                 <td><?=$val->category ?></td>
@@ -92,6 +94,7 @@
 <?php   } ?>
 <?php   foreach($list as $no => $val) { ?>
                             <tr>
+                                <td><input type="checkbox" class="chk_item" name="chk[]" value="<?=$val->board_idx ?>"></td>
                                 <td><?=$val->list_no ?></td>
 <?php       if ($board_config->category_yn == 'Y') { ?>
                                 <td><?=$val->category ?></td>
@@ -114,9 +117,14 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-column flex-md-row align-items-center gap-2">
+                    <div class="flex-grow-1">
 <?= $paging_info['paging_view'] ?>
-                    <a href="/csl/board/<?= $data['board_id'] ?>/write" type="button" class="btn btn-primary">등록</a>
+                    </div>
+                    <div class="d-flex gap-2 justify-content-end align-self-end">
+                        <a href="/csl/board/<?= $data['board_id'] ?>/write" type="button" class="btn btn-primary">등록</a>
+                        <button type="button" class="btn btn-danger" onclick="batchDelete()">일괄삭제</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,6 +152,20 @@
                 search();
             }
         });
+
+        // 전체선택 체크박스 이벤트
+        $("#chk_all").on("change", function() {
+            $(".chk_item").prop("checked", $(this).is(":checked"));
+        });
+
+        // 개별 체크박스 이벤트 하나라도 체크가 해제되면 전체선택 체크박스 해제, 모두 체크되면 전체선택 체크박스 선택
+        $("tbody").on("change", ".chk_item", function() {
+            if (!$(this).is(":checked")) {
+                $("#chk_all").prop("checked", false);
+            } else if ($(".chk_item:not(:checked)").length === 0) {
+                $("#chk_all").prop("checked", true);
+            }
+        });
     });
 
     function search() {
@@ -154,5 +176,34 @@
         var search_page = $('#search_page').val();
         var category = $('#category').val();
         location.href = '/csl/board/'+board_id+'/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows+'&category='+category;
+    }
+
+    function batchDelete() {
+        var board_id = $('#board_id').val();
+        var chk = $("input[name='chk[]']:checked");
+        if (chk.length == 0) {
+            alert('삭제할 게시물을 선택하세요.');
+            return false;
+        }
+
+        if (!confirm('선택한 게시물을 삭제하시겠습니까?')) {
+            return false;
+        }
+
+        var chk_val = [];
+        chk.each(function() {
+            chk_val.push($(this).val());
+        });
+
+        ajax1('/csl/board/'+board_id+'/batch/delete', {chk: chk_val}, 'batchDeleteAfter');
+    }
+
+    function batchDeleteAfter(data) {
+        if (data.result == true) {
+            alert('선택한 게시물이 삭제되었습니다.');
+            location.reload();
+        } else {
+            alert(data.message);
+        }
     }
 </script>

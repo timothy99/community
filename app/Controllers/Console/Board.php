@@ -301,4 +301,41 @@ class Board extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
+    public function batchDelete($board_id)
+    {
+        $result = true;
+        $message = '정상처리 되었습니다.';
+
+        $board_model = new BoardModel();
+
+        $chk = $this->request->getPost('chk');
+
+        if (empty($chk)) {
+            $result = false;
+            $message = '삭제할 게시글을 선택해주세요.';
+        }
+        
+        if ($result == true) {
+            foreach ($chk as $no => $board_idx) {
+                $data = array();
+                $data['board_id'] = $board_id;
+                $data['board_idx'] = $board_idx;
+
+                $model_result = $board_model->procBoardDelete($data);
+                if ($model_result['result'] == false) {
+                    $result = false;
+                    $message = '게시글 번호 '.$board_idx.' 삭제 중 오류가 발생했습니다.';
+                    break;
+                }
+            }
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['return_url'] = '/csl/board/'.$board_id.'/list';
+
+        return $this->response->setJSON($proc_result);
+    }
+
 }
