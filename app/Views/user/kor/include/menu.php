@@ -41,16 +41,18 @@
             <a class="btn btn-sm btn-outline-secondary" href="/member/register">회원가입</a>
         </li>
 <?php   } ?>
+<?php   if ($config_info->language_yn == 'Y') { ?>
         <li class="nav-item">
             <span class="nav-link">|</span>
         </li> 
         <li class="nav-item align-self-center ms-2">
             <select class="form-select form-select-sm" id="select-language" name="select-language" onchange="change_language(this.value)">
-                <option value="kor">한국어</option>
-                <option value="eng">English</option>
-                <option value="chn">中文</option>
+<?php       foreach ($language_list as $no => $val) { ?>
+                <option value="<?= $val->language_code ?>"><?= $val->language_org ?></option>
+<?php       } ?>
             </select>
         </li>
+<?php   } ?>
     </ul>
 </header>
 
