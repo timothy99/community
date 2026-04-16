@@ -85,7 +85,7 @@ class Board extends BaseController
         $proc_result['data'] = $data;
         $proc_result['board_config'] = $board_config;
         $proc_result['authority'] = $authority;
-        $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 목록 > ');
+        $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 목록');
 
         return uview('/user/board/'.$board_config->type.'/list', $proc_result);
     }
@@ -143,7 +143,7 @@ class Board extends BaseController
         $proc_result['info'] = $info;
         $proc_result['board_config'] = $board_config;
         $proc_result['authority'] = $authority;
-        $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 작성 > ');
+        $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 작성');
 
         return uview('/user/board/'.$board_config->type.'/edit', $proc_result);
     }

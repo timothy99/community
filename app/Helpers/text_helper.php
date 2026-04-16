@@ -19,19 +19,26 @@ function nl2br_rn($string)
 // html 헤드의 메타정보 데이터 생성
 function create_meta($title, $description = '')
 {
+    $config_model = new \App\Models\User\ConfigModel();
+    $model_result = $config_model->getConfigInfo();
+    $config_info = $model_result['info'];
+
     $title_arr = explode(' > ', $title);
     $nav_title = $title_arr[count($title_arr)-1];
 
     $html_meta = array();
     $html_meta['nav_title'] = $nav_title;
     $html_meta['meta']['title'] = $title;
-    $html_meta['meta']['keywords'] = str_replace(' > ', ',', $html_meta['meta']['title']);
     $html_meta['meta']['description'] = $description ?: str_replace(' > ', '의 ', $html_meta['meta']['title']);
     $html_meta['og']['type'] = 'website';
     $html_meta['og']['title'] = $html_meta['meta']['title'];
     $html_meta['og']['description'] = $html_meta['meta']['description'];
-    $html_meta['og']['image'] = env('app.baseURL').'/resource/usr/images/logo.png';
+    $html_meta['og']['image'] = env('app.baseURL').'/file/view/'.$config_info->company_logo;
     $html_meta['og']['url'] = current_url();
+    $html_meta['og']['site_name'] = $config_info->title;
+    $html_meta['og']['locale'] = code_replace('locale', getUserSessionInfo('language'));
+    $html_meta['canonical'] = current_url();
+    $html_meta['favicon'] = env('app.baseURL').'/favicon.ico';
 
     return $html_meta;
 }
@@ -98,19 +105,23 @@ function code_replace($category, $text)
     $replace['pdf_yn']['N'] = '미사용';
     $replace['youtube_yn']['Y'] = '사용';
     $replace['youtube_yn']['N'] = '미사용';
-    $replace["authority_role"]["list"] = "목록";
-    $replace["authority_role"]["view"] = "상세";
-    $replace["authority_role"]["write"] = "쓰기";
-    $replace["authority_role"]["edit"] = "수정";
-    $replace["authority_role"]["delete"] = "삭제";
-    $replace["url_link_yn"]["Y"] = "사용";
-    $replace["url_link_yn"]["N"] = "미사용";
-    $replace["main_image_yn"]["Y"] = "사용";
-    $replace["main_image_yn"]["N"] = "미사용";
-    $replace["notice_yn"]["Y"] = "공지";
-    $replace["notice_yn"]["N"] = "일반";
-    $replace["url_target"]["_self"] = "현재창";
-    $replace["url_target"]["_blank"] = "새창";
+    $replace['authority_role']['list'] = '목록';
+    $replace['authority_role']['view'] = '상세';
+    $replace['authority_role']['write'] = '쓰기';
+    $replace['authority_role']['edit'] = '수정';
+    $replace['authority_role']['delete'] = '삭제';
+    $replace['url_link_yn']['Y'] = '사용';
+    $replace['url_link_yn']['N'] = '미사용';
+    $replace['main_image_yn']['Y'] = '사용';
+    $replace['main_image_yn']['N'] = '미사용';
+    $replace['notice_yn']['Y'] = '공지';
+    $replace['notice_yn']['N'] = '일반';
+    $replace['url_target']['_self'] = '현재창';
+    $replace['url_target']['_blank'] = '새창';
+    $replace['locale']['kor'] = 'ko_KR';
+    $replace['locale']['eng'] = 'en_US';
+    $replace['locale']['jpn'] = 'ja_JP';
+    $replace['locale']['chn'] = 'zh_CN';
 
     return isset($replace[$category][$text]) ? $replace[$category][$text] : $text;
 }

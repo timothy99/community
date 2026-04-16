@@ -5,14 +5,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title><?=$html_meta["meta"]["title"] ?></title>
-        <meta name="title" content="<?=$html_meta["meta"]["title"] ?>">
-        <meta name="keywords" content="<?=$html_meta["meta"]["keywords"] ?>">
         <meta name="description" content="<?=$html_meta["meta"]["description"] ?>">
         <meta property="og:type" content="<?=$html_meta["og"]["type"] ?>"> 
         <meta property="og:title" content="<?=$html_meta["og"]["title"] ?>">
         <meta property="og:description" content="<?=$html_meta["og"]["description"] ?>">
         <meta property="og:image" content="<?=$html_meta["og"]["image"] ?>">
         <meta property="og:url" content="<?=$html_meta["og"]["url"] ?>">
+        <meta property="og:site_name" content="<?=$html_meta["og"]["site_name"] ?>">
+        <meta property="og:locale" content="<?=$html_meta["og"]["locale"] ?>">
+        <link rel="canonical" href="<?=$html_meta["canonical"] ?>">
+        <link rel="icon" href="<?=$html_meta["favicon"] ?>" type="image/x-icon">
 
         <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 
