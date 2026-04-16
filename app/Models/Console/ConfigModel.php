@@ -55,6 +55,7 @@ class ConfigModel extends Model
         $smtp_port = $data['smtp_port'];
         $smtp_name = $data['smtp_name'];
         $program_ver = $data['program_ver'];
+        $smtp_host = $data['smtp_host'];
 
         $db = $this->db;
         $db->transStart();
@@ -80,6 +81,7 @@ class ConfigModel extends Model
         $builder->set('smtp_port', $smtp_port);
         $builder->set('smtp_name', $smtp_name);
         $builder->set('program_ver', $program_ver);
+        $builder->set('smtp_host', $smtp_host);
         $result = $builder->update();
 
         $db->transComplete();
