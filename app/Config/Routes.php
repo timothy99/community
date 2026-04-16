@@ -138,3 +138,7 @@ $routes->post("/comment/insert", "User\Comment::insert");
 $routes->post("/comment/delete", "User\Comment::delete");
 $routes->post("/comment/edit/(:num)", "User\Comment::edit/$1");
 $routes->post("/comment/update", "User\Comment::update");
+
+$routes->get('/csl/language', 'Console\Language::index');
+$routes->get('/csl/language/edit', 'Console\Language::edit');
+$routes->post('/csl/language/update', 'Console\Language::update');

@@ -3,12 +3,14 @@
 use App\Models\User\MenuModel;
 use App\Models\User\ConfigModel;
 use App\Models\Console\SettingsModel;
+use App\Models\User\LanguageModel;
 
 // 사용자 뷰 (메뉴바가 상단에 있음)
 function uview($view_file, $proc_result = array())
 {
     $menu_model = new MenuModel();
     $config_model = new ConfigModel();
+    $language_model = new LanguageModel();
 
     $model_result = $config_model->getConfigInfo();
     $config_info = $model_result['info'];
@@ -22,6 +24,10 @@ function uview($view_file, $proc_result = array())
     $proc_result['language'] = $language;
 
     $proc_result["login_yn"] = loginCheck(); // 로그인 상태 여부 저장
+
+    $model_result = $language_model->getLanguageList();
+    $list = $model_result['list'];
+    $proc_result['language_list'] = $list;
 
     $view_result = null;
 

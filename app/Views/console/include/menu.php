@@ -9,7 +9,6 @@
         <li class="nav-item"><a href="/csl/slide/list" class="nav-link link-body-emphasis" id="li-slide">슬라이드</a></li>
         <li class="nav-item"><a href="/csl/popup/list" class="nav-link link-body-emphasis" id="li-popup">팝업</a></li>
 <?php    if (count($board_list) > 0) { ?>
-        <!-- 1단계: 대시보드 (하위 메뉴 있음) 샘플을 위한것. 예시용이라 감춤-->
         <li class="nav-item">
             <a href="/csl/board/<?= $board_list[0]->board_id ?>/list" class="nav-link link-body-emphasis" id="a-board-top">
                 <span>게시판</span>
@@ -34,6 +33,7 @@
         <hr class="my-2">
         <li class="nav-item"><a href="/csl/member/list" class="nav-link link-body-emphasis" id="li-member">회원관리</a></li>
         <li class="nav-item"><a href="/csl/config/view" class="nav-link link-body-emphasis" id="li-config">환경설정</a></li>
+        <li class="nav-item"><a href="/csl/language/edit" class="nav-link link-body-emphasis" id="li-language-edit">다국어</a></li>
         <li class="nav-item"><a href="/csl/menu/list" class="nav-link link-body-emphasis" id="li-menu">메뉴구성</a></li>
         <li class="nav-item"><a href="/csl/contents/list" class="nav-link link-body-emphasis" id="li-contents">콘텐츠</a></li>
         <li class="nav-item"><a href="/csl/settings/board/list" class="nav-link link-body-emphasis" id="li-settings-board-list">게시판 설정</a></li>

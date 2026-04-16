@@ -289,7 +289,7 @@ create table mng_inquiry (
 ) comment '단순문의' collate='utf8mb4_unicode_ci';
 
 create table mng_config (
-    config_idx int auto_increment comment '인덱스' primary key,
+    config_idx int auto_increment comment '인덱스',
     title varchar(300) null comment '회사명',
     description varchar(1000) null comment '회사 소개(메타 설명)',
     phone varchar(13) null comment '전화',
@@ -310,5 +310,22 @@ create table mng_config (
     smtp_pass varchar(200) null comment 'SMTP 암호',
     smtp_port varchar(200) null comment 'SMTP 포트',
     smtp_name varchar(200) null comment 'SMTP 발송자 이름',
-    smtp_mail varchar(200) null comment 'SMTP 발송자 메일'
+    smtp_mail varchar(200) null comment 'SMTP 발송자 메일',
+    language_yn enum('Y', 'N') default 'N' null comment '다국어 사용 여부',
+    primary key (config_idx)
 ) comment '설정 관리' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_language;
+create table mng_language (
+    language_idx int auto_increment comment '인덱스',
+    language_code varchar(20) null comment '언어',
+    language_name varchar(100) null comment '언어 이름',
+    language_org varchar(100) null comment '언어 원어',
+    use_yn enum('Y', 'N') default 'N' not null comment '사용 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key language_idx1 (use_yn),
+    primary key (language_idx)
+) comment '언어 관리' collate='utf8mb4_unicode_ci';
