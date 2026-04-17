@@ -90,15 +90,8 @@ body {
 .hd_pop_topbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     padding: 0 0 8px 0;
-}
-
-.hd_pop_counter {
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .hd_pop_pc_nav {
@@ -245,10 +238,11 @@ body {
         width: auto;
     }
 
-    /* 트랙: 모바일은 block + transition 없음 */
+    /* 트랙: 모바일은 block + transition 없음 + transform 초기화 */
     .hd_pop_track {
         display: block;
-        transition: none;
+        transition: none !important;
+        transform: none !important;
         padding: 0;
     }
 
