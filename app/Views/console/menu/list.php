@@ -11,6 +11,7 @@
                     <table class="table table-bordered table-hover bg-white align-middle text-center mb-0 text-nowrap">
                         <thead class="table-primary">
                             <tr>
+                                <th>언어</th>
                                 <th>메뉴명1</th>
                                 <th>메뉴명2</th>
                                 <th>순서1</th>
@@ -23,10 +24,11 @@
                         <tbody>
 <?php   foreach($list as $no => $val) { ?>
                         <tr>
+                            <td class="text-center"><?= code_replace('language', $val->language) ?></td>
                             <td><?= $val->menu_name ?></td>
                             <td></td>
                             <td class="text-center"><?= $val->order_no ?></td>
-                            <td class="text-center"></td>
+                            <td></td>
                             <td><?= $val->url_link ?></td>
                             <td><?= code_replace('url_target', $val->url_target) ?></td>
                             <td>
@@ -37,9 +39,10 @@
                         </tr>
 <?php       foreach($val->list as $no2 => $val2) { // 2차 메뉴 ?>
                         <tr>
+                            <td class="text-center"><?= code_replace('language', $val2->language) ?></td>
                             <td></td>
                             <td><?= $val2->menu_name ?></td>
-                            <td class="text-center"></td>
+                            <td></td>
                             <td class="text-center"><?= $val2->order_no ?></td>
                             <td><?= $val2->url_link ?></td>
                             <td><?= code_replace('url_target', $val2->url_target) ?></td>
@@ -52,7 +55,7 @@
 <?php   } ?>
 <?php   if (count($list) == 0) { ?>
                             <tr>
-                                <td colspan="7" class="text-center">데이터가 없습니다.</td>
+                                <td colspan="8" class="text-center">데이터가 없습니다.</td>
                             </tr>
 <?php   } ?>
                         </tbody>

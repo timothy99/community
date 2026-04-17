@@ -4,6 +4,7 @@ namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
 use App\Models\Console\MenuModel;
+use App\Models\User\LanguageModel;
 
 class Menu extends BaseController
 {
@@ -31,8 +32,13 @@ class Menu extends BaseController
 
     public function write($upper_idx)
     {
+        $language_model = new LanguageModel();
+
         $result = true;
         $message = '정상';
+
+        $model_result = $language_model->getLanguageList();
+        $language_list = $model_result['list'];
 
         $info = new \stdClass();
         $info->menu_idx = 0;
@@ -42,13 +48,14 @@ class Menu extends BaseController
         $info->menu_position = 0;
         $info->menu_name = '';
         $info->url_link = '';
-        $info->url_target = '_blank';
+        $info->url_target = '_self';
         $info->order_no = '';
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/menu/edit', $proc_result);
     }
@@ -69,6 +76,7 @@ class Menu extends BaseController
         $url_link = $this->request->getPost("url_link", FILTER_SANITIZE_SPECIAL_CHARS);
         $url_target = $this->request->getPost("url_target", FILTER_SANITIZE_SPECIAL_CHARS);
         $order_no = $this->request->getPost("order_no", FILTER_SANITIZE_SPECIAL_CHARS);
+        $language = $this->request->getPost("language", FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($menu_name == null) { $result = false; $message = '메뉴명을 입력해주세요.'; }
         if ($order_no == null) { $result = false; $message = '정렬순서를 입력해주세요.'; }
@@ -84,6 +92,7 @@ class Menu extends BaseController
         $data['url_link'] = $url_link;
         $data['url_target'] = $url_target;
         $data['order_no'] = $order_no;
+        $data['language'] = $language;
 
         if ($result == true) {
             if ($menu_idx == 0) {
@@ -109,9 +118,13 @@ class Menu extends BaseController
     public function edit()
     {
         $menu_model = new MenuModel();
+        $language_model = new LanguageModel();
 
         $result = true;
         $message = '정상';
+
+        $model_result = $language_model->getLanguageList();
+        $language_list = $model_result['list'];
 
         $menu_idx = $this->request->getUri()->getSegment(4);
 
@@ -125,6 +138,7 @@ class Menu extends BaseController
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/menu/edit', $proc_result);
     }

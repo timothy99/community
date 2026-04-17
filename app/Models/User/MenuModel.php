@@ -11,11 +11,14 @@ class MenuModel extends Model
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
 
+        $language = getUserSessionInfo('language') ?? 'kor';
+
         // upper_idx 기준으로 상위 데이터를 찾아본다.
         $db = $this->db;
         $builder = $db->table('menu');
         $builder->where('del_yn', 'N');
         $builder->where('upper_idx', 0);
+        $builder->where('language', $language);
         $builder->orderBy('order_no', 'asc');
         $list = $builder->get()->getResult();
 
