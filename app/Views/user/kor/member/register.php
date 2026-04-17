@@ -3,9 +3,9 @@
 <div class="container">
     <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
         <div class="col-12 col-md-8 col-lg-6">
-            <div class="card shadow">
-                <div class="card-body p-4">
-                    <h3 class="card-title text-center mb-4">회원가입</h3>
+            <div class="card shadow mb-4">
+                <div class="card-body p-4 mb-4">
+                    <h3 class="card-title text-center">회원가입</h3>
 
                     <!-- 아이디 입력 -->
                     <div class="mb-3">
