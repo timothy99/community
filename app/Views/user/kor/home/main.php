@@ -45,10 +45,10 @@
                 <ul class="list-group list-group-flush">
 <?php    foreach ($notice_list as $no => $val) { ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
-                        <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="text-decoration-none text-truncate me-2">
+                        <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="text-decoration-none text-truncate me-2" style="min-width:0">
                             <?= $val->title ?>
                         </a>
-                        <small class="text-muted"><?= $val->ins_date_txt ?></small>
+                        <small class="text-muted flex-shrink-0"><?= $val->ins_date_txt ?></small>
                     </li>
 <?php    } ?>
                 </ul>
@@ -69,10 +69,10 @@
                 <ul class="list-group list-group-flush">
 <?php    foreach ($faq_list as $no => $val) { ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
-                        <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="text-decoration-none text-truncate me-2">
+                        <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="text-decoration-none text-truncate me-2" style="min-width:0">
                             <?= $val->title ?>
                         </a>
-                        <small class="text-muted"><?= $val->ins_date_txt ?></small>
+                        <small class="text-muted flex-shrink-0"><?= $val->ins_date_txt ?></small>
                     </li>
 <?php    } ?>
                 </ul>
@@ -84,10 +84,10 @@
 <!-- Album Style Posts -->
 <div class="row mb-5">
 <?php   foreach ($gallery_list as $no => $val) { ?>
-    <div class="col-md-4 mb-4">
+    <div class="col-6 col-md-3 mb-4">
         <div class="card rounded-0 h-100 d-flex flex-column">
-            <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>">
-                <img src="/file/view/<?= $val->main_image_id ?>" class="card-img-top rounded-0" alt="<?= $val->title ?>">
+            <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="ratio ratio-1x1 overflow-hidden">
+                <img src="/file/view/<?= $val->main_image_id ?>" class="rounded-0 object-fit-cover w-100 h-100" alt="<?= $val->title ?>">
             </a>
             <div class="card-body d-flex flex-column">
                 <p class="card-text flex-grow-1">

@@ -45,7 +45,7 @@ class Home extends BaseController
         $notice_list = $model_result['list'];
 
         $data["board_id"] = "gallery";
-        $data["limit"] = 3;
+        $data["limit"] = 4;
         $model_result = $main_model->getRecentContentsList($data);
         $gallery_list = $model_result['list'];
 
