@@ -122,6 +122,10 @@ function code_replace($category, $text)
     $replace['locale']['eng'] = 'en_US';
     $replace['locale']['jpn'] = 'ja_JP';
     $replace['locale']['chn'] = 'zh_CN';
+    $replace['language']['kor'] = '한국어';
+    $replace['language']['eng'] = '영어';
+    $replace['language']['jpn'] = '일본어';
+    $replace['language']['chn'] = '중국어';
 
     return isset($replace[$category][$text]) ? $replace[$category][$text] : $text;
 }

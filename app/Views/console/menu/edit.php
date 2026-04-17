@@ -19,7 +19,17 @@
                     <label for="menu_name" class="form-label">메뉴명</label>
                     <input type="text" class="form-control" id="menu_name" name="menu_name" placeholder="메뉴명을 입력하세요" value="<?= $info->menu_name ?>">
                 </div>
-
+<?php   if ($config_info->language_yn == 'Y') { ?>
+                <!-- 언어 -->
+                <div class="mb-3">
+                    <label for="language" class="form-label">언어</label>
+                    <select class="form-select w-25" id="language" name="language">
+<?php       foreach ($language_list as $no => $val) { ?>
+                            <option value="<?= $val->language_code ?>"><?= $val->language_name ?></option>
+<?php       } ?>
+                    </select>
+                </div>
+<?php   } ?>
                 <!-- 정렬순서 -->
                 <div class="mb-3">
                     <label for="order_no" class="form-label">정렬순서</label>
@@ -59,6 +69,7 @@
     $(window).on('load', function() {
         $('#li-menu').addClass('active-level-1');
         $('#url_target').val('<?=$info->url_target ?>');
+        $('#language').val('<?=$info->language ?>');
     });
 
     function menuUpdate() {

@@ -16,6 +16,7 @@ class MenuModel extends Model
         $builder = $db->table('menu');
         $builder->where('upper_idx', 0);
         $builder->where('del_yn', 'N');
+        $builder->orderBy('language', 'asc');
         $builder->orderBy('order_no', 'asc');
         $list = $builder->get()->getResult();
         foreach ($list as $no => $val) {
@@ -73,6 +74,7 @@ class MenuModel extends Model
         $url_link = $data["url_link"];
         $url_target = $data["url_target"];
         $order_no = $data["order_no"];
+        $language = $data["language"];
 
         $menu_position = 1;
         $new_menu_position = 1;
@@ -101,6 +103,7 @@ class MenuModel extends Model
         $builder->set('url_link', $url_link);
         $builder->set('url_target', $url_target);
         $builder->set('order_no', $order_no);
+        $builder->set('language', $language);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $user_id);
         $builder->set('ins_date', $today);
@@ -143,6 +146,7 @@ class MenuModel extends Model
         $order_no = $data['order_no'];
         $url_link = $data['url_link'];
         $url_target = $data['url_target'];
+        $language = $data['language'];
 
         $db = $this->db;
         $db->transStart();
@@ -152,6 +156,7 @@ class MenuModel extends Model
         $builder->set('order_no', $order_no);
         $builder->set('url_link', $url_link);
         $builder->set('url_target', $url_target);
+        $builder->set('language', $language);
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
         $builder->where('menu_idx', $menu_idx);
