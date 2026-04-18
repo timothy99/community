@@ -115,23 +115,15 @@ Events::on("DBQuery", function () {
 });
 ```
 - 권한관리 모델 추가
-- AuthorityModel.php 추가 필요
-- session_helpoer.php 추가 필요
 ```
 /*
     사용자 추가 이벤트
     1. 세션을 찾아서 세션에 언어 설정이 없으면 한국어로 기본 설정해서 데이터 넣기
 */
-Events::on("post_controller_constructor", function () {
-    $authority_model = new AuthorityModel();
-
+Events::on('post_controller_constructor', function () {
     getUserSession() ?? setBaseSession(); // 사용자 세션이 없다면 기본 세션 생성
-
-    $authority_model->setPreviousUrl(); // 이전 url 세션에 저장
-
-    $request = \Config\Services::request();
-    $segments = $request->getUri()->getSegments(); // segments 확인
-    $authority_model->checkAuthority($segments); // 권한 체크
+    setPreviousUrl(); // 이전 url 세션에 저장
+    checkAuthority(service('request')->getUri()->getSegments()); // 권한 체크
 });
 ```
 
@@ -185,6 +177,7 @@ $routes->get('/home/main', 'User\Home::main');
 
 ### index.php 설정
 - public/index.php
+- Boot.php 파일 아래. exit 위에 위치 (57번 라인 이후로)
 ```
 // Load .env first
 $env_directory = $paths->envDirectory ?? $paths->appDirectory . '/../';
@@ -197,7 +190,7 @@ if (! defined('ENVIRONMENT')) {
     if (PHP_SAPI === 'cli') {
         define('ENVIRONMENT', 'development');
     } else {
-        $ip_arr = explode("||", env("development.ip"));
+        $ip_arr = explode("||", getenv("development.ip"));
         $ip_addr = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
         if (in_array($ip_addr, $ip_arr)) {
             define('ENVIRONMENT', 'development');
