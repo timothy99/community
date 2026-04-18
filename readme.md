@@ -131,7 +131,29 @@ Events::on('post_controller_constructor', function () {
 1. env파일을 .env로 복사합니다.
 2. DB설정을 합니다.
 3. 설명에 따라 기타 필요한 사항들을 입력합니다.
+```
+app.baseURL = "https를 포함한 도메인 전체"
 
+session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
+
+app.appTimezone = "Asia/Seoul"
+
+logger.threshold = 4
+
+encryption.key = "암호화키"
+encryption.iv = "암호화iv"
+encryption.way = "aes-256-gcm"
+
+database.default.hostname = "DB호스트"
+database.default.database = "DB명"
+database.default.username = "DB아이디"
+database.default.password = "암호"
+database.default.DBDriver = "MySQLi"
+database.default.DBPrefix = "mng_"
+database.default.port = 3306
+
+development.ip = "아이피1||아이피2||아이피3"
+```
 ### sftp 설정
 ```
 {
