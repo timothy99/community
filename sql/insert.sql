@@ -82,6 +82,8 @@ insert into mng_board (board_id, category, title, contents, main_image_id, url_l
 insert into mng_board (board_id, category, title, contents, main_image_id, url_link, pdf_file_id, youtube_link, comment_cnt, heart_cnt, hit_cnt, reg_date, notice_yn, del_yn, ins_id, ins_date, upd_id, upd_date) values ('gallery', null, '갤러리4', '<p>갤러리4</p>', 'TdlTNRy90aHstF5hPZ1BM7C8DxSMFah9', null, '', null, 0, 0, 0, '20260316204928', 'N', 'N', 'system', '20260316204726', 'system', '20260316204928');
 insert into mng_board (board_id, category, title, contents, main_image_id, url_link, pdf_file_id, youtube_link, comment_cnt, heart_cnt, hit_cnt, reg_date, notice_yn, del_yn, ins_id, ins_date, upd_id, upd_date) values ('gallery', null, '갤러리5', '<p>갤러리5</p>', 'V2NTIN2qILC2KQRniRBoE0wMW4heL99L', null, '', null, 0, 0, 0, '20260316204948', 'N', 'N', 'system', '20260316204738', 'system', '20260316204948');
 
+update mng_board set board_idx_desc = -board_idx where board_idx_desc = 0;
+
 insert into mng_board_file (board_idx, file_id) values (4, 'N1gStIBylusuQgGED0z9xyr1vDRl2POz');
 insert into mng_board_file (board_idx, file_id) values (35, 'TAuNo3gN1F6O4sP56nsDUNxtpI3QuL5B');
 insert into mng_board_file (board_idx, file_id) values (35, 'PJJpysfssVnJfCVCoUlc0LBqsV0CXS2P');
