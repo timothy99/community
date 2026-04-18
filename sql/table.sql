@@ -50,6 +50,7 @@ create table mng_member_memo (
     key index1 (member_id)
 ) comment='회원 메모' collate='utf8mb4_unicode_ci';
 
+drop table if exists mng_admin;
 create table mng_admin (
     admin_idx int not null auto_increment comment '관리자 번호',
     member_id int not null comment '회원 번호',
@@ -113,6 +114,7 @@ create table mng_board (
     primary key (board_idx)
 ) comment='게시판' collate='utf8mb4_unicode_ci';
 
+drop table if exists mng_board_comment;
 create table mng_board_comment (
     board_comment_idx int not null auto_increment comment '인덱스',
     board_idx int not null comment '게시물 번호',
@@ -288,6 +290,7 @@ create table mng_inquiry (
     primary key (inquiry_idx)
 ) comment '단순문의' collate='utf8mb4_unicode_ci';
 
+drop table if exists mng_config;
 create table mng_config (
     config_idx int auto_increment comment '인덱스',
     title varchar(300) null comment '회사명',

@@ -459,7 +459,7 @@ class FileModel extends Model
     {
         $user_file = $data['user_file'];
 
-        $upload_date_path = date('Y/m'); // 업로드 디렉토리는 연/월로 생성
+        $upload_date_path = date('Ym'); // 업로드 디렉토리는 연월(202701)로 생성
         $random_name = $user_file->getRandomName(); // 랜덤네임 생성
         $user_file->store($upload_date_path, $random_name); // 저장
         $file_id = getRandomString(4, 32); // 보안을 위한 랜덤문자 생성
