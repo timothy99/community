@@ -738,7 +738,7 @@ class FileModel extends Model
     {
         try {
             if ($file_path === null || !file_exists($file_path)) {
-                $file_path = "resource/community/image/no_image.png";
+                $file_path = FCPATH . "resource/user/images/no_image.png";
             }
 
             $mime = mime_content_type($file_path);
@@ -754,7 +754,7 @@ class FileModel extends Model
                 $raw_file = $response->download($file_path, null); // 그 외 파일은 다운로드
             }
         } catch (\Throwable $t) {
-            $fallback = "resource/community/image/no_image.png";
+            $fallback = FCPATH . "resource/user/images/no_image.png";
             $mime = mime_content_type($fallback);
             $response->setHeader('Content-Type', $mime);
             $response->setHeader('Content-Disposition', 'inline; filename="no_image.png"');

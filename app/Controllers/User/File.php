@@ -121,14 +121,15 @@ class File extends BaseController
     {
         $file_model = new FileModel();
 
-        $file_info = new \stdClass();
-        if ($file_id == null) { // 파일 아이디가 없다는건 파일 정보가 애초에 없다는 말이니
-            $file_info->file_path = null; // 공백 no image 파일이 다운로드 되도록 처리한다.
-        } else {
+        $file_path = null;
+        if ($file_id != null) {
             $file_info = $file_model->getFileInfo($file_id); // 파일소유권 확인 및 파일 정보 확인
+            if ($file_info != null) {
+                $file_path = $file_info->file_path;
+            }
         }
 
-        $raw_file = $file_model->getRawFile($this->response, $file_info->file_path); // 파일 다운로드
+        $raw_file = $file_model->getRawFile($this->response, $file_path); // 파일 다운로드
 
         return $raw_file;
     }
