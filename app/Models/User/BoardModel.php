@@ -22,6 +22,7 @@ class BoardModel extends Model
             // 기본 설정 반환
             $config = new \stdClass();
             $config->board_id = $board_id;
+            $config->category = '';
             $config->category_yn = 'N';
             $config->reg_date_yn = 'N';
             $config->hit_yn = 'Y';
