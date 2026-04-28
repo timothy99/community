@@ -15,6 +15,7 @@ function getPagingArray(array $data): array
     $cnt = $data['cnt'];
     $page = $data['search_page'];
     $rows = $data['search_rows'];
+    $active_class = $data['active_class'] ?? 'active';
 
     $prev_pages = 4; // 현재 페이지($page)기준 앞에 있을 최대 페이지 수
     $next_pages = 4; // 현재 페이지($page)기준 뒤에 있을 최대 페이지 수
@@ -58,11 +59,8 @@ function getPagingArray(array $data): array
 
     $page_arr = array();
     for ($i = $start_page; $i <= $end_page; $i++) {
-        $active_class = '';
-        if ($i == $page) {
-            $active_class = 'active';
-        }
-        $page_arr[] = ['page_num'=>$i, 'active_class'=>$active_class];
+        $active_class_txt = ($i == $page) ? $active_class : '';
+        $page_arr[] = ['page_num'=>$i, 'active_class'=>$active_class_txt];
     }
 
     $paging = array();
@@ -82,6 +80,8 @@ function getPagingView($data, $search_arr)
 {
     unset($search_arr['cnt']);
     unset($search_arr['search_page']);
+    unset($search_arr['active_class']);
+    unset($search_arr['paging_file']);
 
     $uri_path = current_url(true)->getPath();
 
