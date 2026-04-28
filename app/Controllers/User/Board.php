@@ -73,6 +73,8 @@ class Board extends BaseController
         $search_arr['search_rows'] = $search_rows;
         $search_arr['category'] = $category;
         $search_arr['cnt'] = $cnt;
+        $search_arr['active_class'] = 'active';
+        $search_arr['paging_file'] = '/user/'.getUserSessionInfo('language').'/paging/general';
         $paging_info = getPagingInfo($search_arr);
 
         $proc_result = array();
