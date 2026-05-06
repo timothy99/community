@@ -76,7 +76,7 @@
         <?php if (ENVIRONMENT !== 'production') : ?>
             <?= nl2br(esc($message)) ?>
         <?php else : ?>
-            <?= lang('Errors.sorryBadRequest') ?>
+            죄송합니다. 잘못된 요청입니다.
         <?php endif; ?>
     </p>
 </div>

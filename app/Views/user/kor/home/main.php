@@ -1,4 +1,10 @@
-<?php    include_once 'popup.php'; ?>
+<?php
+/** @var array $slide_list */
+/** @var array $notice_list */
+/** @var array $faq_list */
+/** @var array $gallery_list */
+?>
+<?php   include_once 'popup.php'; ?>
 
 <!-- Carousel -->
 <div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
