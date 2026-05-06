@@ -67,6 +67,10 @@
                                 <td><?= code_replace('comment_write', $info->comment_write) ?></td>
                             </tr>
                             <tr>
+                                <th class="align-middle bg-light">비밀 댓글 기능 사용 여부</th>
+                                <td><?= code_replace('secret_comment_yn', $info->secret_comment_yn) ?></td>
+                            </tr>
+                            <tr>
                                 <th class="align-middle bg-light">조회수 노출 기능 사용 여부</th>
                                 <td><?= code_replace('hit_yn', $info->hit_yn) ?></td>
                             </tr>

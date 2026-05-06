@@ -122,6 +122,22 @@
                     <small class="text-muted">일반 사용자의 댓글쓰기 권한을 설정합니다.</small>
                 </div>
 
+                <!-- 비밀 댓글 기능 사용여부 -->
+                <div class="mb-3" id="secret_comment_yn_wrap">
+                    <label class="form-label">비밀 댓글 기능 사용 여부</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="secret_comment_yn" id="secret_comment_yn_y" value="Y">
+                            <label class="form-check-label" for="secret_comment_yn_y">사용</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="secret_comment_yn" id="secret_comment_yn_n" value="N">
+                            <label class="form-check-label" for="secret_comment_yn_n">미사용</label>
+                        </div>
+                    </div>
+                    <small class="text-muted">댓글 작성 시 비밀 댓글로 설정할 수 있는 기능입니다. 댓글쓰기가 가능일 때만 활성화됩니다.</small>
+                </div>
+
                 <!-- 조회수 노출 기능 사용여부 -->
                 <div class="mb-3">
                     <label class="form-label">조회수 노출 기능 사용 여부</label>
@@ -420,6 +436,7 @@
         $('input[name="category_yn"][value="<?=$info->category_yn ?>"]').prop('checked', true);
         $('input[name="user_write"][value="<?=$info->user_write ?>"]').prop('checked', true);
         $('input[name="comment_write"][value="<?=$info->comment_write ?>"]').prop('checked', true);
+        $('input[name="secret_comment_yn"][value="<?=$info->secret_comment_yn ?>"]').prop('checked', true);
         $('input[name="reg_date_yn"][value="<?=$info->reg_date_yn ?>"]').prop('checked', true);
         $('input[name="form_style_yn"][value="<?=$info->form_style_yn ?>"]').prop('checked', true);
         $('input[name="hit_edit_yn"][value="<?=$info->hit_edit_yn ?>"]').prop('checked', true);

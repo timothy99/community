@@ -69,6 +69,7 @@ class Settings extends BaseController
         $info->category_yn = 'N';
         $info->user_write = 'N';
         $info->comment_write = 'N';
+        $info->secret_comment_yn = 'N';
         $info->title = '게시판'.$random_board_number;
         $info->meta_title = '';
         $info->base_rows = 10;
@@ -117,6 +118,7 @@ class Settings extends BaseController
         $category = $this->request->getPost('category', FILTER_SANITIZE_SPECIAL_CHARS);
         $user_write = $this->request->getPost('user_write', FILTER_SANITIZE_SPECIAL_CHARS);
         $comment_write = $this->request->getPost('comment_write', FILTER_SANITIZE_SPECIAL_CHARS);
+        $secret_comment_yn = $this->request->getPost('secret_comment_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $hit_yn = $this->request->getPost('hit_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $heart_yn = $this->request->getPost('heart_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $pdf_yn = $this->request->getPost('pdf_yn', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -153,6 +155,7 @@ class Settings extends BaseController
         if ($category_yn == null || $category_yn == '') { $result = false; $message = '카테고리 사용여부를 선택해주세요.'; }
         if ($user_write == null || $user_write == '') { $result = false; $message = '사용자 글쓰기 가능 여부를 선택해주세요.'; }
         if ($comment_write == null || $comment_write == '') { $result = false; $message = '사용자 댓글쓰기 가능 여부를 선택해주세요.'; }
+        if ($secret_comment_yn == null || $secret_comment_yn == '') { $result = false; $message = '비밀 댓글 기능 사용 여부를 선택해주세요.'; }
         if ($reg_date_yn == null || $reg_date_yn == '') { $result = false; $message = '입력일 수정 기능 사용 여부를 선택해주세요.'; }
         if ($hit_edit_yn == null || $hit_edit_yn == '') { $result = false; $message = '조회수 수정 기능 사용 여부를 선택해주세요.'; }
         if ($hit_yn == null || $hit_yn == '') { $result = false; $message = '조회수 노출 기능 사용 여부를 선택해주세요.'; }
@@ -183,6 +186,7 @@ class Settings extends BaseController
         $data['category'] = $category;
         $data['user_write'] = $user_write;
         $data['comment_write'] = $comment_write;
+        $data['secret_comment_yn'] = $secret_comment_yn;
         $data['hit_yn'] = $hit_yn;
         $data['heart_yn'] = $heart_yn;
         $data['pdf_yn'] = $pdf_yn;

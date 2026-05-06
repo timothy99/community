@@ -80,6 +80,7 @@ class SettingsModel extends Model
         $category = $data['category'];
         $user_write = $data['user_write'];
         $comment_write = $data['comment_write'];
+        $secret_comment_yn = $data['secret_comment_yn'];
         $hit_yn = $data['hit_yn'];
         $heart_yn = $data['heart_yn'];
         $pdf_yn = $data['pdf_yn'];
@@ -118,6 +119,7 @@ class SettingsModel extends Model
         $builder->set('category', $category);
         $builder->set('user_write', $user_write);
         $builder->set('comment_write', $comment_write);
+        $builder->set('secret_comment_yn', $secret_comment_yn);
         $builder->set('hit_yn', $hit_yn);
         $builder->set('heart_yn', $heart_yn);
         $builder->set('pdf_yn', $pdf_yn);
@@ -196,6 +198,7 @@ class SettingsModel extends Model
         $category = $data['category'];
         $user_write = $data['user_write'];
         $comment_write = $data['comment_write'];
+        $secret_comment_yn = $data['secret_comment_yn'];
         $hit_yn = $data['hit_yn'];
         $heart_yn = $data['heart_yn'];
         $pdf_yn = $data['pdf_yn'];
@@ -234,6 +237,7 @@ class SettingsModel extends Model
         $builder->set('category', $category);
         $builder->set('user_write', $user_write);
         $builder->set('comment_write', $comment_write);
+        $builder->set('secret_comment_yn', $secret_comment_yn);
         $builder->set('hit_yn', $hit_yn);
         $builder->set('heart_yn', $heart_yn);
         $builder->set('pdf_yn', $pdf_yn);

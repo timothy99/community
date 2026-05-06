@@ -21,10 +21,12 @@ class Comment extends BaseController
 
         $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
         $comment = $this->request->getPost('comment', FILTER_SANITIZE_SPECIAL_CHARS);
+        $secret_yn = $this->request->getPost('secret_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
 
         $data = array();
         $data['board_idx'] = $board_idx;
         $data['comment'] = $comment;
+        $data['secret_yn'] = $secret_yn;
 
         $model_result = $comment_model->procCommentInsert($data);
         $result = $model_result['result'];
@@ -94,10 +96,12 @@ class Comment extends BaseController
 
         $board_comment_idx = $this->request->getPost('board_comment_idx', FILTER_SANITIZE_SPECIAL_CHARS);
         $comment = $this->request->getPost('comment', FILTER_SANITIZE_SPECIAL_CHARS);
+        $secret_yn = $this->request->getPost('secret_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
 
         $data = array();
         $data['board_comment_idx'] = $board_comment_idx;
         $data['comment'] = $comment;
+        $data['secret_yn'] = $secret_yn;
 
         $model_result = $comment_model->procCommentUpdate($data);
         $result = $model_result['result'];
