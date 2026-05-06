@@ -126,6 +126,8 @@ function code_replace($category, $text)
     $replace['language']['eng'] = '영어';
     $replace['language']['jpn'] = '일본어';
     $replace['language']['chn'] = '중국어';
+    $replace['secret_comment_yn']['Y'] = '사용';
+    $replace['secret_comment_yn']['N'] = '미사용';
 
     return isset($replace[$category][$text]) ? $replace[$category][$text] : $text;
 }

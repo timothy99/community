@@ -224,7 +224,12 @@
                 <div class="border-top">
 <?php       foreach($comment_list as $no => $val) { ?>
                     <div class="row g-0 border-bottom tbl-row--with-action" id="board_comment_idx_<?= $val->board_comment_idx ?>">
-                        <div class="tbl-label"><?= $val->member_info->member_nickname ?><br><?= $val->ins_date_txt ?></div>
+                        <div class="tbl-label">
+                            <?= $val->member_info->member_nickname ?><br><?= $val->ins_date_txt ?>
+<?php           if ($val->secret_yn == 'Y') { ?>
+                            <br><span class="badge bg-secondary"><i class="fas fa-lock"></i> 비밀댓글</span>
+<?php           } ?>
+                        </div>
                         <div class="tbl-value"><?= nl2br($val->comment) ?></div>
                         <div class="tbl-action">
                             <button type="button" class="btn btn-sm btn-danger" onclick="commentDelete('<?=$val->board_comment_idx ?>')">삭제</button>

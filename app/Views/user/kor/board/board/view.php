@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var object $board_config
+ * @var object $info
+ * @var array $comment_list
+ * @var object $authority
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="board_idx" name="board_idx" value="<?= $info->board_idx ?>">
@@ -218,8 +227,18 @@
                 <div class="border-top">
 <?php       foreach($comment_list as $no => $val) { ?>
                     <div class="row g-0 border-bottom tbl-row--with-action" id="board_comment_idx_<?= $val->board_comment_idx ?>">
-                        <div class="tbl-label"><?= $val->member_info->member_nickname ?><br><?= $val->ins_date_txt ?></div>
-                        <div class="tbl-value"><?= nl2br($val->comment) ?></div>
+                        <div class="tbl-label">
+                            <?= $val->member_info->member_nickname ?><br><?= $val->ins_date_txt ?>
+                        </div>
+                        <div class="tbl-value">
+<?php           if ($val->secret_yn == 'Y' && $authority->admin_authority != 'Y' && $val->ins_id != getUserSessionInfo('member_id')) { ?>
+                            <span class="badge bg-secondary"><i class="fas fa-lock"></i> 비밀댓글</span>
+<?php           } else if ($val->secret_yn == 'Y') { ?>
+                            <span class="badge bg-secondary"><i class="fas fa-lock"></i></span><?= nl2br($val->comment) ?>
+<?php           } else { ?>
+                            <?= nl2br($val->comment) ?>
+<?php           } ?>
+                        </div>
 <?php           if ($val->ins_id == getUserSessionInfo("member_id") || $authority->admin_authority == "Y") { ?>
                         <div class="tbl-action">
                             <button type="button" class="btn btn-sm btn-danger" onclick="commentDelete('<?=$val->board_comment_idx ?>')">삭제</button>
@@ -237,6 +256,14 @@
                     <div class="mb-3">
                         <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="댓글을 입력하세요"></textarea>
                     </div>
+<?php           if ($board_config->secret_comment_yn == 'Y') { ?>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="secret_yn" name="secret_yn" value="Y">
+                            <label class="form-check-label" for="secret_yn"><i class="fas fa-lock"></i> 비밀 댓글</label>
+                        </div>
+                    </div>
+<?php           } ?>
                     <div class="text-end">
                         <button type="button" class="btn btn-primary" onclick="commentInsert()">댓글 등록</button>
                     </div>
@@ -284,6 +311,8 @@
         update_form.append('board_id', $('#board_id').val());
         update_form.append('board_idx', $('#board_idx').val());
         update_form.append('comment', $('#comment').val());
+        var secret_yn = $('#secret_yn').is(':checked') ? 'Y' : 'N';
+        update_form.append('secret_yn', secret_yn);
         ajax1('/comment/insert', update_form, 'commentAfter');
     }
 
@@ -303,8 +332,10 @@
     function commentUpdate(board_comment_idx) {
         var update_form = new FormData();
         var comment = $('#comment_'+board_comment_idx).val();
+        var secret_yn = $('#secret_yn_'+board_comment_idx).val() || 'N';
         update_form.append('board_comment_idx', board_comment_idx);
         update_form.append('comment', comment);
+        update_form.append('secret_yn', secret_yn);
         ajax1('/comment/update', update_form, 'commentAfter');
     }
 
