@@ -76,7 +76,7 @@
             <?php if (ENVIRONMENT !== 'production') : ?>
                 <?= nl2br(esc($message)) ?>
             <?php else : ?>
-                <?= lang('Errors.sorryCannotFind') ?>
+                죄송합니다. 페이지를 찾을 수 없습니다.
             <?php endif; ?>
         </p>
     </div>
