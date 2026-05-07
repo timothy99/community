@@ -83,6 +83,7 @@ class Config extends BaseController
         $smtp_name = $this->request->getPost('smtp_name', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_host = $this->request->getPost('smtp_host', FILTER_SANITIZE_SPECIAL_CHARS);
         $program_ver = $this->request->getPost('program_ver', FILTER_SANITIZE_SPECIAL_CHARS);
+        $construction_yn = $this->request->getPost('construction_yn', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($title == null) { $result = false; $message = '회사명을 입력해주세요.'; }
         if ($phone == null) { $result = false; $message = '전화번호를 입력해주세요.'; }
@@ -119,7 +120,7 @@ class Config extends BaseController
         $data['smtp_name'] = $smtp_name;
         $data['program_ver'] = $program_ver;
         $data['smtp_host'] = $smtp_host;
-
+        $data['construction_yn'] = $construction_yn;
         if ($result == true) {
             $model_result = $config_model->procConfigUpdate($data);
             $result = $model_result['result'];

@@ -317,6 +317,7 @@ create table mng_config (
     smtp_name varchar(200) null comment 'SMTP 발송자 이름',
     smtp_mail varchar(200) null comment 'SMTP 발송자 메일',
     language_yn enum('Y', 'N') default 'N' null comment '다국어 사용 여부',
+    construction_yn enum('Y', 'N') default 'N' null comment '공사중 여부',
     primary key (config_idx)
 ) comment '설정 관리' collate='utf8mb4_unicode_ci';
 

@@ -150,3 +150,5 @@ $routes->post('/csl/ip/update', 'Console\Ip::update');
 $routes->get('/csl/ip/view/(:num)', 'Console\Ip::view/$1');
 $routes->get('/csl/ip/edit/(:num)', 'Console\Ip::edit/$1');
 $routes->post('/csl/ip/delete', 'Console\Ip::delete');
+
+$routes->get('/construction', 'User\Construction::index');
