@@ -142,3 +142,11 @@ $routes->post("/comment/update", "User\Comment::update");
 $routes->get('/csl/language', 'Console\Language::index');
 $routes->get('/csl/language/edit', 'Console\Language::edit');
 $routes->post('/csl/language/update', 'Console\Language::update');
+
+$routes->get('/csl/ip', 'Console\Ip::index');
+$routes->get('/csl/ip/list', 'Console\Ip::list');
+$routes->get('/csl/ip/write', 'Console\Ip::write');
+$routes->post('/csl/ip/update', 'Console\Ip::update');
+$routes->get('/csl/ip/view/(:num)', 'Console\Ip::view/$1');
+$routes->get('/csl/ip/edit/(:num)', 'Console\Ip::edit/$1');
+$routes->post('/csl/ip/delete', 'Console\Ip::delete');

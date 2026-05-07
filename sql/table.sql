@@ -334,3 +334,18 @@ create table mng_language (
     key language_idx1 (use_yn),
     primary key (language_idx)
 ) comment '언어 관리' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_ip;
+create table mng_ip (
+    ip_idx int auto_increment comment '인덱스',
+    ip varchar(15) not null comment 'IP 주소',
+    environment_mode enum('development', 'production') default 'production' not null comment '환경 모드',
+    memo varchar(4000) null comment '메모',
+    del_yn enum('Y', 'N') default 'N' not null comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key ip_index1 (ip),
+    primary key (ip_idx)
+) comment '관리자 IP 정보' collate='utf8mb4_unicode_ci';

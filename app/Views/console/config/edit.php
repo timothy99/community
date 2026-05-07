@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var object $info
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="company_logo_hidden" name="company_logo_hidden" value="<?= $info->company_logo ?>">
@@ -197,6 +203,9 @@
     // 메뉴강조
     $(window).on('load', function() {
         $('#li-config').addClass('active-level-1');
+        $('#collapse-config').addClass('show').addClass('submenu');
+        $('#a-config').addClass('active-level-2');
+
         $('#admin_two_factor_yn').val('<?= $info->admin_two_factor_yn ?>');
         $('#smtp_yn').val('<?= $info->smtp_yn ?>');
     });

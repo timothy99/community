@@ -61,19 +61,40 @@ $env_directory = $paths->envDirectory ?? $paths->appDirectory . '/../';
 require $paths->systemDirectory . '/Config/DotEnv.php';
 (new CodeIgniter\Config\DotEnv($env_directory))->load();
 
-// Define ENVIRONMENT // 정해둔 ip인 경우 development 모드로 작동
+// Define ENVIRONMENT // mng_ip 테이블의 IP 목록 기반으로 환경 모드를 결정
 if (! defined('ENVIRONMENT')) {
-    // CLI 환경에서는 development 모드로 설정 (로깅을 위해)
     if (PHP_SAPI === 'cli') {
         define('ENVIRONMENT', 'development');
     } else {
-        $ip_arr = explode("||", getenv("development.ip"));
-        $ip_addr = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
-        if (in_array($ip_addr, $ip_arr)) {
-            define('ENVIRONMENT', 'development');
-        } else {
-            define('ENVIRONMENT', 'production');
+        $ip_addr  = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        $env_mode = 'production';
+
+        try {
+            $db_host = getenv('database.default.hostname') ?: 'localhost';
+            $db_port = getenv('database.default.port') ?: 3306;
+            $db_name = getenv('database.default.database') ?: '';
+            $db_user = getenv('database.default.username') ?: '';
+            $db_pass = getenv('database.default.password') ?: '';
+
+            $pdo = new PDO(
+                "mysql:host={$db_host};port={$db_port};dbname={$db_name};charset=utf8mb4",
+                $db_user,
+                $db_pass,
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 3]
+            );
+            $stmt = $pdo->prepare(
+                "SELECT environment_mode FROM mng_ip WHERE ip = ? AND del_yn = 'N' LIMIT 1"
+            );
+            $stmt->execute([$ip_addr]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row !== false) {
+                $env_mode = $row['environment_mode'];
+            }
+        } catch (Exception $e) {
+            // DB 연결 실패 시 production으로 fallback
         }
+
+        define('ENVIRONMENT', $env_mode);
     }
 }
 

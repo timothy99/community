@@ -1,9 +1,16 @@
+<?php
+/**
+ * @var object $info
+ * @var array $list
+ */
+?>
+
 <form id="frm" name="frm">
 
 <!-- Main Content -->
 <main id="main-content">
     <div class="container-fluid py-4">
-        <h3>언어설정</h3>
+        <h3>다국어 설정</h3>
 
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
@@ -11,7 +18,7 @@
 
 
                 <div class="mb-3">
-                    <label class="form-label">다국어 설정</label>
+                    <label class="form-label">다국어 사용</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="language_yn" id="language_yn_y" value="Y">
@@ -66,7 +73,9 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
-        $('#li-language-edit').addClass('active-level-1');
+        $('#li-config').addClass('active-level-1');
+        $('#collapse-config').addClass('show').addClass('submenu');
+        $('#a-language-edit').addClass('active-level-2');
         $('input[name="language_yn"][value="<?= $info->language_yn ?>"]').prop('checked', true);
     });
 

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var object $config_info
+ * @var array $board_list
+ */
+?>
+
 <div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3">
     <div class="sidebar-header justify-content-center">
         <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none" target="_blank">
@@ -31,10 +38,21 @@
 
 <?php   if (in_array(getUserSessionInfo("auth_group"), ["최고관리자"])) { ?>
         <hr class="my-2">
-        <li class="nav-item"><a href="/csl/member/list" class="nav-link link-body-emphasis" id="li-member">회원관리</a></li>
-        <li class="nav-item"><a href="/csl/config/view" class="nav-link link-body-emphasis" id="li-config">환경설정</a></li>
-        <li class="nav-item"><a href="/csl/language/edit" class="nav-link link-body-emphasis" id="li-language-edit">다국어</a></li>
-        <li class="nav-item"><a href="/csl/menu/list" class="nav-link link-body-emphasis" id="li-menu">메뉴구성</a></li>
+        <li class="nav-item"><a href="/csl/member/list" class="nav-link link-body-emphasis" id="li-member">회원 관리</a></li>
+        <li class="nav-item">
+            <a href="/csl/config/view" class="nav-link link-body-emphasis" id="li-config">
+                <span>환경설정</span>
+                <span class="nav-arrow">›</span>
+            </a>
+            <div class="collapse" id="collapse-config">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a id="a-config" href="/csl/config/view" class="nav-link link-body-emphasis">일반환경</a></li>
+                    <li class="nav-item"><a id="a-ip-list" href="/csl/ip/list" class="nav-link link-body-emphasis">IP 관리</a></li>
+                    <li class="nav-item"><a id="a-language-edit" href="/csl/language/edit" class="nav-link link-body-emphasis">다국어 설정</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item"><a href="/csl/menu/list" class="nav-link link-body-emphasis" id="li-menu">메뉴 구성</a></li>
         <li class="nav-item"><a href="/csl/contents/list" class="nav-link link-body-emphasis" id="li-contents">콘텐츠</a></li>
         <li class="nav-item"><a href="/csl/settings/board/list" class="nav-link link-body-emphasis" id="li-settings-board-list">게시판 설정</a></li>
 <?php   } ?>
