@@ -81,3 +81,33 @@ function setPreviousUrl()
 
     setUserSessionInfo("current_url", $current_url); // 현재 사용자가 보고 있는 화면 url
 }
+
+/*
+    1. 환경설정의 공사중 여부를 확인하여 공사중이면 공사중 페이지로 바로 리다이렉션
+    2. 만약 IP가 등록된 IP가 아니라면 공사중 페이지로 바로 리다이렉션
+*/
+function checkConstruction()
+{
+    // 이미 공사중 페이지라면 무한 리다이렉션 방지
+    $current_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    if ($current_path === '/construction') {
+        return;
+    }
+
+    $db = \Config\Database::connect();
+    $builder = $db->table('config');
+    $info = $builder->get()->getRow();
+    $construction_yn = $info->construction_yn;
+
+    $ip_addr = $_SERVER['REMOTE_ADDR'] ?? '';
+    $builder = $db->table('ip');
+    $builder->where('ip', $ip_addr);
+    $ip_info = $builder->get()->getRow();
+    $ip = $ip_info->ip ?? '';
+
+    // 공사중이고 등록된 IP가 아닌 경우 공사중 페이지로 리다이렉션
+    if ($construction_yn == "Y" && $ip !== $ip_addr) {
+        header("Location: /construction");
+        exit;
+    }
+}

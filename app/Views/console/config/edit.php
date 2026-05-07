@@ -16,6 +16,15 @@
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
             <div class="card-body">
+                <!-- 공사중 여부 -->
+                <div class="mb-3">
+                    <label for="construction_yn" class="form-label">공사중 여부</label>
+                    <select class="form-select" id="construction_yn" name="construction_yn">
+                        <option value="Y">공사중</option>
+                        <option value="N">정상</option>
+                    </select>
+                    <small class="text-muted">공사중 여부를 선택하세요. 공사중으로 선택하시면 사이트가 비활성화 되며 <a href="/csl/ip/list">IP관리</a>에 등록한 IP만 접근이 가능합니다.</small>
+                </div>
                 <!-- 회사명 -->
                 <div class="mb-3">
                     <label for="title" class="form-label">회사명</label>
@@ -208,6 +217,7 @@
 
         $('#admin_two_factor_yn').val('<?= $info->admin_two_factor_yn ?>');
         $('#smtp_yn').val('<?= $info->smtp_yn ?>');
+        $('#construction_yn').val('<?= $info->construction_yn ?>');
     });
 
     function configUpdate() {

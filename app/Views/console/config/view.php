@@ -22,6 +22,10 @@
                         </colgroup>
                         <tbody>
                             <tr>
+                                <th class="align-middle bg-light">공사중 여부</th>
+                                <td><?= $info->construction_yn ?></td>
+                            </tr>
+                            <tr>
                                 <th class="align-middle bg-light">회사명</th>
                                 <td><?= $info->title ?></td>
                             </tr>

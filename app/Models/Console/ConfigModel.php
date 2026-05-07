@@ -41,6 +41,7 @@ class ConfigModel extends Model
         $phone = $data['phone'];
         $fax = $data['fax'];
         $email = $data['email'];
+        $construction_yn = $data['construction_yn'];
         $work_hour = $data['work_hour'];
         $post_code = $data['post_code'];
         $addr1 = $data['addr1'];
@@ -82,6 +83,7 @@ class ConfigModel extends Model
         $builder->set('smtp_name', $smtp_name);
         $builder->set('program_ver', $program_ver);
         $builder->set('smtp_host', $smtp_host);
+        $builder->set('construction_yn', $construction_yn);
         $result = $builder->update();
 
         $db->transComplete();
