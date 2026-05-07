@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var array $paging_info
+ * @var array $list
+ * @var object $board_config
+ * @var array $data
+ * @var array $notice_list
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="search_page" name="search_page" value="<?= $data['search_page'] ?>">

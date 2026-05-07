@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var object $info
+ */
+?>
+
 <form id="frm" name="frm">
 
 <!-- Main Content -->
@@ -141,5 +147,7 @@
     // 메뉴강조
     $(window).on('load', function() {
         $('#li-config').addClass('active-level-1');
+        $('#collapse-config').addClass('show').addClass('submenu');
+        $('#a-config').addClass('active-level-2');
     });
 </script>

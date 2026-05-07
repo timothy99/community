@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var object $info
+ * @var object $board_config
+ * @var array $comment_list
+ */
+?>
+
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="board_idx" name="board_idx" value="<?= $info->board_idx ?>">
