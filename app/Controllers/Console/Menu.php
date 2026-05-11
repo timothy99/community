@@ -30,15 +30,29 @@ class Menu extends BaseController
         return aview('/console/menu/list', $proc_result);
     }
 
-    public function write($upper_idx)
+    public function write(int $upper_idx)
     {
         $language_model = new LanguageModel();
+        $menu_model = new MenuModel();
 
         $result = true;
         $message = '정상';
 
+        $language = 'kor';
+
+        $upper_menu_info = new \stdClass();
+
         $model_result = $language_model->getLanguageList();
         $language_list = $model_result['list'];
+
+        if ($upper_idx > 0) {
+            $data = array();
+            $data['menu_idx'] = $upper_idx;
+            $model_result = $menu_model->getMenuInfo($data);
+            $upper_menu_info = $model_result['info'];
+
+            $language = $upper_menu_info->language;
+        }
 
         $info = new \stdClass();
         $info->menu_idx = 0;
@@ -50,12 +64,14 @@ class Menu extends BaseController
         $info->url_link = '';
         $info->url_target = '_self';
         $info->order_no = '';
+        $info->language = $language;
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
         $proc_result['language_list'] = $language_list;
+        $proc_result['upper_menu_info'] = $upper_menu_info;
 
         return aview('console/menu/edit', $proc_result);
     }

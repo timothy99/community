@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var object $info
+ * @var array $language_list
+ * @var object $config_info
+ * @var object $upper_menu_info
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="menu_idx" name="menu_idx" value="<?=$info->menu_idx ?>">
@@ -14,6 +23,13 @@
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
             <div class="card-body">
+<?php   if ($info->upper_idx > 0) { ?>
+                <!-- 상위 메뉴명 -->
+                <div class="mb-3">
+                    <label for="upper_menu_name" class="form-label">상위 메뉴명</label>
+                    <input type="text" class="form-control" id="upper_menu_name" name="upper_menu_name" placeholder="상위 메뉴명을 입력하세요" value="<?= $upper_menu_info->menu_name ?>" readonly disabled>
+                </div>
+<?php   } ?>
                 <!-- 메뉴명 -->
                 <div class="mb-3">
                     <label for="menu_name" class="form-label">메뉴명</label>

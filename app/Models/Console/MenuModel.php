@@ -36,7 +36,7 @@ class MenuModel extends Model
         return $proc_result;
     }
 
-    public function getMenuInfo($data)
+    public function getMenuInfo(array $data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
@@ -57,7 +57,7 @@ class MenuModel extends Model
         return $proc_result;
     }
 
-    public function procMenuInsert($data)
+    public function procMenuInsert(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -132,7 +132,7 @@ class MenuModel extends Model
         return $model_result;
     }
 
-    public function procMenuUpdate($data)
+    public function procMenuUpdate(array $data)
     {
         // 게시판 입력과 관련된 기본 정보
         $user_id = getUserSessionInfo('member_id');
@@ -176,7 +176,7 @@ class MenuModel extends Model
         return $model_result;
     }
 
-    public function procMenuDelete($data)
+    public function procMenuDelete(array $data)
     {
         $member_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
