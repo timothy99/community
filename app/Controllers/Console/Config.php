@@ -76,6 +76,7 @@ class Config extends BaseController
         $smtp_yn = $this->request->getPost('smtp_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $manager_email = $this->request->getPost('manager_email', FILTER_SANITIZE_SPECIAL_CHARS);
         $admin_two_factor_yn = $this->request->getPost('admin_two_factor_yn', FILTER_SANITIZE_SPECIAL_CHARS);
+        $admin_ip_check_yn = $this->request->getPost('admin_ip_check_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_mail = $this->request->getPost('smtp_mail', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_user = $this->request->getPost('smtp_user', FILTER_SANITIZE_SPECIAL_CHARS);
         $smtp_pass = $this->request->getPost('smtp_pass', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -121,6 +122,8 @@ class Config extends BaseController
         $data['program_ver'] = $program_ver;
         $data['smtp_host'] = $smtp_host;
         $data['construction_yn'] = $construction_yn;
+        $data['admin_ip_check_yn'] = $admin_ip_check_yn;
+
         if ($result == true) {
             $model_result = $config_model->procConfigUpdate($data);
             $result = $model_result['result'];
