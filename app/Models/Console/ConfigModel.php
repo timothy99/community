@@ -57,7 +57,7 @@ class ConfigModel extends Model
         $smtp_name = $data['smtp_name'];
         $program_ver = $data['program_ver'];
         $smtp_host = $data['smtp_host'];
-
+        $admin_ip_check_yn = $data['admin_ip_check_yn'];
         $db = $this->db;
         $db->transStart();
 
@@ -84,6 +84,7 @@ class ConfigModel extends Model
         $builder->set('program_ver', $program_ver);
         $builder->set('smtp_host', $smtp_host);
         $builder->set('construction_yn', $construction_yn);
+        $builder->set('admin_ip_check_yn', $admin_ip_check_yn);
         $result = $builder->update();
 
         $db->transComplete();

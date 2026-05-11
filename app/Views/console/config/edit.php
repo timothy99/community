@@ -143,6 +143,15 @@
                     </select>
                 </div>
 
+                <!-- 관리자 접속시 IP확인 -->
+                <div class="mb-3">
+                    <label for="admin_ip_check_yn" class="form-label">관리자 접속시 IP확인</label>
+                    <select class="form-select" id="admin_ip_check_yn" name="admin_ip_check_yn">
+                        <option value="Y">사용</option>
+                        <option value="N">사용안함</option>
+                    </select>
+                </div>
+
                 <!-- 담당자 이메일 -->
                 <div class="mb-3">
                     <label for="manager_email" class="form-label">담당자 이메일</label>
@@ -216,6 +225,7 @@
         $('#a-config').addClass('active-level-2');
 
         $('#admin_two_factor_yn').val('<?= $info->admin_two_factor_yn ?>');
+        $('#admin_ip_check_yn').val('<?= $info->admin_ip_check_yn ?>');
         $('#smtp_yn').val('<?= $info->smtp_yn ?>');
         $('#construction_yn').val('<?= $info->construction_yn ?>');
     });

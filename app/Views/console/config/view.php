@@ -100,6 +100,10 @@
                                 <td><?= $info->admin_two_factor_yn ?></td>
                             </tr>
                             <tr>
+                                <th class="align-middle bg-light">관리자 접속시 IP확인</th>
+                                <td><?= $info->admin_ip_check_yn ?></td>
+                            </tr>
+                            <tr>
                                 <th class="align-middle bg-light">메일발송기능 사용여부</th>
                                 <td><?= $info->smtp_yn ?></td>
                             </tr>

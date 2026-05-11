@@ -111,3 +111,32 @@ function checkConstruction()
         exit;
     }
 }
+
+/*
+    1. 관리자 접속시 IP확인이 활성화 되어 있다면 등록된 IP가 아닌 경우 관리자 페이지 접속 불가
+    2. 관리자는 /csl로 시작하는 페이지에 접속하기 때문에 /csl로 시작하는 페이지에 접속할 때 IP체크를 한다.
+    3. 등록된 IP가 아닌 경우 메인 페이지로 리다이렉션. 경고창 보여주지 않음
+*/
+function checkAdminIp()
+{
+    $current_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    if (strpos($current_path, '/csl') === 0) {
+        $db = \Config\Database::connect();
+        $builder = $db->table('config');
+        $info = $builder->get()->getRow();
+        $admin_ip_check_yn = $info->admin_ip_check_yn;
+
+        if ($admin_ip_check_yn == "Y") {
+            $ip_addr = $_SERVER['REMOTE_ADDR'] ?? '';
+            $builder = $db->table('ip');
+            $builder->where('ip', $ip_addr);
+            $ip_info = $builder->get()->getRow();
+            $ip = $ip_info->ip ?? '';
+
+            if ($ip !== $ip_addr) {
+                header("Location: /");
+                exit;
+            }
+        }
+    }
+}
