@@ -6,7 +6,7 @@ use App\Models\Console\SettingsModel;
 use App\Models\User\LanguageModel;
 
 // 사용자 뷰 (메뉴바가 상단에 있음)
-function uview($view_file, $proc_result = array())
+function uview(string $view_file, array $proc_result = array())
 {
     $menu_model = new MenuModel();
     $config_model = new ConfigModel();
@@ -43,7 +43,7 @@ function uview($view_file, $proc_result = array())
 }
 
 // 관리자(admin) 뷰 - 메뉴바가 좌측에 있음
-function aview($view_file, $proc_result = array())
+function aview(string $view_file, array $proc_result = array())
 {
     $config_model = new ConfigModel();
     $settings_model = new SettingsModel();

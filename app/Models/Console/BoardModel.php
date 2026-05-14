@@ -220,13 +220,6 @@ class BoardModel extends Model
             $builder->insert();
         }
 
-        $db->transComplete();
-
-        if ($db->transStatus() === false) {
-            $result = false;
-            $message = '입력에 오류가 발생했습니다.';
-        }
-
         $model_result = array();
         $model_result['result'] = $result;
         $model_result['message'] = $message;

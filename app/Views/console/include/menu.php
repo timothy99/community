@@ -34,6 +34,18 @@
             </div>
         </li>
 <?php    } ?>
+        <li class="nav-item">
+            <a href="/csl/product/list" class="nav-link link-body-emphasis" id="a-product-top">
+                <span>제품 관리</span>
+                <span class="nav-arrow">›</span>
+            </a>
+            <div class="collapse" id="collapse-product-top">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a id="li-product" href="/csl/product/list" class="nav-link link-body-emphasis">제품 관리</a></li>
+                    <li class="nav-item"><a id="li-category" href="/csl/category/list" class="nav-link link-body-emphasis">카테고리 관리</a></li>
+                </ul>
+            </div>
+        </li>
         <li class="nav-item"><a href="/csl/inquiry/list" class="nav-link link-body-emphasis" id="li-inquiry">문의</a></li>
 
 <?php   if (in_array(getUserSessionInfo("auth_group"), ["최고관리자"])) { ?>

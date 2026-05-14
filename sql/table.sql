@@ -351,3 +351,74 @@ create table mng_ip (
     key ip_index1 (ip),
     primary key (ip_idx)
 ) comment '관리자 IP 정보' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_product_category;
+create table mng_product_category (
+    product_category_idx int not null auto_increment comment '카테고리 번호',
+    upper_idx int not null default 0 comment '상위 카테고리 번호 (1단계는 0)',
+    language varchar(20) not null default 'kor' comment '언어 코드',
+    idx1 int not null default 0 comment '인덱스1',
+    idx2 int not null default 0 comment '인덱스2',
+    idx3 int not null default 0 comment '인덱스3',
+    order_no int not null default 0 comment '정렬순서',
+    category_position int not null default 0 comment '카테고리 위치',
+    category_name varchar(500) not null comment '카테고리명',
+    del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key index1 (language, idx1, idx2, idx3, del_yn),
+    primary key (product_category_idx)
+) comment='제품 카테고리' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_product;
+create table mng_product (
+    product_idx int not null auto_increment comment '제품 번호',
+    language varchar(20) not null default 'kor' comment '언어 코드',
+    product_category_idx1 int not null default 0 comment '카테고리1 인덱스',
+    product_category_idx2 int not null default 0 comment '카테고리2 인덱스',
+    product_category_idx3 int not null default 0 comment '카테고리3 인덱스',
+    title varchar(500) not null comment '제품명',
+    contents text default null comment '제품 설명',
+    main_image_id varchar(32) default null comment '대표 이미지 파일 id',
+    display_yn enum('Y', 'N') not null default 'Y' comment '노출 여부',
+    reg_date varchar(14) not null comment '등록일',
+    hit_cnt int not null default 0 comment '조회수',
+    del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key index1 (language, product_category_idx1, product_category_idx2, product_category_idx3, del_yn, reg_date),
+    primary key (product_idx)
+) comment='제품' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_product_option;
+create table mng_product_option (
+    product_option_idx int not null auto_increment comment '옵션 번호',
+    product_idx int not null comment '제품 번호',
+    option_name varchar(200) not null comment '옵션명',
+    option_value varchar(1000) not null comment '옵션값',
+    del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key index1 (product_idx),
+    primary key (product_option_idx)
+) comment='제품 옵션' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_product_image;
+create table mng_product_image (
+    product_image_idx int not null auto_increment comment '이미지 번호',
+    product_idx int not null comment '제품 번호',
+    file_id varchar(32) not null comment '파일 id',
+    del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    key index1 (product_idx),
+    primary key (product_image_idx)
+) comment='제품 이미지' collate='utf8mb4_unicode_ci';

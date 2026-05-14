@@ -74,6 +74,22 @@ function format_phone($phone) {
     return $phone_string;
 }
 
+// hwp json 제거
+function remove_hwp_json($contents)
+{
+    $contents = str_replace('<!--[if !supportEmptyParas]-->&nbsp;<!--[endif]-->', '', $contents);
+    // HWP JSON 데이터 제거
+    $start = strpos($contents, '<!--[data-hwpjson]');
+    if ($start !== false) {
+        $end = strpos($contents, '-->', $start);
+        if ($end !== false) {
+            $contents = substr($contents, 0, $start) . substr($contents, $end + 3);
+        }
+    }
+
+    return $contents;
+}
+
 
 // N이나 Y등 코드를 입력하면 그걸 정해진 텍스트로 보여주는 함수
 function code_replace($category, $text)

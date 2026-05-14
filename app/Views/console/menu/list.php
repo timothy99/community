@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $list
+ */
+?>
 <form id="frm" name="frm">
 
 <!-- Main Content -->
