@@ -170,3 +170,7 @@ $routes->get('/csl/category/edit/(:num)', 'Console\Category::edit/$1');
 $routes->post('/csl/category/update', 'Console\Category::update');
 $routes->post('/csl/category/delete', 'Console\Category::delete');
 $routes->get('/csl/category/sub', 'Console\Category::sub');
+
+$routes->get('/product', 'User\Product::index');
+$routes->get('/product/list', 'User\Product::list');
+$routes->get('/product/view/(:num)', 'User\Product::view/$1');
