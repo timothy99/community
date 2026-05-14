@@ -152,3 +152,21 @@ $routes->get('/csl/ip/edit/(:num)', 'Console\Ip::edit/$1');
 $routes->post('/csl/ip/delete', 'Console\Ip::delete');
 
 $routes->get('/construction', 'User\Construction::index');
+
+$routes->get('/csl/product', 'Console\Product::index');
+$routes->get('/csl/product/list', 'Console\Product::list');
+$routes->get('/csl/product/write', 'Console\Product::write');
+$routes->post('/csl/product/update', 'Console\Product::update');
+$routes->get('/csl/product/view/(:num)', 'Console\Product::view/$1');
+$routes->get('/csl/product/edit/(:num)', 'Console\Product::edit/$1');
+$routes->post('/csl/product/delete', 'Console\Product::delete');
+$routes->post('/csl/product/category', 'Console\Product::category');
+
+$routes->get('/csl/category', 'Console\Category::index');
+$routes->get('/csl/category/list', 'Console\Category::list');
+$routes->get('/csl/category/write/(:num)', 'Console\Category::write/$1');
+$routes->get('/csl/category/view/(:num)', 'Console\Category::view/$1');
+$routes->get('/csl/category/edit/(:num)', 'Console\Category::edit/$1');
+$routes->post('/csl/category/update', 'Console\Category::update');
+$routes->post('/csl/category/delete', 'Console\Category::delete');
+$routes->get('/csl/category/sub', 'Console\Category::sub');

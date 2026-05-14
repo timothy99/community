@@ -118,8 +118,7 @@ class Menu extends BaseController
                 $model_result = $menu_model->procMenuUpdate($data);
             }
 
-            $result = $model_result['result'];
-            $message = $model_result['message'];
+
         }
 
         $proc_result = array();
