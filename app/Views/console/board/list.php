@@ -5,6 +5,7 @@
  * @var object $board_config
  * @var array $data
  * @var array $notice_list
+ * @var int $cnt
  */
 ?>
 
@@ -68,6 +69,7 @@
         </div>
         <!-- 목록 -->
         <div class="card">
+            <div class="card-header bg-success bg-opacity-75 text-white">전체 <?= number_format($cnt) ?> 건</div>
             <div class="card-body p-3">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover bg-white align-middle text-center mb-0 text-nowrap">

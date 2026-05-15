@@ -1,3 +1,15 @@
+<?php
+/**
+ * @var object $board_config
+ * @var array $notice_list
+ * @var array $list
+ * @var array $paging_info
+ * @var array $data
+ * @var object $authority
+ * @var int $cnt
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="search_page" name="search_page" value="<?= $data['search_page'] ?>">
@@ -58,6 +70,7 @@
         </div>
         <!-- 목록 -->
         <div class="card">
+            <div class="card-header bg-success bg-opacity-75 text-white">전체 <?= number_format($cnt) ?> 건</div>
             <div class="card-body p-3">
                 <!-- 공지사항 -->
 <?php   if (count($notice_list) > 0) { ?>
