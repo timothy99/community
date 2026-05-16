@@ -81,6 +81,12 @@
                                 <th>카테고리</th>
 <?php   } ?>
                                 <th>제목</th>
+<?php   if ($board_config->file_cnt > 0) { ?>
+                                <th>파일</th>
+<?php   } ?>
+<?php   if ($board_config->comment_write == 'Y') { ?>
+                                <th>댓글</th>
+<?php   } ?>
 <?php   if ($board_config->hit_yn == 'Y') { ?>
                                 <th>조회수</th>
 <?php   } ?>
@@ -96,7 +102,20 @@
 <?php       if ($board_config->category_yn == 'Y') { ?>
                                 <td><?=$val->category ?></td>
 <?php       } ?>
-                                <td class="text-start"><a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>"><?=$val->title ?></a></td>
+                                <td class="text-start">
+                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>">
+                                        <?=$val->title ?>
+<?php       if ($val->new_yn == 'Y') { ?>
+                                        <span class="badge bg-danger ms-2">N</span>
+<?php       } ?>
+                                    </a>
+                                </td>
+<?php       if ($board_config->file_cnt > 0) { ?>
+                                <td><?= $val->file_yn ?></td>
+<?php       } ?>
+<?php       if ($board_config->comment_write == 'Y') { ?>
+                                <td><?=number_format($val->comment_cnt) ?></td>
+<?php       } ?>
 <?php       if ($board_config->hit_yn == 'Y') { ?>
                                 <td><?=number_format($val->hit_cnt) ?></td>
 <?php       } ?>
@@ -111,7 +130,20 @@
 <?php       if ($board_config->category_yn == 'Y') { ?>
                                 <td><?=$val->category ?></td>
 <?php       } ?>
-                                <td class="text-start"><a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>"><?=$val->title ?></a></td>
+                                <td class="text-start">
+                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>">
+                                        <?=$val->title ?>
+<?php       if ($val->new_yn == 'Y') { ?>
+                                        <span class="badge bg-danger ms-2">N</span>
+<?php       } ?>
+                                    </a>
+                                </td>
+<?php       if ($board_config->file_cnt > 0) { ?>
+                                <td><?= $val->file_yn ?></td>
+<?php       } ?>
+<?php       if ($board_config->comment_write == 'Y') { ?>
+                                <td><?=number_format($val->comment_cnt) ?></td>
+<?php       } ?>
 <?php       if ($board_config->hit_yn == 'Y') { ?>
                                 <td><?=number_format($val->hit_cnt) ?></td>
 <?php       } ?>
@@ -121,7 +153,7 @@
 <?php   } ?>
 <?php   if (count($list) == 0) { ?>
                             <tr>
-                                <td colspan="7" class="text-center">데이터가 없습니다.</td>
+                                <td colspan="8" class="text-center">데이터가 없습니다.</td>
                             </tr>
 <?php   } ?>
                         </tbody>

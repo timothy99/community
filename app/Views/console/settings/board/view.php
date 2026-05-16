@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var object $info
+ * @var array $authority_list
+ * @var array $admin_list
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="board_config_idx" name="board_config_idx" value="<?= $info->board_config_idx ?>">
@@ -94,7 +102,10 @@
                                 <th class="align-middle bg-light">대표 이미지 기능 사용 여부</th>
                                 <td><?= code_replace('main_image_yn', $info->main_image_yn) ?></td>
                             </tr>
-
+                            <tr>
+                                <th class="align-middle bg-light">new 표시 기간</th>
+                                <td><?= $info->new_days ?> 일</td>
+                            </tr>
                             <!-- 관리자 수정 권한 설정 -->
                             <tr>
                                 <th colspan="2" class="bg-success bg-opacity-75 text-white">관리자 수정 권한 설정</th>

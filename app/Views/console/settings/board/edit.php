@@ -1,6 +1,10 @@
-<style>
-
-</style>
+<?php
+/**
+ * @var object $info
+ * @var array $authority_list
+ * @var array $admin_list
+ */
+?>
 
 <form id="frm" name="frm">
 
@@ -43,7 +47,6 @@
                         <option value="">선택하세요</option>
                         <option value="board">board</option>
                         <option value="gallery">gallery</option>
-                        <option value="faq">faq</option>
                     </select>
                     <small class="text-muted">게시판 스킨을 선택하세요.</small>
                 </div>
@@ -232,6 +235,13 @@
                         </div>
                     </div>
                     <small class="text-muted">게시글에서 대표 이미지 기능 사용 여부를 설정합니다.</small>
+                </div>
+
+                <!-- new 표시 기간 -->
+                <div class="mb-3">
+                    <label for="new_days" class="form-label">new 표시 기간 (일)</label>
+                    <input type="number" class="form-control w-25" id="new_days" name="new_days" placeholder="0" value="<?= $info->new_days ?>" min="0">
+                    <small class="text-muted">게시글 등록 후 new 아이콘이 표시될 기간을 일 단위로 입력합니다. 0을 입력하면 new 아이콘이 표시되지 않습니다.</small>
                 </div>
 
             </div>

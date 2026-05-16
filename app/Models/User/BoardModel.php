@@ -7,7 +7,7 @@ use App\Models\User\FileModel;
 
 class BoardModel extends Model
 {
-    public function getBoardConfig($board_id)
+    public function getBoardConfig(string $board_id)
     {
         $result = true;
         $message = '게시판 설정을 가져왔습니다.';
@@ -40,7 +40,7 @@ class BoardModel extends Model
         return $proc_result;
     }
 
-    public function getBoardList($data)
+    public function getBoardList(array $data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
@@ -55,6 +55,7 @@ class BoardModel extends Model
 
         $board_config = $data['board_config'];
         $reg_date_yn = $board_config->reg_date_yn;
+        $new_days = $board_config->new_days;
 
         $db = $this->db;
         $builder = $db->table('board');
@@ -76,10 +77,23 @@ class BoardModel extends Model
         foreach ($list as $no => $val) {
             $list[$no]->list_no = $cnt-$no-(($page-1)*$rows);
             if ($reg_date_yn == 'Y') {
+                $ins_date = $val->reg_date;
                 $list[$no]->ins_date_txt = convertTextToDate($val->reg_date, 1, 2);
             } else {
+                $ins_date = $val->ins_date;
                 $list[$no]->ins_date_txt = convertTextToDate($val->ins_date, 1, 1);
             }
+
+            // 새글 여부 판단
+            $new_yn = 'N';
+            if ($new_days > 0) {
+                $compare_date = date('YmdHis', strtotime("-".$new_days." day"));
+                if ($ins_date >= $compare_date) {
+                    $new_yn = 'Y';
+                }
+            }
+            $list[$no]->new_yn = $new_yn;
+            $list[$no]->file_yn = $this->getBoardFileCount($val->board_idx)['file_yn'];
         }
 
         $proc_result = array();
@@ -91,7 +105,31 @@ class BoardModel extends Model
         return $proc_result;
     }
 
-    public function getBoardInfo($data)
+    // 게시물의 파일 갯수 갖고 오기
+    public function getBoardFileCount(string $board_idx)
+    {
+        $db = $this->db;
+        $builder = $db->table('board_file');
+        $builder->where('board_idx', $board_idx);
+        $list = $builder->get()->getResult();
+        $cnt = count($list);
+        if ($cnt > 0) {
+            $file_yn = 'Y';
+        } else {
+            $file_yn = 'N';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = true;
+        $proc_result['message'] = '게시물의 파일 갯수를 가져왔습니다.';
+        $proc_result['list'] = $list;
+        $proc_result['cnt'] = $cnt;
+        $proc_result['file_yn'] = $file_yn;
+
+        return $proc_result;
+    }
+
+    public function getBoardInfo(array $data)
     {
         $file_model = new FileModel();
 
@@ -166,7 +204,7 @@ class BoardModel extends Model
         return $proc_result;
     }
 
-    public function procBoardInsert($data, $db)
+    public function procBoardInsert(array $data, object $db)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -240,7 +278,7 @@ class BoardModel extends Model
         return $model_result;
     }
 
-    public function procBoardUpdate($data, $db)
+    public function procBoardUpdate(array $data, object $db)
     {
         // 게시판 입력과 관련된 기본 정보
         $user_id = getUserSessionInfo('member_id');
@@ -299,7 +337,7 @@ class BoardModel extends Model
         return $model_result;
     }
 
-    public function procBoardDelete($data)
+    public function procBoardDelete(array $data)
     {
         $member_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -336,7 +374,7 @@ class BoardModel extends Model
     }
 
     // 조회수 증가
-    public function procBoardHitUpdate($data)
+    public function procBoardHitUpdate(array $data)
     {
         $board_idx = $data["board_idx"];
         $board_id = $data["board_id"];

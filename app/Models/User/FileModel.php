@@ -649,8 +649,8 @@ class FileModel extends Model
         if ($result == true) {
             // 파일 갯수 체크
             $file_cnt = $config->file_cnt;
-            $upload_cnt = count($file_list)+1;
-            if ($upload_cnt > $file_cnt && $file_cnt > 0) {
+            $upload_cnt = count($file_list) + 1; // 새로 올리는 파일까지 포함해서 계산
+            if ($upload_cnt > $file_cnt) {
                 $result = false;
                 $message = '파일은 '.$file_cnt.'개 보다 많이 올릴 수 없습니다.';
             }

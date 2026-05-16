@@ -42,6 +42,7 @@ class SettingsModel extends Model
 
     public function getBoardNumber()
     {
+        $random_board_number = 0;
         $cnt = 1;
         while ($cnt == 1) {
             $random_board_number = getRandomString(6, 4);
@@ -96,6 +97,7 @@ class SettingsModel extends Model
         $form_style = $data['form_style'];
         $url_link_yn = $data['url_link_yn'];
         $main_image_yn = $data['main_image_yn'];
+        $new_days = $data['new_days'];
         $authority_arr = $data['authority_arr'];
 
         $category_arr = explode('||', $category);
@@ -135,6 +137,7 @@ class SettingsModel extends Model
         $builder->set('form_style', $form_style);
         $builder->set('url_link_yn', $url_link_yn);
         $builder->set('main_image_yn', $main_image_yn);
+        $builder->set('new_days', $new_days);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $user_id);
         $builder->set('ins_date', $today);
@@ -215,6 +218,7 @@ class SettingsModel extends Model
         $url_link_yn = $data['url_link_yn'];
         $authority_arr = $data['authority_arr'];
         $main_image_yn = $data['main_image_yn'];
+        $new_days = $data['new_days'];
 
         $category_arr = explode('||', $category);
         foreach($category_arr as $no => $val) {
@@ -253,6 +257,7 @@ class SettingsModel extends Model
         $builder->set('form_style', $form_style);
         $builder->set('url_link_yn', $url_link_yn);
         $builder->set('main_image_yn', $main_image_yn);
+        $builder->set('new_days', $new_days);
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
         $builder->where('board_config_idx', $board_config_idx);

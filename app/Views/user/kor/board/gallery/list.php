@@ -95,7 +95,12 @@
 <?php           if ($board_config->category_yn == 'Y' && !empty($val->category)) { ?>
                                     <span class="badge bg-secondary mb-2"><?=$val->category ?></span>
 <?php           } ?>
-                                    <h6 class="card-title text-dark mb-2" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?=$val->title ?></h6>
+                                    <h6 class="card-title text-dark mb-2" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        <?=$val->title ?>
+<?php           if ($val->new_yn == 'Y') { ?>
+                                        <span class="badge bg-danger ms-2">N</span>
+<?php           } ?>
+                                    </h6>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small class="text-muted"><?=$val->ins_date_txt ?></small>
 <?php           if ($board_config->hit_yn == 'Y') { ?>
@@ -130,9 +135,17 @@
 <?php           if ($board_config->category_yn == 'Y' && !empty($val->category)) { ?>
                                     <span class="badge bg-secondary mb-2"><?=$val->category ?></span>
 <?php           } ?>
-                                    <h6 class="card-title text-dark mb-2" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?=$val->title ?></h6>
+                                    <h6 class="card-title text-dark mb-2" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        <?=$val->title ?>
+<?php           if ($val->new_yn == 'Y') { ?>
+                                        <span class="badge bg-danger ms-2">N</span>
+<?php           } ?>
+                                    </h6>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small class="text-muted"><?=$val->ins_date_txt ?></small>
+<?php       if ($board_config->comment_write == 'Y') { ?>
+                                        <small class="text-muted">댓글 <?=number_format($val->comment_cnt) ?></small>
+<?php       } ?>
 <?php           if ($board_config->hit_yn == 'Y') { ?>
                                         <small class="text-muted">조회 <?=number_format($val->hit_cnt) ?></small>
 <?php           } ?>

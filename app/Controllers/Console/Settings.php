@@ -134,6 +134,7 @@ class Settings extends BaseController
         $form_style_yn = $this->request->getPost('form_style_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $form_style = sanitizeHtml($this->request->getPost('summer_code'));
         $main_image_yn = $this->request->getPost('main_image_yn', FILTER_SANITIZE_SPECIAL_CHARS);
+        $new_days = $this->request->getPost('new_days', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $list_authority = $this->request->getPost('list_authority');
         $view_authority = $this->request->getPost('view_authority');
@@ -171,6 +172,7 @@ class Settings extends BaseController
         if ($write_authority == null || $write_authority == '') { $result = false; $message = '쓰기 권한을 선택해주세요.'; }
         if ($url_link_yn == null || $url_link_yn == '') { $result = false; $message = '링크 기능 사용 여부를 선택해주세요.'; }
         if ($main_image_yn == null || $main_image_yn == '') { $result = false; $message = '대표 이미지 사용 여부를 선택해주세요.'; }
+        if ($new_days == null || $new_days == '') { $result = false; $message = 'new 표시 기간을 입력해주세요.'; }
 
         $meta_title = str_replace('&#62;', '>', $meta_title);
         $meta_title = $meta_title.' ';// 메타 타이틀 끝에 공백을 하나 추가해서 제목이 공백으로 끝나도록 해서, og 태그의 제목이 공백으로 끝나도록 해서, 페이스북 등에서 제목이 짤리는 현상을 방지
@@ -203,6 +205,7 @@ class Settings extends BaseController
         $data['authority_arr'] = $authority_arr;
         $data['url_link_yn'] = $url_link_yn;
         $data['main_image_yn'] = $main_image_yn;
+        $data['new_days'] = $new_days;
 
         if ($result == true) {
             if ($board_config_idx == 0) {

@@ -64,6 +64,7 @@
                     <textarea class="form-control" id="contents" name="contents" rows="10" placeholder="내용을 입력하세요"></textarea>
                 </div>
 
+<?php   if ($board_config->file_cnt > 0) { ?>
                 <!-- 첨부파일 -->
                 <div class="mb-3">
                     <label for="main_file" class="form-label">첨부파일</label>
@@ -106,6 +107,7 @@
 <?php   } ?>
                     </div>
                 </div>
+<?php   } ?>
 
 <?php   if ($board_config->main_image_yn == 'Y') { ?>
                 <!-- 대표 이미지 -->
