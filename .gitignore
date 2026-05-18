@@ -145,13 +145,15 @@ LICENSE
 phpunit.xml.dist
 preload.php
 spark
-BaseController.php
 Common.php
 app/index.html
 app/.htaccess
 public/.htaccess
 
 # 사용자 추가로 없어진것중 다시 넣어야 할거
+contents/
 !app/Config/Routes.php
 !app/Config/Events.php
-contents/
+!app/Config/Logger.php
+!app/Config/App.php
+!app/Config/Constants.php
