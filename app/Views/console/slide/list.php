@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var object $config_info
+ * @var array $language_list
+ * @var array $list
+ * @var array $data
+ * @var array $paging_info
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="search_page" name="search_page" value="<?= $data['search_page'] ?>">
@@ -12,7 +22,7 @@
             <div class="card-header bg-success bg-opacity-75 text-white">검색</div>
             <div class="card-body">
                 <div class="row g-2 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col">
                         <label for="search_rows" class="form-label mb-1">줄수</label>
                         <select class="form-select" id="search_rows" name="search_rows" onchange="search()">
                             <option value="10">10</option>
@@ -24,14 +34,27 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+
+<?php   if ($config_info->language_yn === 'Y') { ?>
+                    <div class="col">
+                        <label for="search_language" class="form-label mb-1">언어</label>
+                        <select class="form-select" id="search_language" name="search_language" onchange="search()">
+                            <option value="">전체</option>
+<?php       foreach($language_list as $val) { ?>
+                            <option value="<?=$val->language_code ?>" ><?=$val->language_name ?></option>
+<?php       } ?>
+                        </select>
+                    </div>
+<?php   } ?>
+
+                    <div class="col">
                         <label for="search_condition" class="form-label mb-1">조건</label>
                         <select class="form-select" id="search_condition" name="search_condition">
                             <option value="title">제목</option>
                             <option value="contents">내용</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col">
                         <label for="search_text" class="form-label mb-1">검색어</label>
                         <input type="text" class="form-control" id="search_text" name="search_text" placeholder="검색어를 입력하세요" value="<?= $data['search_text'] ?>">
                     </div>
@@ -52,6 +75,9 @@
                         <thead class="table-primary">
                             <tr>
                                 <th>번호</th>
+<?php   if ($config_info->language_yn === 'Y') { ?>
+                                <th>언어</th>
+<?php   } ?>    
                                 <th>정렬순서</th>
                                 <th>제목</th>
                                 <th>게시기간</th>
@@ -63,6 +89,9 @@
                         <tbody>
 <?php   foreach($list as $no => $val) { ?>
                             <tr>
+<?php       if ($config_info->language_yn === 'Y') { ?>
+                                <td><?= code_replace('language', $val->language) ?></td>
+<?php       } ?>
                                 <td><?=$val->list_no ?></td>
                                 <td><?=$val->order_no ?></td>
                                 <td><a href="/csl/slide/view/<?=$val->slide_idx ?>"><?=$val->title ?></a></td>
@@ -74,7 +103,7 @@
 <?php   } ?>
 <?php   if (count($list) == 0) { ?>
                             <tr>
-                                <td colspan="7" class="text-center">데이터가 없습니다.</td>
+                                <td colspan="10" class="text-center">데이터가 없습니다.</td>
                             </tr>
 <?php   } ?>
                         </tbody>
@@ -96,11 +125,11 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
-        // $('#li-slide').addClass('active-level-1').attr({'data-bs-toggle': 'collapse', 'aria-expanded': 'true'});
         $('#li-slide').addClass('active-level-1');
 
         $("#search_condition").val("<?= $data['search_condition'] ?>").prop("selected", true);
         $("#search_rows").val("<?= $data['search_rows'] ?>").prop("selected", true);
+        $("#search_language").val("<?= $data['search_language'] ?>").prop("selected", true);
     });
 
     // 검색어 엔터키 이벤트
@@ -117,6 +146,7 @@
         var search_condition = $('#search_condition').val();
         var search_rows = $('#search_rows').val();
         var search_page = $('#search_page').val();
-        location.href = '/csl/slide/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows;
+        var search_language = $('#search_language').val();
+        location.href = '/csl/slide/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows+'&search_language='+search_language;
     }
 </script>

@@ -7,7 +7,7 @@ use App\Models\User\FileModel;
 
 class SlideModel extends Model
 {
-    public function getSlideList($data)
+    public function getSlideList(array $data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
@@ -16,12 +16,16 @@ class SlideModel extends Model
         $rows = $data['search_rows'];
         $search_condition = $data['search_condition'];
         $search_text = $data['search_text'];
+        $search_language = $data['search_language'];
 
         $db = $this->db;
         $builder = $db->table('slide');
         $builder->where('del_yn', 'N');
         if ($search_text != null) {
             $builder->like($search_condition, $search_text);
+        }
+        if ($search_language != null) {
+            $builder->where('language', $search_language);
         }
         $builder->orderBy('slide_idx', 'desc');
         $builder->limit($rows, getOffset($page, $rows));
@@ -43,7 +47,7 @@ class SlideModel extends Model
         return $proc_result;
     }
 
-    public function getSlideInfo($data)
+    public function getSlideInfo(array $data)
     {
         $file_model = new FileModel();
 
@@ -79,7 +83,7 @@ class SlideModel extends Model
         return $proc_result;
     }
 
-    public function procSlideInsert($data)
+    public function procSlideInsert(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -97,6 +101,7 @@ class SlideModel extends Model
         $start_date = $data['start_date'];
         $end_date = $data['end_date'];
         $display_yn = $data['display_yn'];
+        $language = $data['language'];
 
         $db = $this->db;
         $db->transStart();
@@ -111,6 +116,7 @@ class SlideModel extends Model
         $builder->set('start_date', $start_date);
         $builder->set('end_date', $end_date);
         $builder->set('display_yn', $display_yn);
+        $builder->set('language', $language);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $user_id);
         $builder->set('ins_date', $today);
@@ -134,7 +140,7 @@ class SlideModel extends Model
         return $model_result;
     }
 
-    public function procSlideUpdate($data)
+    public function procSlideUpdate(array $data)
     {
         // 게시판 입력과 관련된 기본 정보
         $user_id = getUserSessionInfo('member_id');
@@ -153,6 +159,7 @@ class SlideModel extends Model
         $start_date = $data['start_date'];
         $end_date = $data['end_date'];
         $display_yn = $data['display_yn'];
+        $language = $data['language'];
 
         $db = $this->db;
         $db->transStart();
@@ -167,6 +174,7 @@ class SlideModel extends Model
         $builder->set('start_date', $start_date);
         $builder->set('end_date', $end_date);
         $builder->set('display_yn', $display_yn);
+        $builder->set('language', $language);
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
         $builder->where('slide_idx', $slide_idx);
@@ -186,7 +194,7 @@ class SlideModel extends Model
         return $model_result;
     }
 
-    public function procSlideDelete($data)
+    public function procSlideDelete(array $data)
     {
         $member_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');

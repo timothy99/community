@@ -12,11 +12,13 @@ class MainModel extends Model
         $message = '슬라이드 불러오기가 정상적으로 이루어졌습니다.';
 
         $today = date('YmdHis');
+        $language = service('request')->getCookie('language') ?? 'kor';
 
         $db = $this->db;
         $builder = $db->table('slide');
         $builder->where('del_yn', 'N');
         $builder->where('display_yn', 'Y');
+        $builder->where('language', $language);
         $builder->where('start_date <=', $today);
         $builder->where('end_date >=', $today);
         $list = $builder->get()->getResult();
@@ -40,11 +42,13 @@ class MainModel extends Model
         $message = '팝업 불러오기가 정상적으로 이루어졌습니다.';
 
         $today = date('YmdHis');
+        $language = service('request')->getCookie('language') ?? 'kor';
 
         $db = $this->db;
         $builder = $db->table('popup');
         $builder->where('del_yn', 'N');
         $builder->where('display_yn', 'Y');
+        $builder->where('language', $language);
         $builder->where('start_date <=', $today);
         $builder->where('end_date >=', $today);
         $list = $builder->get()->getResult();

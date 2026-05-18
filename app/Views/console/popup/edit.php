@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var object $info
+ * @var array $language_list
+ * @var object $config_info
+ */
+?>
 <form id="frm" name="frm">
 
 <input type="hidden" id="popup_idx" name="popup_idx" value="<?= $info->popup_idx ?>">
@@ -11,6 +18,19 @@
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
             <div class="card-body">
+                <!-- 언어 -->
+<?php   if ($config_info->language_yn === 'Y') { ?>
+                <div class="mb-3">
+                    <label for="language" class="form-label">언어</label>
+                    <select class="form-select w-25" id="language" name="language">
+                        <option value="">선택하세요</option>
+<?php       foreach($language_list as $val) { ?>
+                        <option value="<?=$val->language_code ?>"><?=$val->language_name ?></option>
+<?php       } ?>
+                    </select>
+                </div>
+<?php   } ?>
+
                 <!-- 제목 -->
                 <div class="mb-3">
                     <label for="title" class="form-label">제목</label>
@@ -116,6 +136,7 @@
         $("input[name='display_yn'][value='<?=$info->display_yn ?>']").prop("checked", true);
         $("#start_date").inputmask("datetime", {inputFormat:"yyyy-mm-dd"});
         $("#end_date").inputmask("datetime", {inputFormat:"yyyy-mm-dd"});
+        $("#language").val("<?= $info->language ?>").prop("selected", true);
     });
 
     function popupUpdate() {

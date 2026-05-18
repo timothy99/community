@@ -182,6 +182,7 @@ create table mng_board_config (
     youtube_yn enum('Y', 'N') default 'N' not null comment '유튜브 기능 사용 여부',
     url_link_yn enum('Y', 'N') default 'N' not null comment '링크 기능 사용 여부',
     main_image_yn enum('Y', 'N') not null default 'N' comment '대표 이미지 여부',
+    new_days int not null default 0 comment 'new 표시할 기간(0이면 new 표시 안함)',
     del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
     ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
@@ -245,6 +246,7 @@ create table mng_contents (
 drop table if exists mng_slide;
 create table mng_slide (
     slide_idx int auto_increment comment '슬라이드 인덱스',
+    language varchar(20) not null default 'kor' comment '언어',
     title varchar(1000) not null comment '제목',
     sub_title varchar(1000) null comment '부제목',
     contents varchar(4000) not null comment '내용-슬라이드에선 실제 내용 출력되지 않으므로 alt내용을 의미함',

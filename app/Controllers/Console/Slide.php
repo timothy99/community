@@ -4,6 +4,7 @@ namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
 use App\Models\Console\SlideModel;
+use App\Models\Console\LanguageModel;
 
 class Slide extends BaseController
 {
@@ -15,23 +16,29 @@ class Slide extends BaseController
     public function list()
     {
         $slide_model = new SlideModel();
+        $language_model = new LanguageModel();
 
         $search_page = $this->request->getGet('search_page') ?? 1;
         $search_rows = $this->request->getGet('search_rows') ?? 10;
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
+        $search_language = $this->request->getGet('search_language', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $data = array();
         $data['search_page'] = $search_page;
         $data['search_rows'] = $search_rows;
         $data['search_text'] = $search_text;
         $data['search_condition'] = $search_condition;
+        $data['search_language'] = $search_language;
 
         $model_result = $slide_model->getSlideList($data);
         $result = $model_result['result'];
         $message = $model_result['message'];
         $list = $model_result['list'];
         $cnt = $model_result['cnt'];
+
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
 
         $search_arr = array();
         $search_arr['search_condition'] = $search_condition;
@@ -48,14 +55,20 @@ class Slide extends BaseController
         $proc_result['cnt'] = $cnt;
         $proc_result['paging_info'] = $paging_info;
         $proc_result['data'] = $data;
+        $proc_result['language_list'] = $language_list;
 
         return aview('/console/slide/list', $proc_result);
     }
 
     public function write()
     {
+        $language_model = new LanguageModel();
+
         $result = true;
         $message = '정상';
+
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
 
         $info = new \stdClass();
         $info->slide_idx = 0;
@@ -69,11 +82,13 @@ class Slide extends BaseController
         $info->start_date_txt = '2000-01-01 00:00';
         $info->end_date_txt = '9999-12-31 23:59';
         $info->slide_file_info = null;
+        $info->language = '';
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/slide/edit', $proc_result);
     }
@@ -95,6 +110,7 @@ class Slide extends BaseController
         $display_yn = $this->request->getPost('display_yn');
         $start_date_txt = $this->request->getPost('start_date').' 00:00:00';
         $end_date_txt = $this->request->getPost('end_date').' 23:59:59';
+        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $start_date = convertTextToDate($start_date_txt, 2, 3);
         $end_date = convertTextToDate($end_date_txt, 2, 3);
@@ -130,6 +146,7 @@ class Slide extends BaseController
         $data['start_date'] = $start_date;
         $data['end_date'] = $end_date;
         $data['display_yn'] = $display_yn;
+        $data['language'] = $language;
 
         if ($result == true) {
             if ($slide_idx == 0) {
@@ -152,14 +169,12 @@ class Slide extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function view()
+    public function view(int $slide_idx)
     {
         $slide_model = new SlideModel();
 
         $result = true;
         $message = '정상';
-
-        $slide_idx = $this->request->getUri()->getSegment(4);
 
         $data = array();
         $data['slide_idx'] = $slide_idx;
@@ -177,14 +192,13 @@ class Slide extends BaseController
         return aview('console/slide/view', $proc_result);
     }
 
-    public function edit()
+    public function edit(int $slide_idx)
     {
         $slide_model = new SlideModel();
+        $language_model = new LanguageModel();
 
         $result = true;
         $message = '정상';
-
-        $slide_idx = $this->request->getUri()->getSegment(4);
 
         $data = array();
         $data['slide_idx'] = $slide_idx;
@@ -192,10 +206,14 @@ class Slide extends BaseController
         $model_result = $slide_model->getSlideInfo($data);
         $info = $model_result['info'];
 
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/slide/edit', $proc_result);
     }

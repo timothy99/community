@@ -1,4 +1,11 @@
-
+<?php
+/**
+ * @var array $proc_result
+ * @var object $config_info
+ * @var array $menu_list
+ * @var array $language_list
+ */
+?>
 <header class="border-bottom mb-4">
     <nav class="navbar navbar-expand-md py-3">
         <div class="container-fluid px-0">
@@ -137,6 +144,6 @@
 
     function change_language(lang) {
         document.cookie = "language=" + lang + "; path=/; max-age=" + (60 * 60 * 24 * 30);
-        location.reload();
+        location.href="/";
     }
 </script>

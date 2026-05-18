@@ -4,6 +4,7 @@ namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
 use App\Models\Console\PopupModel;
+use App\Models\Console\LanguageModel;
 
 class Popup extends BaseController
 {
@@ -15,23 +16,29 @@ class Popup extends BaseController
     public function list()
     {
         $popup_model = new PopupModel();
+        $language_model = new LanguageModel();
 
         $search_page = $this->request->getGet('search_page') ?? 1;
         $search_rows = $this->request->getGet('search_rows') ?? 10;
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
+        $search_language = $this->request->getGet('search_language', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $data = array();
         $data['search_page'] = $search_page;
         $data['search_rows'] = $search_rows;
         $data['search_text'] = $search_text;
         $data['search_condition'] = $search_condition;
+        $data['search_language'] = $search_language;
 
         $model_result = $popup_model->getPopupList($data);
         $result = $model_result['result'];
         $message = $model_result['message'];
         $list = $model_result['list'];
         $cnt = $model_result['cnt'];
+
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
 
         $search_arr = array();
         $search_arr['search_condition'] = $search_condition;
@@ -48,14 +55,20 @@ class Popup extends BaseController
         $proc_result['cnt'] = $cnt;
         $proc_result['paging_info'] = $paging_info;
         $proc_result['data'] = $data;
+        $proc_result['language_list'] = $language_list;
 
         return aview('/console/popup/list', $proc_result);
     }
 
     public function write()
     {
+        $language_model = new LanguageModel();
+
         $result = true;
         $message = '정상';
+
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
 
         $info = new \stdClass();
         $info->popup_idx = 0;
@@ -67,11 +80,13 @@ class Popup extends BaseController
         $info->start_date_txt = '2000-01-01';
         $info->end_date_txt = '9999-12-31';
         $info->popup_file_info = null;
+        $info->language = '';
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/popup/edit', $proc_result);
     }
@@ -91,6 +106,7 @@ class Popup extends BaseController
         $display_yn = $this->request->getPost('display_yn');
         $start_date_txt = $this->request->getPost('start_date').' 00:00:00';
         $end_date_txt = $this->request->getPost('end_date').' 23:59:59';
+        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $start_date = convertTextToDate($start_date_txt, 2, 3);
         $end_date = convertTextToDate($end_date_txt, 2, 3);
@@ -124,6 +140,7 @@ class Popup extends BaseController
         $data['start_date'] = $start_date;
         $data['end_date'] = $end_date;
         $data['display_yn'] = $display_yn;
+        $data['language'] = $language;
 
         if ($result == true) {
             if ($popup_idx == 0) {
@@ -174,6 +191,7 @@ class Popup extends BaseController
     public function edit()
     {
         $popup_model = new PopupModel();
+        $language_model = new LanguageModel();
 
         $result = true;
         $message = '정상';
@@ -186,10 +204,14 @@ class Popup extends BaseController
         $model_result = $popup_model->getPopupInfo($data);
         $info = $model_result['info'];
 
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/popup/edit', $proc_result);
     }

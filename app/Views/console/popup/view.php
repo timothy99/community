@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var object $info
+ * @var object $config_info
+ */
+?>
 <form id="frm" name="frm">
 
 <input type="hidden" id="popup_idx" name="popup_idx" value="<?= $info->popup_idx ?>">
@@ -21,6 +27,12 @@
                                 <th class="align-middle bg-light">제목</th>
                                 <td><?= $info->title ?></td>
                             </tr>
+<?php   if ($config_info->language_yn === 'Y') { ?>
+                            <tr>
+                                <th class="align-middle bg-light">언어</th>
+                                <td><?= code_replace('language', $info->language) ?></td>
+                            </tr>
+<?php   } ?>
                             <tr>
                                 <th class="align-middle bg-light">링크 URL</th>
                                 <td><a href="<?= $info->url_link ?>" target="_blank"><?= $info->url_link ?></a></td>

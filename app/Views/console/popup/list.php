@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var array $data
+ * @var array $list
+ * @var array $paging_info
+ * @var array $language_list
+ * @var object $config_info
+ */
+?>
 <form id="frm" name="frm">
 
 <input type="hidden" id="search_page" name="search_page" value="<?= $data['search_page'] ?>">
@@ -12,7 +21,7 @@
             <div class="card-header bg-success bg-opacity-75 text-white">검색</div>
             <div class="card-body">
                 <div class="row g-2 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="search_rows" class="form-label mb-1">줄수</label>
                         <select class="form-select" id="search_rows" name="search_rows" onchange="search()">
                             <option value="10">10</option>
@@ -24,13 +33,24 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+<?php   if ($config_info->language_yn === 'Y') { ?>
+                    <div class="col-md-3">
+                        <label for="search_language" class="form-label mb-1">언어</label>
+                        <select class="form-select" id="search_language" name="search_language" onchange="search()">
+                            <option value="">전체</option>
+<?php       foreach($language_list as $val) { ?>
+                            <option value="<?=$val->language_code ?>"><?=$val->language_name ?></option>
+<?php       } ?>
+                        </select>
+                    </div>
+<?php   } ?>
+                    <div class="col-md-3">
                         <label for="search_condition" class="form-label mb-1">조건</label>
                         <select class="form-select" id="search_condition" name="search_condition">
                             <option value="title">제목</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="search_text" class="form-label mb-1">검색어</label>
                         <input type="text" class="form-control" id="search_text" name="search_text" placeholder="검색어를 입력하세요" value="<?= $data['search_text'] ?>">
                     </div>
@@ -51,6 +71,9 @@
                         <thead class="table-primary">
                             <tr>
                                 <th>번호</th>
+<?php   if ($config_info->language_yn === 'Y') { ?>
+                                <th>언어</th>
+<?php   } ?>
                                 <th>제목</th>
                                 <th>게시기간</th>
                                 <th>노출여부</th>
@@ -62,6 +85,9 @@
 <?php   foreach($list as $no => $val) { ?>
                             <tr>
                                 <td><?=$val->list_no ?></td>
+<?php       if ($config_info->language_yn === 'Y') { ?>
+                                <td><?= code_replace('language', $val->language) ?></td>
+<?php       } ?>
                                 <td><a href="/csl/popup/view/<?=$val->popup_idx ?>"><?=$val->title ?></a></td>
                                 <td><?=$val->start_date_txt ?> ~ <?=$val->end_date_txt ?></td>
                                 <td><?=$val->display_yn ?></td>
@@ -97,6 +123,7 @@
 
         $("#search_condition").val("<?= $data['search_condition'] ?>").prop("selected", true);
         $("#search_rows").val("<?= $data['search_rows'] ?>").prop("selected", true);
+        $("#search_language").val("<?= $data['search_language'] ?>").prop("selected", true);
     });
 
     // 검색어 엔터키 이벤트
@@ -113,6 +140,7 @@
         var search_condition = $('#search_condition').val();
         var search_rows = $('#search_rows').val();
         var search_page = $('#search_page').val();
-        location.href = '/csl/popup/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows;
+        var search_language = $('#search_language').val();
+        location.href = '/csl/popup/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows+'&search_language='+search_language;
     }
 </script>

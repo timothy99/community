@@ -16,12 +16,16 @@ class PopupModel extends Model
         $rows = $data['search_rows'];
         $search_condition = $data['search_condition'];
         $search_text = $data['search_text'];
+        $search_language = $data['search_language'];
 
         $db = $this->db;
         $builder = $db->table('mng_popup');
         $builder->where('del_yn', 'N');
         if ($search_text != null) {
             $builder->like($search_condition, $search_text);
+        }
+        if ($search_language != null) {
+            $builder->where('language', $search_language);
         }
         $builder->orderBy('popup_idx', 'desc');
         $builder->limit($rows, getOffset($page, $rows));
@@ -91,14 +95,11 @@ class PopupModel extends Model
         $title = $data['title'];
         $popup_file = $data['popup_file'];
         $url_link = $data['url_link'];
-        $position_left = $data['position_left'];
-        $position_top = $data['position_top'];
-        $popup_width = $data['popup_width'];
-        $popup_height = $data['popup_height'];
         $disabled_hours = $data['disabled_hours'];
         $start_date = $data['start_date'];
         $end_date = $data['end_date'];
         $display_yn = $data['display_yn'];
+        $language = $data['language'];
 
         $db = $this->db;
         $db->transStart();
@@ -107,14 +108,11 @@ class PopupModel extends Model
         $builder->set('title', $title);
         $builder->set('popup_file', $popup_file);
         $builder->set('url_link', $url_link);
-        $builder->set('position_left', $position_left);
-        $builder->set('position_top', $position_top);
-        $builder->set('popup_width', $popup_width);
-        $builder->set('popup_height', $popup_height);
         $builder->set('disabled_hours', $disabled_hours);
         $builder->set('start_date', $start_date);
         $builder->set('end_date', $end_date);
         $builder->set('display_yn', $display_yn);
+        $builder->set('language', $language);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $user_id);
         $builder->set('ins_date', $today);
@@ -154,6 +152,7 @@ class PopupModel extends Model
         $start_date = $data['start_date'];
         $end_date = $data['end_date'];
         $display_yn = $data['display_yn'];
+        $language = $data['language'];
 
         $db = $this->db;
         $db->transStart();
@@ -166,8 +165,8 @@ class PopupModel extends Model
         $builder->set('start_date', $start_date);
         $builder->set('end_date', $end_date);
         $builder->set('display_yn', $display_yn);
+        $builder->set('language', $language);
         $builder->set('upd_id', $user_id);
-        $builder->set('upd_date', $today);
         $builder->where('popup_idx', $popup_idx);
         $result = $builder->update();
 

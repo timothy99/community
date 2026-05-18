@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var object $info
+ * @var array $language_list
+ * @var object $config_info
+ */
+?>
 <form id="frm" name="frm">
 
 <input type="hidden" id="slide_idx" name="slide_idx" value="<?= $info->slide_idx ?>">
@@ -21,6 +28,12 @@
                                 <th class="align-middle bg-light">정렬순서</th>
                                 <td><?= $info->order_no ?></td>
                             </tr>
+<?php   if ($config_info->language_yn === 'Y') { ?>
+                            <tr>
+                                <th class="align-middle bg-light">언어</th>
+                                <td><?= code_replace('language', $info->language) ?></td>
+                            </tr>
+<?php   } ?>
                             <tr>
                                 <th class="align-middle bg-light">제목</th>
                                 <td><?= $info->title ?></td>
