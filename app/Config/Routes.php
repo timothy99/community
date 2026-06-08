@@ -38,6 +38,11 @@ $routes->post('/member/password/change/update', 'User\Member::passwordChangeUpda
 $routes->get('/member/authenticate', 'User\Member::authenticate');
 $routes->post('/member/authenticate/confirm', 'User\Member::authenticateConfirm');
 
+$routes->get('/member/sns/(:alpha)/callback', 'User\Sns::callback/$1');
+$routes->get('/member/sns/(:alpha)/connect', 'User\Sns::connect/$1');
+$routes->get('/member/sns/(:alpha)', 'User\Sns::start/$1');
+$routes->post('/member/sns/disconnect', 'User\Sns::disconnect');
+
 $routes->get('/csl/config/view', 'Console\Config::view');
 $routes->get('/csl/config/edit', 'Console\Config::edit');
 $routes->post('/csl/config/update', 'Console\Config::update');

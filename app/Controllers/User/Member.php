@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 
 use App\Models\User\MemberModel;
 use App\Models\User\MailModel;
+use App\Models\User\SnsModel;
 use App\Models\Console\ConfigModel;
 
 class Member extends BaseController
@@ -434,7 +435,9 @@ class Member extends BaseController
         }
 
         $member_model = new MemberModel();
+        $sns_model = new SnsModel();
         $member_id = getUserSessionInfo('member_id');
+        $member_idx = (int)getUserSessionInfo('member_idx');
 
         $data = array();
         $data['member_id'] = $member_id;
@@ -442,8 +445,14 @@ class Member extends BaseController
         $model_result = $member_model->getMemberInfo($data);
         $info = $model_result['info'];
 
+        $sns_data = array();
+        $sns_data['member_idx'] = $member_idx;
+        $sns_result = $sns_model->getMemberSnsList($sns_data);
+        $sns_map = $sns_result['sns_map'];
+
         $proc_result = array();
         $proc_result['info'] = $info;
+        $proc_result['sns_map'] = $sns_map;
         $proc_result['html_meta'] = create_meta('홈 > 마이페이지');
 
         return uview('/user/member/mypage', $proc_result);

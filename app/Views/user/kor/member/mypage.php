@@ -1,3 +1,14 @@
+<?php
+/**
+ * 마이페이지
+ * 회원 정보 조회/수정, SNS 연결 관리
+ * 
+ * @var object $info 회원 정보 (member 테이블)
+ * @var array $sns_map 회원의 SNS 연결 정보 (sns_type을 key로 한 map)
+ *     - 예시: [ 'kakao' => { sns_idx, member_idx, sns_type, sns_id, ins_date }, 'naver' => ... ]
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="member_idx" name="member_idx" value="<?= $info->member_idx ?>">
@@ -94,6 +105,82 @@
                     <!-- 구분선 -->
                     <hr class="my-4">
 
+                    <!-- SNS 연결 -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">SNS 연결</label>
+                        <p class="text-muted mb-3" style="font-size:0.85rem;">연결하면 해당 SNS 버튼으로 간편하게 로그인할 수 있습니다. 여러 계정을 동시에 연결할 수 있습니다.</p>
+
+                        <div class="d-flex flex-wrap gap-3">
+
+                            <!-- 카카오 -->
+                            <div class="d-flex flex-column align-items-center" style="min-width:80px;">
+                                <div class="sns-connect-icon kakao mb-1">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 3C6.48 3 2 6.48 2 10.77c0 2.74 1.66 5.15 4.19 6.57l-.97 3.6c-.08.31.24.56.51.39L9.9 18.9A11.5 11.5 0 0 0 12 19.1c5.52 0 10-3.48 10-7.33C22 6.48 17.52 3 12 3z"/>
+                                    </svg>
+                                </div>
+                                <small class="text-muted mb-1">카카오</small>
+                                <?php if (isset($sns_map['kakao'])): ?>
+                                    <span class="badge bg-success mb-1" style="font-size:0.7rem;">연결됨</span>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="snsDisconnect('kakao')">해제</button>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary mb-1" style="font-size:0.7rem;">미연결</span>
+                                    <a href="/member/sns/kakao/connect" class="btn btn-sm btn-outline-warning">연결</a>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- 네이버 -->
+                            <div class="d-flex flex-column align-items-center" style="min-width:80px;">
+                                <div class="sns-connect-icon naver mb-1">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16.273 12.845L7.376 3H3v18h4.727v-9.845L16.624 21H21V3h-4.727z"/>
+                                    </svg>
+                                </div>
+                                <small class="text-muted mb-1">네이버</small>
+                                <?php if (isset($sns_map['naver'])): ?>
+                                    <span class="badge bg-success mb-1" style="font-size:0.7rem;">연결됨</span>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="snsDisconnect('naver')">해제</button>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary mb-1" style="font-size:0.7rem;">미연결</span>
+                                    <a href="/member/sns/naver/connect" class="btn btn-sm btn-outline-success">연결</a>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- 구글 -->
+                            <div class="d-flex flex-column align-items-center" style="min-width:80px;">
+                                <div class="sns-connect-icon google mb-1">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                    </svg>
+                                </div>
+                                <small class="text-muted mb-1">구글</small>
+                                <?php if (isset($sns_map['google'])): ?>
+                                    <span class="badge bg-success mb-1" style="font-size:0.7rem;">연결됨</span>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="snsDisconnect('google')">해제</button>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary mb-1" style="font-size:0.7rem;">미연결</span>
+                                    <a href="/member/sns/google/connect" class="btn btn-sm btn-outline-secondary">연결</a>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- 애플 (준비 중) -->
+                            <div class="d-flex flex-column align-items-center" style="min-width:80px; opacity:0.45;">
+                                <div class="sns-connect-icon apple mb-1">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-.22.15-2.18 1.27-2.16 3.8.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.37 2.68zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                                    </svg>
+                                </div>
+                                <small class="text-muted mb-1">애플</small>
+                                <span class="badge bg-secondary mb-1" style="font-size:0.7rem;">준비 중</span>
+                                <button class="btn btn-sm btn-outline-secondary" disabled>연결</button>
+                            </div>
+
+                        </div>
+                    </div>
+
                     <!-- 저장 버튼 -->
                     <div class="d-grid mb-3">
                         <button type="button" class="btn btn-primary btn-lg" onclick="mypageUpdate()">저장</button>
@@ -159,5 +246,28 @@
         } else {
             alert(message);
         }
+    }
+
+    function snsDisconnect(sns_type) {
+        var name_map = { kakao: '카카오', naver: '네이버', google: '구글' };
+        var name = name_map[sns_type] || sns_type;
+        if (!confirm(name + ' 연결을 해제하시겠습니까?')) {
+            return false;
+        }
+        $.ajax({
+            url: '/member/sns/disconnect',
+            type: 'POST',
+            data: { sns_type: sns_type },
+            dataType: 'json',
+            success: function(proc_result) {
+                alert(proc_result.message);
+                if (proc_result.result == true) {
+                    location.reload();
+                }
+            },
+            error: function() {
+                alert('처리 중 오류가 발생했습니다.');
+            }
+        });
     }
 </script>
