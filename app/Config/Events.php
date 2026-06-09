@@ -56,10 +56,12 @@ Events::on('pre_system', static function (): void {
 
 // CI에서 기본적 DB이벤트(select등 모두 포함)가 발생되었을때의 로깅
 Events::on('DBQuery', function () {
+    if (is_cli()) { return; } // CLI(배치) 실행 시 로깅 스킵
     logModifyQuery(); // 쿼리 로깅
 });
 
 Events::on('post_controller_constructor', function () {
+    if (is_cli()) { return; } // CLI(배치) 실행 시 웹 전용 체크 스킵
     checkConstruction(); // 공사중 체크
     checkAdminIp(); // 관리자 접속시 IP체크
     getUserSession() ?? setBaseSession(); // 사용자 세션이 없다면 기본 세션 생성

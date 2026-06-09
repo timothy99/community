@@ -179,3 +179,9 @@ $routes->get('/csl/category/sub', 'Console\Category::sub');
 $routes->get('/product', 'User\Product::index');
 $routes->get('/product/list', 'User\Product::list');
 $routes->get('/product/view/(:num)', 'User\Product::view/$1');
+
+// ─────────────────────────────────────────────────────────
+// 배치 CLI 라우트 (웹 접근 불가, CLI 전용)
+// 실행 예시: php public/index.php batch/housekeeping
+// ─────────────────────────────────────────────────────────
+$routes->cli('batch/(:segment)', 'Batch\Batch::$1');
