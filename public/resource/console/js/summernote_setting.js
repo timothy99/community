@@ -59,8 +59,8 @@ function uploadSummernoteFile(file) {
         contentType : false,
         success : function(proc_result) {
             var info = proc_result.info;
-            var result = info.result;
-            var message = info.message;
+            var result = proc_result.result;
+            var message = proc_result.message;
             if (result == false) {
                 alert(message);
             } else {
@@ -68,9 +68,9 @@ function uploadSummernoteFile(file) {
                 var file_id = info.file_id;
                 var file_name_org = info.file_name_org;
                 if (category == 'image') {
-                    var file_html = '<img src="/file/view/'+file_id+'" class="img-fluid">';
+                    var file_html = '<br><br><img src="/file/view/'+file_id+'" class="img-fluid"><br>';
                 } else {
-                    var file_html = '<a href="/file/download/'+file_id+'">'+file_name_org+'</a>';
+                    var file_html = '<br><a href="/file/download/'+file_id+'">'+file_name_org+'</a><br>';
                 }
                 $('#contents').summernote('pasteHTML', file_html);
             }

@@ -8,7 +8,7 @@ use App\Models\Console\SettingsModel;
 class FileModel extends Model
 {
     // 일반적인 파일 업로드
-    public function uploadGeneralFile($data)
+    public function uploadGeneralFile(array $data)
     {
         $result = true;
         $message = '파일 업로드가 완료되었습니다.';
@@ -88,7 +88,7 @@ class FileModel extends Model
             $message = $model_result['message'];
         }
 
-        $data['icon_class'] = $this->getFileIconClass($data['file_ext']); // 파일 확장자에 따른 아이콘 클래스 반환
+        $data['icon_class'] = $this->getFileIconClass($data['file_ext'] ?? ''); // 파일 확장자에 따른 아이콘 클래스 반환
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -99,7 +99,7 @@ class FileModel extends Model
     }
 
     // 게시판의 파일 업로드
-    public function uploadBoardFile($data)
+    public function uploadBoardFile(array $data)
     {
         $result = true;
         $message = '파일 업로드가 완료되었습니다.';
@@ -177,7 +177,7 @@ class FileModel extends Model
             $result = $model_result['result'];
             $message = $model_result['message'];
 
-            $data['icon_class'] = $this->getFileIconClass($data['file_ext']); // 파일 확장자에 따른 아이콘 클래스 반환
+            $data['icon_class'] = $this->getFileIconClass($data['file_ext'] ?? ''); // 파일 확장자에 따른 아이콘 클래스 반환
         }
 
 
@@ -190,7 +190,7 @@ class FileModel extends Model
     }
 
     // 원본파일 그대로
-    public function uploadOriginalFile($data)
+    public function uploadOriginalFile(array $data)
     {
         $result = true;
         $message = '파일 업로드가 완료되었습니다.';
@@ -271,7 +271,7 @@ class FileModel extends Model
     }
 
     // 이미지 업로드
-    public function uploadImageFile($data)
+    public function uploadImageFile(array $data)
     {
         $result = true;
         $message = '파일 업로드가 완료되었습니다.';
@@ -360,7 +360,7 @@ class FileModel extends Model
     }
 
     // 파일 사이즈 체크해서 우리가 설정한 크기와 맞는지 확인
-    public function checkFileSize($data)
+    public function checkFileSize(array $data)
     {
         $result = true;
         $message = '파일이 지정된 용량을 초과하지 않았습니다.';
@@ -378,7 +378,7 @@ class FileModel extends Model
 
         if($check_file_size == false) {
             $result = false;
-            $message = '파일이 '.$limit_size.'MB 보다 큽니다';
+            $message = '파일이 '.$limit_size.'MB 보다 큽니다. 이미지를 복사 붙여넣기 하시는 경우 상단의 이미지 업로드 버튼을 사용해 업로드 해보세요.';
         }
 
         $proc_result = array();
@@ -389,7 +389,7 @@ class FileModel extends Model
     }
 
     // 확장자 체크 해서 필터에 따라 분류가 맞는지 확인
-    public function checkMimeType($data)
+    public function checkMimeType(array $data)
     {
         $result = false;
         $message = '업로드가 허용되지 않는 파일형식입니다.';
@@ -455,7 +455,7 @@ class FileModel extends Model
     }
 
     // 파일을 저장한다.
-    public function saveFile($data)
+    public function saveFile(array $data)
     {
         $user_file = $data['user_file'];
 
@@ -477,7 +477,7 @@ class FileModel extends Model
     }
 
     // 이미지 파일 리사이즈
-    public function resizeImageFile($data)
+    public function resizeImageFile(array $data)
     {
         $file_path = $data['file_path'];
         $mime_type = $data['mime_type'];
@@ -534,7 +534,7 @@ class FileModel extends Model
     }
 
     // 파일 정보 DB에 저장
-    public function insertFileInfo($data)
+    public function insertFileInfo(array $data)
     {
         $file_name_org = $data['file_name_org'];
         $file_directory = $data['file_directory'];
@@ -589,7 +589,7 @@ class FileModel extends Model
         return $model_result;
     }
 
-    public function getUploadInfo($data)
+    public function getUploadInfo(array $data)
     {
         $settings_model = new SettingsModel();
 
@@ -664,7 +664,7 @@ class FileModel extends Model
     }
 
     // base64로 인코딩된 이미지를 파일로 저장
-    public function saveBase64ImageFile($data)
+    public function saveBase64ImageFile(array $data)
     {
         $base64_image = str_replace('data:image/png;base64,', '', $data['base64_image']);
         $file_ext = 'png';
@@ -712,9 +712,8 @@ class FileModel extends Model
         return $file_info;
     }
 
-    public function getFileInfo($file_id)
+    public function getFileInfo(string $file_id)
     {
-        $file_id = (string)$file_id;
         $db = $this->db;
         $builder = $db->table("file");
         $builder->where("file_id", $file_id);
@@ -734,7 +733,7 @@ class FileModel extends Model
         return $db_info;
     }
 
-    public function getRawFile($response, $file_path)
+    public function getRawFile(object $response, string $file_path)
     {
         try {
             if ($file_path === null || !file_exists($file_path)) {
@@ -766,7 +765,7 @@ class FileModel extends Model
         return $raw_file;
     }
 
-    public function getFileIconClass($ext)
+    public function getFileIconClass(string $ext)
     {
         $ext = strtolower($ext);
         $iconMap = [
