@@ -1,5 +1,12 @@
+<?php
+/** 
+ * @var object $html_meta
+ * @var object $config_info
+ */
+?>
+
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">

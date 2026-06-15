@@ -38,7 +38,7 @@ class Menu extends BaseController
         $result = true;
         $message = '정상';
 
-        $language = 'kor';
+        $language = 'kr';
 
         $upper_menu_info = new \stdClass();
 
@@ -92,7 +92,7 @@ class Menu extends BaseController
         $url_link = $this->request->getPost("url_link", FILTER_SANITIZE_SPECIAL_CHARS);
         $url_target = $this->request->getPost("url_target", FILTER_SANITIZE_SPECIAL_CHARS);
         $order_no = $this->request->getPost("order_no", FILTER_SANITIZE_SPECIAL_CHARS);
-        $language = $this->request->getPost("language", FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kor';
+        $language = $this->request->getPost("language", FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
 
         if ($menu_name == null) { $result = false; $message = '메뉴명을 입력해주세요.'; }
         if ($order_no == null) { $result = false; $message = '정렬순서를 입력해주세요.'; }

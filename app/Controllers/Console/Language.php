@@ -45,15 +45,23 @@ class Language extends BaseController
 
         $language_yn = $this->request->getPost('language_yn', FILTER_SANITIZE_SPECIAL_CHARS);
         $language_use = $this->request->getPost('language_use', FILTER_SANITIZE_SPECIAL_CHARS);
+        $language_autotranslate = $this->request->getPost('language_autotranslate', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $data = array();
         $data['language_yn'] = $language_yn;
         $data['language_use'] = $language_use;
+        $data['language_autotranslate'] = $language_autotranslate;
 
         if ($result == true) {
             $model_result = $language_model->procLanguageUpdate($data);
             $result = $model_result['result'];
             $message = $model_result['message'];
+
+            // 언어 사용 여부 변경 직후에는 기존 페이지 캐시가 남아
+            // 리다이렉트 규칙이 즉시 반영되지 않을 수 있어 전체 캐시를 비운다.
+            if ($result === true) {
+                \Config\Services::cache()->clean();
+            }
         }
 
         $proc_result = array();

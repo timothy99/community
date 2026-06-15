@@ -41,10 +41,11 @@
                                 <th>언어명</th>
                                 <th>코드</th>
                                 <th>원어명</th>
+                                <th class="text-center" style="width:50px;">자동번역</th>
                             </tr>
                         </thead>
                         <tbody>
-<?php foreach ($list as $no => $val) { ?>
+<?php   foreach ($list as $no => $val) { ?>
                             <tr>
                                 <td class="text-center">
                                     <input class="form-check-input" type="checkbox" name="language_use[]" value="<?= $val->language_code ?>" <?= ($val->use_yn == 'Y') ? 'checked' : '' ?>>
@@ -52,6 +53,11 @@
                                 <td><?= $val->language_name ?></td>
                                 <td><?= $val->language_code ?></td>
                                 <td><?= $val->language_org ?></td>
+                                <td class="text-center">
+<?php       if ($val->language_code != 'kr') { // 한국어는 자동번역 대상에서 제외 ?>
+                                    <input class="form-check-input" type="checkbox" name="language_autotranslate[]" value="<?= $val->language_code ?>" <?= ($val->autotranslate_yn == 'Y') ? 'checked' : '' ?>>
+<?php       } ?>
+                                </td>
                             </tr>
 <?php } ?>
                         </tbody>

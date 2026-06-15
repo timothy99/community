@@ -12,7 +12,7 @@ class MainModel extends Model
         $message = '슬라이드 불러오기가 정상적으로 이루어졌습니다.';
 
         $today = date('YmdHis');
-        $language = service('request')->getCookie('language') ?? 'kor';
+        $language = service('request')->getCookie('language') ?? 'kr';
 
         $db = $this->db;
         $builder = $db->table('slide');
@@ -42,7 +42,7 @@ class MainModel extends Model
         $message = '팝업 불러오기가 정상적으로 이루어졌습니다.';
 
         $today = date('YmdHis');
-        $language = service('request')->getCookie('language') ?? 'kor';
+        $language = service('request')->getCookie('language') ?? 'kr';
 
         $db = $this->db;
         $builder = $db->table('popup');

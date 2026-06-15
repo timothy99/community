@@ -57,6 +57,7 @@ Events::on('pre_system', static function (): void {
 // CI에서 기본적 DB이벤트(select등 모두 포함)가 발생되었을때의 로깅
 Events::on('DBQuery', function () {
     if (is_cli()) { return; } // CLI(배치) 실행 시 로깅 스킵
+    if (! function_exists('logModifyQuery')) { return; } // 헬퍼 미로드 시점(Routes 초기화 등) 스킵
     logModifyQuery(); // 쿼리 로깅
 });
 

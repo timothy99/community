@@ -49,6 +49,7 @@ class LanguageModel extends Model
 
         $language_yn = $data['language_yn'];
         $language_use = $data['language_use'];
+        $language_autotranslate = $data['language_autotranslate'];
 
         $db = $this->db;
         $db->transStart();
@@ -65,6 +66,15 @@ class LanguageModel extends Model
         $builder = $db->table('language');
         $builder->set('use_yn', 'Y');
         $builder->whereIn('language_code', $language_use);
+        $builder->update();
+
+        $builder = $db->table('language');
+        $builder->set('autotranslate_yn', 'N');
+        $builder->update();
+
+        $builder = $db->table('language');
+        $builder->set('autotranslate_yn', 'Y');
+        $builder->whereIn('language_code', $language_autotranslate);
         $builder->update();
 
         $db->transComplete();

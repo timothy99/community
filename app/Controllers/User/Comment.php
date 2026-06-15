@@ -75,7 +75,7 @@ class Comment extends BaseController
         $result = $model_result['result'];
         $message = $model_result['message'];
 
-        $language = service('request')->getCookie('language') ?? 'kor';
+        $language = service('request')->getCookie('language') ?? 'kr';
         $comment_edit_html = view('/user/'.$language.'/comment/edit', $model_result);
 
         $proc_result = array();

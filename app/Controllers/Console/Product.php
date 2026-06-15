@@ -32,7 +32,7 @@ class Product extends BaseController
         $search_rows = $this->request->getGet('search_rows') ?? 10;
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'product_name';
-        $search_language = $this->request->getGet('search_language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kor';
+        $search_language = $this->request->getGet('search_language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
         $product_category_idx1 = $this->request->getGet('product_category_idx1', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
         $product_category_idx2 = $this->request->getGet('product_category_idx2', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
         $product_category_idx3 = $this->request->getGet('product_category_idx3', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
@@ -62,7 +62,7 @@ class Product extends BaseController
 
         $language_yn = $config_info->language_yn;
         if ($language_yn === 'N') { // 다국어가 아니라면 한국어로 고정한다.
-            $data["search_language"] = 'kor';
+            $data["search_language"] = 'kr';
         } else {
             $data["search_language"] = $this->request->getGet('search_language', FILTER_SANITIZE_SPECIAL_CHARS);
         }
@@ -114,7 +114,7 @@ class Product extends BaseController
         $message = '정상';
 
         $upper_idx = $this->request->getPost('upper_idx', FILTER_SANITIZE_SPECIAL_CHARS);
-        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS);
+        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
 
         $data = array();
         $data['search_category'] = $upper_idx;
@@ -143,7 +143,7 @@ class Product extends BaseController
         $config_info = $model_result['info'];
         $language_yn = $config_info->language_yn;
         if ($language_yn === 'N') { // 다국어가 아니라면 한국어로 고정한다.
-            $language = 'kor';
+            $language = 'kr';
 
             // 1차 카테고리는 항상 갖고 와야함
             $data = array();
@@ -152,7 +152,7 @@ class Product extends BaseController
             $model_result = $category_model->getCategorySearchList($data);
             $product_category_list1 = $model_result['list'];
         } else {
-            $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS);
+            $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
             $product_category_list1 = array();
         }
 
@@ -193,7 +193,7 @@ class Product extends BaseController
 
         $product_idx = $this->request->getPost('product_idx', FILTER_SANITIZE_SPECIAL_CHARS);
         $main_image_hidden = $this->request->getPost('main_image_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
-        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS);
+        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
         $product_category_idx1 = $this->request->getPost('product_category_idx1', FILTER_SANITIZE_SPECIAL_CHARS);
         $product_category_idx2 = $this->request->getPost('product_category_idx2', FILTER_SANITIZE_SPECIAL_CHARS);
         $product_category_idx3 = $this->request->getPost('product_category_idx3', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -314,9 +314,9 @@ class Product extends BaseController
         $config_info = $model_result['info'];
         $language_yn = $config_info->language_yn;
         if ($language_yn === 'N') { // 다국어가 아니라면 한국어로 고정한다.
-            $language = 'kor';
+            $language = 'kr';
         } else {
-            $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS);
+            $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
         }
 
         // 언어 리스트는 무조건 갖고 와야함

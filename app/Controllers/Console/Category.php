@@ -38,7 +38,7 @@ class Category extends BaseController
         $result = true;
         $message = '정상';
 
-        $language = 'kor';
+        $language = 'kr';
 
         $upper_menu_info = new \stdClass();
 
@@ -89,7 +89,7 @@ class Category extends BaseController
         $idx3 = $this->request->getPost('idx3', FILTER_SANITIZE_SPECIAL_CHARS);
         $category_position = $this->request->getPost('category_position', FILTER_SANITIZE_SPECIAL_CHARS);
         $category_name = $this->request->getPost('category_name', FILTER_SANITIZE_SPECIAL_CHARS);
-        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kor';
+        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
         $order_no = $this->request->getPost('order_no', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $data = array();

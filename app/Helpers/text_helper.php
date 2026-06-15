@@ -134,14 +134,14 @@ function code_replace($category, $text)
     $replace['notice_yn']['N'] = '일반';
     $replace['url_target']['_self'] = '현재창';
     $replace['url_target']['_blank'] = '새창';
-    $replace['locale']['kor'] = 'ko_KR';
-    $replace['locale']['eng'] = 'en_US';
-    $replace['locale']['jpn'] = 'ja_JP';
-    $replace['locale']['chn'] = 'zh_CN';
-    $replace['language']['kor'] = '한국어';
-    $replace['language']['eng'] = '영어';
-    $replace['language']['jpn'] = '일본어';
-    $replace['language']['chn'] = '중국어';
+    $replace['locale']['kr'] = 'ko_KR';
+    $replace['locale']['en'] = 'en_US';
+    $replace['locale']['jp'] = 'ja_JP';
+    $replace['locale']['cn'] = 'zh_CN';
+    $replace['language']['kr'] = '한국어';
+    $replace['language']['en'] = '영어';
+    $replace['language']['jp'] = '일본어';
+    $replace['language']['cn'] = '중국어';
     $replace['secret_comment_yn']['Y'] = '사용';
     $replace['secret_comment_yn']['N'] = '미사용';
 
