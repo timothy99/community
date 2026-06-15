@@ -1,20 +1,34 @@
 <?php
 
 // uri에 따라 권한 체크 후 로그인이 필요한 경우 리다이렉션
-function checkAuthority($segments)
+function checkAuthority(array $segments)
 {
     $user_session = getUserSession();
     $auth_group = $user_session->auth_group;
 
+    $method = service('request')->getMethod();
+
+    // language_yn='Y' 일 때 segments 앞에 locale 코드가 포함될 수 있으므로 제거
+    $supportedLocales = config('App')->supportedLocales;
+    if (! empty($segments) && in_array($segments[0], $supportedLocales, true)) {
+        array_shift($segments);
+    }
+
     $segment0 = $segments[0] ?? null;
     $segment1 = $segments[1] ?? null;
-    $segment2 = $segments[2] ?? null;
 
     $auth_group_arr = ["관리자", "최고관리자"];
-
     // 관리자 페이지인데, 로그인을 안했다면 로그인 페이지로 보낸다. 
     if ($segment0 == "csl" && in_array($auth_group, $auth_group_arr) == false) {
-        header("Location: /member/login");
+        if ($method == "POST") { // ajax로 들어온 호출일 경우 로그인 페이지로 리다이렉션 하지 않고 json으로 결과 반환
+            $proc_result = array();
+            $proc_result["result"] = false;
+            $proc_result["message"] = "로그인이 필요한 서비스입니다. 계속 문제가 발생한다면 새로고침하고 다시 입력해주세요.";
+            echo json_encode($proc_result, JSON_UNESCAPED_UNICODE);
+            exit;
+        } else {
+            header("Location: /member/login");
+        }
         exit;
     }
 
@@ -31,12 +45,28 @@ function checkAuthority($segments)
         exit;
     }
 
-    // 등록수정삭제등에는 로그인이 필요하다.
-    $authority_arr = ["write", "update", "delete", "edit"];
-    if (in_array($segment2, $authority_arr) && $auth_group == "guest") {
-        header("Location: /member/login");
-        exit;
+    /*
+     * 입력받은 method 가 post인 경우
+     * insert, update, delete, edit 가 포함된 uri는 로그인이 필요한것으로 간주
+    */
+    if ($method == "POST") {
+        $post_arr = array();
+        $post_arr[] = "insert";
+        $post_arr[] = "update";
+        $post_arr[] = "delete";
+        $post_arr[] = "edit";
+
+        foreach ($post_arr as $value) {
+            if (strpos($uri, $value) !== false && $auth_group == "guest") {
+                $proc_result = array();
+                $proc_result["result"] = false;
+                $proc_result["message"] = "로그인이 필요한 서비스입니다. 계속 문제가 발생한다면 새로고침하고 다시 입력해주세요.";
+                echo json_encode($proc_result, JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+        }
     }
+
 }
 
 /*
@@ -56,7 +86,7 @@ function setPreviousUrl()
     $is_post = $request->getMethod() == "post"; // post 확인
 
     // 이전페이지가 로그인 페이지면 입력하지 않는다.
-    if (strpos($previous_url, "/member/login") > 0) {
+    if (strpos($previous_url, '/member/login') !== false) {
         $url_save_yn = false;
     }
 
@@ -134,7 +164,8 @@ function checkAdminIp()
             $ip = $ip_info->ip ?? '';
 
             if ($ip !== $ip_addr) {
-                header("Location: /");
+                // '/'로 보내면 User\Home::index → /home/main 체인이 발생하므로 로그인 페이지로 보낸다
+                header('Location: /member/login');
                 exit;
             }
         }
