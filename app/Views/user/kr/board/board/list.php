@@ -76,7 +76,7 @@
                     <table class="table table-bordered table-hover bg-white align-middle text-center mb-0 text-nowrap">
                         <thead class="table-primary">
                             <tr>
-                                <th>번호</th>
+                                <th>연번</th>
 <?php   if ($board_config->category_yn == 'Y') { ?>
                                 <th>카테고리</th>
 <?php   } ?>
@@ -102,7 +102,7 @@
                                 <td><?=$val->category ?></td>
 <?php       } ?>
                                 <td class="text-start">
-                                    <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>">
+                                    <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_no ?>">
                                         <?=$val->title ?>
 <?php       if ($val->new_yn == 'Y') { ?>
                                         <span class="badge bg-danger ms-2">N</span>
@@ -129,7 +129,7 @@
                                 <td><?=$val->category ?></td>
 <?php       } ?>
                                 <td class="text-start">
-                                    <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>">
+                                    <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_no ?>">
                                         <?=$val->title ?>
 <?php       if ($val->new_yn == 'Y') { ?>
                                         <span class="badge bg-danger ms-2">N</span>

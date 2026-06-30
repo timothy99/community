@@ -13,7 +13,7 @@ class Board extends BaseController
         return redirect()->to('/csl/board/list');
     }
 
-    public function list($board_id)
+    public function list(string $board_id)
     {
         $board_model = new BoardModel();
 
@@ -77,7 +77,7 @@ class Board extends BaseController
         return aview('/console/board/list', $proc_result);
     }
 
-    public function write($board_id)
+    public function write(string $board_id)
     {
         $board_model = new BoardModel();
 
@@ -92,6 +92,7 @@ class Board extends BaseController
 
         $info = new \stdClass();
         $info->board_idx = 0;
+        $info->board_no = 0;
         $info->board_id = $board_id;
         $info->category = '';
         $info->title = '';
@@ -129,6 +130,7 @@ class Board extends BaseController
         $message = '정상처리 되었습니다.';
 
         $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+        $board_no = $this->request->getPost('board_no', FILTER_SANITIZE_SPECIAL_CHARS);
         $board_id = $this->request->getPost('board_id', FILTER_SANITIZE_SPECIAL_CHARS);
         $main_image_id = $this->request->getPost('main_image_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
         $pdf_file_id = $this->request->getPost('pdf_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -156,6 +158,7 @@ class Board extends BaseController
 
         $data = array();
         $data['board_idx'] = $board_idx;
+        $data['board_no'] = $board_no;
         $data['board_id'] = $board_id;
         $data['category'] = $category;
         $data['title'] = $title;
@@ -176,6 +179,7 @@ class Board extends BaseController
             if ($board_idx == 0) {
                 $model_result = $board_model->procBoardInsert($data, $db);
                 $board_idx = $model_result['insert_id'];
+                $board_no = $model_result['board_no'];
             } else {
                 $model_result = $board_model->procBoardUpdate($data, $db);
             }
@@ -194,13 +198,13 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/board/'.$board_id.'/view/'.$board_idx;
-        $proc_result['board_idx'] = $board_idx;
+        $proc_result['return_url'] = '/csl/board/'.$board_id.'/view/'.$board_no;
+        $proc_result['board_no'] = $board_no;
 
         return $this->response->setJSON($proc_result);
     }
 
-    public function view($board_id, $board_idx)
+    public function view(string $board_id, string $board_no)
     {
         $board_model = new BoardModel();
         $comment_model = new CommentModel();
@@ -210,7 +214,7 @@ class Board extends BaseController
 
         $data = array();
         $data['board_id'] = $board_id;
-        $data['board_idx'] = $board_idx;
+        $data['board_no'] = $board_no;
 
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
@@ -223,6 +227,7 @@ class Board extends BaseController
         $result = $model_result['result'];
         $message = $model_result['message'];
         $info = $model_result['info'];
+        $data['board_idx'] = $info->board_idx;
 
         // 댓글목록
         $model_result = $comment_model->getCommentList($data);
@@ -238,7 +243,7 @@ class Board extends BaseController
         return aview('console/board/view', $proc_result);
     }
 
-    public function edit($board_id, $board_idx)
+    public function edit(string $board_id, string $board_no)
     {
         $board_model = new BoardModel();
 
@@ -247,7 +252,7 @@ class Board extends BaseController
 
         $data = array();
         $data['board_id'] = $board_id;
-        $data['board_idx'] = $board_idx;
+        $data['board_no'] = $board_no;
 
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
@@ -275,11 +280,11 @@ class Board extends BaseController
         $board_model = new BoardModel();
 
         $board_id = $this->request->getPost('board_id', FILTER_SANITIZE_SPECIAL_CHARS);
-        $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+        $board_no = $this->request->getPost('board_no', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $data = array();
         $data['board_id'] = $board_id;
-        $data['board_idx'] = $board_idx;
+        $data['board_no'] = $board_no;
 
         $model_result = $board_model->procBoardDelete($data);
         $result = $model_result['result'];
@@ -293,7 +298,7 @@ class Board extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function batchDelete($board_id)
+    public function batchDelete(string $board_id)
     {
         $result = true;
         $message = '정상처리 되었습니다.';
@@ -308,15 +313,15 @@ class Board extends BaseController
         }
         
         if ($result == true) {
-            foreach ($chk as $no => $board_idx) {
+            foreach ($chk as $no => $board_no) {
                 $data = array();
                 $data['board_id'] = $board_id;
-                $data['board_idx'] = $board_idx;
+                $data['board_no'] = $board_no;
 
                 $model_result = $board_model->procBoardDelete($data);
                 if ($model_result['result'] == false) {
                     $result = false;
-                    $message = '게시글 번호 '.$board_idx.' 삭제 중 오류가 발생했습니다.';
+                    $message = '게시글 번호 '.$board_no.' 삭제 중 오류가 발생했습니다.';
                     break;
                 }
             }

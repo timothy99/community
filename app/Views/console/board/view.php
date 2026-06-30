@@ -25,6 +25,10 @@
                         <div class="tbl-label">공지여부</div>
                         <div class="tbl-value"><?= code_replace('notice_yn', $info->notice_yn) ?></div>
                     </div>
+                    <div class="row g-0 border-bottom">
+                        <div class="tbl-label">게시물 번호</div>
+                        <div class="tbl-value"><?= $info->board_no ?></div>
+                    </div>
 <?php if ($board_config->category_yn == 'Y') { ?>
                     <div class="row g-0 border-bottom">
                         <div class="tbl-label">카테고리</div>
@@ -221,7 +225,7 @@
                 <div class="d-flex gap-2 justify-content-end">
                     <button type="button" class="btn btn-danger" onclick="boardDelete()">삭제</button>
                     <a href="/csl/board/<?= $info->board_id ?>/list" class="btn btn-secondary">목록</a>
-                    <a href="/csl/board/<?= $info->board_id ?>/edit/<?= $info->board_idx ?>" class="btn btn-primary">수정</a>
+                    <a href="/csl/board/<?= $info->board_id ?>/edit/<?= $info->board_no ?>" class="btn btn-primary">수정</a>
                 </div>
             </div>
         </div>

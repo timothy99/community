@@ -14,7 +14,7 @@ class Board extends BaseController
         return redirect()->to('/usr/board/list');
     }
 
-    public function list($board_id)
+    public function list(string $board_id)
     {
         $board_model = new BoardModel();
         $authority_model = new BoardAuthorityModel();
@@ -92,7 +92,7 @@ class Board extends BaseController
         return uview('/user/board/'.$board_config->type.'/list', $proc_result);
     }
 
-    public function write($board_id)
+    public function write(string $board_id)
     {
         $board_model = new BoardModel();
         $authority_model = new BoardAuthorityModel();
@@ -103,6 +103,7 @@ class Board extends BaseController
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
         $board_config = $config_result['config'];
+        $temp_load = $this->request->getGet('temp_load', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
 
         $data = array();
         $data["board_id"] = $board_id;
@@ -118,6 +119,7 @@ class Board extends BaseController
         $board_config->category_arr = explode("||", $board_config->category);
 
         $info = new \stdClass();
+        $info->board_no = 0;
         $info->board_idx = 0;
         $info->board_id = $board_id;
         $info->category = '';
@@ -139,15 +141,85 @@ class Board extends BaseController
         $info->pdf_file_info = null;
         $info->file_list = array();
 
+        $temp_result = $board_model->getBoardTempInfo($board_id, getUserSessionInfo('member_id'));
+        $has_temp = $temp_result['exists'];
+        $temp_info = $temp_result['info'];
+        $temp_loaded = 'N';
+
+        if ($has_temp && $temp_load == 'Y' && $temp_info != null) {
+            $info = $temp_info;
+            $temp_loaded = 'Y';
+        }
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
         $proc_result['board_config'] = $board_config;
         $proc_result['authority'] = $authority;
+        $proc_result['has_temp'] = $has_temp;
+        $proc_result['temp_info'] = $temp_info;
+        $proc_result['temp_loaded'] = $temp_loaded;
         $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 작성');
 
         return uview('/user/board/'.$board_config->type.'/edit', $proc_result);
+    }
+
+    public function tempSave(string $board_id)
+    {
+        $board_model = new BoardModel();
+
+        $result = true;
+        $message = '임시저장 되었습니다.';
+
+        $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
+        $board_no = $this->request->getPost('board_no', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
+        $main_image_id = $this->request->getPost('main_image_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
+        $pdf_file_id = $this->request->getPost('pdf_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
+        $notice_yn = $this->request->getPost('notice_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
+        $category = $this->request->getPost('category', FILTER_SANITIZE_SPECIAL_CHARS);
+        $title = $this->request->getPost('title', FILTER_SANITIZE_SPECIAL_CHARS);
+        $contents = $this->request->getPost('contents') ?? '';
+        $url_link = $this->request->getPost('url_link', FILTER_SANITIZE_SPECIAL_CHARS);
+        $youtube_link = $this->request->getPost('youtube_link', FILTER_SANITIZE_SPECIAL_CHARS);
+        $reg_date = $this->request->getPost('reg_date', FILTER_SANITIZE_SPECIAL_CHARS) ?? date('Y-m-d H:i:s');
+        $hit_cnt = $this->request->getPost('hit_cnt', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
+        $file_idxs = $this->request->getPost('file_idxs', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        $reg_date = convertTextToDate($reg_date, 2, 3);
+        if ($file_idxs == '') {
+            $file_arr = array();
+        } else {
+            $file_arr = explode('||', $file_idxs);
+        }
+
+        $contents = remove_hwp_json($contents);
+
+        $data = array();
+        $data['board_idx'] = $board_idx;
+        $data['board_no'] = $board_no;
+        $data['board_id'] = $board_id;
+        $data['category'] = $category;
+        $data['title'] = $title;
+        $data['contents'] = $contents;
+        $data['main_image_id'] = $main_image_id;
+        $data['url_link'] = $url_link;
+        $data['pdf_file_id'] = $pdf_file_id;
+        $data['youtube_link'] = $youtube_link;
+        $data['notice_yn'] = $notice_yn;
+        $data['hit_cnt'] = $hit_cnt;
+        $data['reg_date'] = $reg_date;
+        $data['file_arr'] = $file_arr;
+
+        $model_result = $board_model->procBoardTempUpsert($data);
+        $result = $model_result['result'];
+        $message = $model_result['message'];
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+
+        return $this->response->setJSON($proc_result);
     }
 
     public function update()
@@ -158,6 +230,7 @@ class Board extends BaseController
         $message = '정상처리 되었습니다.';
 
         $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
+        $board_no = $this->request->getPost('board_no', FILTER_SANITIZE_SPECIAL_CHARS);
         $board_id = $this->request->getPost('board_id', FILTER_SANITIZE_SPECIAL_CHARS);
         $main_image_id = $this->request->getPost('main_image_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
         $pdf_file_id = $this->request->getPost('pdf_file_hidden', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -181,15 +254,7 @@ class Board extends BaseController
             $file_arr = explode("||", $file_idxs);
         }
 
-        $contents = str_replace('<!--[if !supportEmptyParas]-->&nbsp;<!--[endif]-->', '', $contents);
-        // HWP JSON 데이터 제거
-        $start = strpos($contents, '<!--[data-hwpjson]');
-        if ($start !== false) {
-            $end = strpos($contents, '-->', $start);
-            if ($end !== false) {
-                $contents = substr($contents, 0, $start) . substr($contents, $end + 3);
-            }
-        }
+        $contents = remove_hwp_json($contents);
 
         $data = array();
         $data['board_idx'] = $board_idx;
@@ -213,12 +278,21 @@ class Board extends BaseController
             if ($board_idx == 0) {
                 $model_result = $board_model->procBoardInsert($data, $db);
                 $board_idx = $model_result['insert_id'];
+                $board_no = $model_result['board_no'];
             } else {
                 $model_result = $board_model->procBoardUpdate($data, $db);
             }
 
             $result = $model_result['result'];
             $message = $model_result['message'];
+
+            if ($result == true) {
+                $temp_result = $board_model->procBoardTempDelete($board_id, getUserSessionInfo('member_id'), $db);
+                $result = $temp_result['result'];
+                if ($result == false) {
+                    $message = $temp_result['message'];
+                }
+            }
         }
 
         $db->transComplete();
@@ -231,13 +305,13 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/board/'.$board_id.'/view/'.$board_idx;
+        $proc_result['return_url'] = '/board/'.$board_id.'/view/'.$board_no;
         $proc_result['board_idx'] = $board_idx;
 
         return $this->response->setJSON($proc_result);
     }
 
-    public function view($board_id, $board_idx)
+    public function view(string $board_id, int $board_no)
     {
         $board_model = new BoardModel();
         $authority_model = new BoardAuthorityModel();
@@ -248,7 +322,7 @@ class Board extends BaseController
 
         $data = array();
         $data['board_id'] = $board_id;
-        $data['board_idx'] = $board_idx;
+        $data['board_no'] = $board_no;
 
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
@@ -269,6 +343,8 @@ class Board extends BaseController
         $result = $model_result['result'];
         $message = $model_result['message'];
         $info = $model_result['info'];
+        $board_idx = $info->board_idx;
+        $data['board_idx'] = $board_idx;
 
         // 조회수 증가
         if ($result == true) {
@@ -291,7 +367,7 @@ class Board extends BaseController
         return uview('/user/board/'.$board_config->type.'/view', $proc_result);
     }
 
-    public function edit($board_id, $board_idx)
+    public function edit(string $board_id, int $board_no)
     {
         $board_model = new BoardModel();
         $authority_model = new BoardAuthorityModel();
@@ -301,7 +377,7 @@ class Board extends BaseController
 
         $data = array();
         $data['board_id'] = $board_id;
-        $data['board_idx'] = $board_idx;
+        $data['board_no'] = $board_no;
 
         // 게시판 설정 가져오기
         $config_result = $board_model->getBoardConfig($board_id);
@@ -327,6 +403,9 @@ class Board extends BaseController
         $proc_result['info'] = $info;
         $proc_result['board_config'] = $board_config;
         $proc_result['authority'] = $authority;
+        $proc_result['has_temp'] = false;
+        $proc_result['temp_info'] = null;
+        $proc_result['temp_loaded'] = 'N';
         $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 수정 > '.$info->title);
 
         return uview('/user/board/'.$board_config->type.'/edit', $proc_result);

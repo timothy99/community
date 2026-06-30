@@ -76,6 +76,7 @@
                         <thead class="table-primary">
                             <tr>
                                 <th><input type="checkbox" id="chk_all"></th>
+                                <th>연번</th>
                                 <th>번호</th>
 <?php   if ($board_config->category_yn == 'Y') { ?>
                                 <th>카테고리</th>
@@ -97,13 +98,14 @@
                         <tbody>
 <?php   foreach($notice_list as $no => $val) { ?>
                             <tr>
-                                <td><input type="checkbox" class="chk_item" name="chk[]" value="<?=$val->board_idx ?>"></td>
+                                <td><input type="checkbox" class="chk_item" name="chk[]" value="<?=$val->board_no ?>"></td>
                                 <td>공지</td>
+                                <td><?=$val->board_no ?></td>
 <?php       if ($board_config->category_yn == 'Y') { ?>
                                 <td><?=$val->category ?></td>
 <?php       } ?>
                                 <td class="text-start">
-                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>">
+                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_no ?>">
                                         <?=$val->title ?>
 <?php       if ($val->new_yn == 'Y') { ?>
                                         <span class="badge bg-danger ms-2">N</span>
@@ -125,13 +127,14 @@
 <?php   } ?>
 <?php   foreach($list as $no => $val) { ?>
                             <tr>
-                                <td><input type="checkbox" class="chk_item" name="chk[]" value="<?=$val->board_idx ?>"></td>
+                                <td><input type="checkbox" class="chk_item" name="chk[]" value="<?=$val->board_no ?>"></td>
                                 <td><?=$val->list_no ?></td>
+                                <td><?=$val->board_no ?></td>
 <?php       if ($board_config->category_yn == 'Y') { ?>
                                 <td><?=$val->category ?></td>
 <?php       } ?>
                                 <td class="text-start">
-                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>">
+                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_no ?>">
                                         <?=$val->title ?>
 <?php       if ($val->new_yn == 'Y') { ?>
                                         <span class="badge bg-danger ms-2">N</span>

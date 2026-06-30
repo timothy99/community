@@ -136,14 +136,15 @@ class BoardModel extends Model
         $result = true;
         $message = '게시물 정보를 가져왔습니다.';
 
-        $board_idx = $data['board_idx'];
+        $board_no = $data['board_no'];
         $board_config = $data['board_config'];
 
         $db = $this->db;
         $builder = $db->table('board');
         $builder->where('del_yn', 'N');
-        $builder->where('board_idx', $board_idx);
+        $builder->where('board_no', $board_no);
         $info = $builder->get()->getRow();
+        $board_idx = $info->board_idx;
 
         $info->upd_date_txt = convertTextToDate($info->ins_date, 1, 1);
         $info->reg_date_txt = convertTextToDate($info->reg_date, 1, 1);
@@ -221,7 +222,19 @@ class BoardModel extends Model
         $reg_date = $data['reg_date'];
         $file_arr = $data['file_arr'];
 
+        // board_no 생성 및 중복 체크
+        while (true) {
+            $board_no = getRandomString(6, 8);
+            $builder = $db->table('board');
+            $builder->where('board_no', $board_no);
+            $existing_cnt = $builder->countAllResults();
+            if ($existing_cnt == 0) {
+                break;
+            }
+        }
+
         $builder = $db->table('board');
+        $builder->set('board_no', $board_no);
         $builder->set('board_id', $board_id);
         $builder->set('category', $category);
         $builder->set('title', $title);
@@ -241,27 +254,47 @@ class BoardModel extends Model
         $result = $builder->insert();
         $insert_id = $db->insertID();
 
+        if (!$result) {
+            $message = '게시물 등록에 오류가 발생했습니다.';
+        }
+
         // board_idx_desc 에 $insert_id 의 음수 업데이트
-        $builder = $db->table('board');
-        $builder->set('board_idx_desc', -$insert_id);
-        $builder->where('board_idx', $insert_id);
-        $builder->update();
+        if ($result) {
+            $builder = $db->table('board');
+            $builder->set('board_idx_desc', -$insert_id);
+            $builder->where('board_idx', $insert_id);
+            if (!$builder->update()) {
+                $result = false;
+                $message = 'board_idx_desc 업데이트에 오류가 발생했습니다.';
+            }
+        }
 
-        $builder = $db->table('board_file');
-        $builder->where('board_idx', $insert_id);
-        $builder->delete();
-
-        foreach ($file_arr as $file_id) {
+        // board_file 삭제
+        if ($result) {
             $builder = $db->table('board_file');
-            $builder->set('board_idx', $insert_id);
-            $builder->set('file_id', $file_id);
-            $builder->insert();
+            $builder->where('board_idx', $insert_id);
+            $builder->delete();
+        }
+
+        // board_file 삽입
+        if ($result) {
+            foreach ($file_arr as $file_id) {
+                $builder = $db->table('board_file');
+                $builder->set('board_idx', $insert_id);
+                $builder->set('file_id', $file_id);
+                if (!$builder->insert()) {
+                    $result = false;
+                    $message = '파일 등록에 오류가 발생했습니다.';
+                    break;
+                }
+            }
         }
 
         $model_result = array();
         $model_result['result'] = $result;
         $model_result['message'] = $message;
         $model_result['insert_id'] = $insert_id;
+        $model_result['board_no'] = $board_no;
 
         return $model_result;
     }
@@ -276,6 +309,7 @@ class BoardModel extends Model
         $message = '입력이 잘 되었습니다';
 
         $board_idx = $data['board_idx'];
+        $board_no = $data['board_no'];
         $board_id = $data['board_id'];
         $category = $data['category'];
         $title = $data['title'];
@@ -303,19 +337,32 @@ class BoardModel extends Model
         $builder->set('reg_date', $reg_date);
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
-        $builder->where('board_idx', $board_idx);
+        $builder->where('board_no', $board_no);
         $result = $builder->update();
 
-        // board_idx 기준으로 삭제
-        $builder = $db->table('board_file');
-        $builder->where('board_idx', $board_idx);
-        $builder->delete();
+        if (!$result) {
+            $message = '게시물 수정에 오류가 발생했습니다.';
+        }
 
-        foreach ($file_arr as $file_id) {
+        // board_idx 기준으로 삭제
+        if ($result) {
             $builder = $db->table('board_file');
-            $builder->set('board_idx', $board_idx);
-            $builder->set('file_id', $file_id);
-            $builder->insert();
+            $builder->where('board_idx', $board_idx);
+            $builder->delete();
+        }
+
+        // board_file 삽입
+        if ($result) {
+            foreach ($file_arr as $file_id) {
+                $builder = $db->table('board_file');
+                $builder->set('board_idx', $board_idx);
+                $builder->set('file_id', $file_id);
+                if (!$builder->insert()) {
+                    $result = false;
+                    $message = '파일 등록에 오류가 발생했습니다.';
+                    break;
+                }
+            }
         }
 
         $model_result = array();
@@ -334,7 +381,7 @@ class BoardModel extends Model
         $message = '삭제가 잘 되었습니다';
 
         $board_id = $data['board_id'];
-        $board_idx = $data['board_idx'];
+        $board_no = $data['board_no'];
 
         $db = $this->db;
         $db->transStart();
@@ -343,7 +390,7 @@ class BoardModel extends Model
         $builder->set('del_yn', 'Y');
         $builder->set('upd_id', $member_id);
         $builder->set('upd_date', $today);
-        $builder->where('board_idx', $board_idx);
+        $builder->where('board_no', $board_no);
         $builder->where('board_id', $board_id);
         $result = $builder->update();
 

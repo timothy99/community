@@ -11,6 +11,7 @@
 <input type="hidden" id="board_id" name="board_id" value="<?= $info->board_id ?>">
 <input type="hidden" id="main_image_hidden" name="main_image_hidden" value="<?= $info->main_image_id ?>">
 <input type="hidden" id="pdf_file_hidden" name="pdf_file_hidden" value="<?= $info->pdf_file_id ?>">
+<input type="hidden" id="board_no" name="board_no" value="<?= $info->board_no ?>">
 
 <input type="hidden" id="contents_code" name="contents_code" value='<?=base64_encode($info->contents) ?>'>
 <input type="hidden" id="summer_code" name="summer_code">

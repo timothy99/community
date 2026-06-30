@@ -136,14 +136,16 @@ class BoardModel extends Model
         $result = true;
         $message = '게시물 정보를 가져왔습니다.';
 
-        $board_idx = $data['board_idx'];
+        $board_no = $data['board_no'];
         $board_config = $data['board_config'];
 
         $db = $this->db;
         $builder = $db->table('board');
         $builder->where('del_yn', 'N');
-        $builder->where('board_idx', $board_idx);
+        $builder->where('board_no', $board_no);
         $info = $builder->get()->getRow();
+
+        $board_idx = $info->board_idx;
 
         if ($info == null) {
             redirect_alert('존재하지 않는 게시물입니다.', '/');
@@ -226,7 +228,19 @@ class BoardModel extends Model
         $reg_date = $data['reg_date'];
         $file_arr = $data['file_arr'];
 
+        // board_no 생성 및 중복 체크
+        while (true) {
+            $board_no = getRandomString(6, 8);
+            $builder = $db->table('board');
+            $builder->where('board_no', $board_no);
+            $existing_cnt = $builder->countAllResults();
+            if ($existing_cnt == 0) {
+                break;
+            }
+        }
+
         $builder = $db->table('board');
+        $builder->set('board_no', $board_no);
         $builder->set('board_id', $board_id);
         $builder->set('category', $category);
         $builder->set('title', $title);
@@ -246,34 +260,47 @@ class BoardModel extends Model
         $result = $builder->insert();
         $insert_id = $db->insertID();
 
-        // board_idx_desc 에 $insert_id 의 음수 업데이트
-        $builder = $db->table('board');
-        $builder->set('board_idx_desc', -$insert_id);
-        $builder->where('board_idx', $insert_id);
-        $builder->update();
-
-        $builder = $db->table('board_file');
-        $builder->where('board_idx', $insert_id);
-        $builder->delete();
-
-        foreach ($file_arr as $file_id) {
-            $builder = $db->table('board_file');
-            $builder->set('board_idx', $insert_id);
-            $builder->set('file_id', $file_id);
-            $builder->insert();
+        if (!$result) {
+            $message = '게시물 등록에 오류가 발생했습니다.';
         }
 
-        $db->transComplete();
+        // board_idx_desc 에 $insert_id 의 음수 업데이트
+        if ($result) {
+            $builder = $db->table('board');
+            $builder->set('board_idx_desc', -$insert_id);
+            $builder->where('board_idx', $insert_id);
+            if (!$builder->update()) {
+                $result = false;
+                $message = 'board_idx_desc 업데이트에 오류가 발생했습니다.';
+            }
+        }
 
-        if ($db->transStatus() === false) {
-            $result = false;
-            $message = '입력에 오류가 발생했습니다.';
+        // board_file 삭제
+        if ($result) {
+            $builder = $db->table('board_file');
+            $builder->where('board_idx', $insert_id);
+            $builder->delete();
+        }
+
+        // board_file 삽입
+        if ($result) {
+            foreach ($file_arr as $file_id) {
+                $builder = $db->table('board_file');
+                $builder->set('board_idx', $insert_id);
+                $builder->set('file_id', $file_id);
+                if (!$builder->insert()) {
+                    $result = false;
+                    $message = '파일 등록에 오류가 발생했습니다.';
+                    break;
+                }
+            }
         }
 
         $model_result = array();
         $model_result['result'] = $result;
         $model_result['message'] = $message;
         $model_result['insert_id'] = $insert_id;
+        $model_result['board_no'] = $board_no;
 
         return $model_result;
     }
@@ -318,16 +345,29 @@ class BoardModel extends Model
         $builder->where('board_idx', $board_idx);
         $result = $builder->update();
 
-        // board_idx 기준으로 삭제
-        $builder = $db->table('board_file');
-        $builder->where('board_idx', $board_idx);
-        $builder->delete();
+        if (!$result) {
+            $message = '게시물 수정에 오류가 발생했습니다.';
+        }
 
-        foreach ($file_arr as $file_id) {
+        // board_idx 기준으로 삭제
+        if ($result) {
             $builder = $db->table('board_file');
-            $builder->set('board_idx', $board_idx);
-            $builder->set('file_id', $file_id);
-            $builder->insert();
+            $builder->where('board_idx', $board_idx);
+            $builder->delete();
+        }
+
+        // board_file 삽입
+        if ($result) {
+            foreach ($file_arr as $file_id) {
+                $builder = $db->table('board_file');
+                $builder->set('board_idx', $board_idx);
+                $builder->set('file_id', $file_id);
+                if (!$builder->insert()) {
+                    $result = false;
+                    $message = '파일 등록에 오류가 발생했습니다.';
+                    break;
+                }
+            }
         }
 
         $model_result = array();
@@ -361,9 +401,9 @@ class BoardModel extends Model
 
         $db->transComplete();
 
-        if ($db->transStatus() === false) {
+        if (!$result || $db->transStatus() === false) {
             $result = false;
-            $message = '입력에 오류가 발생했습니다.';
+            $message = '삭제 중 오류가 발생했습니다.';
         }
 
         $model_result = array();
@@ -376,7 +416,7 @@ class BoardModel extends Model
     // 조회수 증가
     public function procBoardHitUpdate(array $data)
     {
-        $board_idx = $data["board_idx"];
+        $board_no = $data["board_no"];
         $board_id = $data["board_id"];
 
         $result = true;
@@ -385,13 +425,209 @@ class BoardModel extends Model
         $db = $this->db;
         $builder = $db->table("board");
         $builder->set("hit_cnt", "hit_cnt+1", false);
-        $builder->where("board_idx", $board_idx);
+        $builder->where("board_no", $board_no);
         $builder->where("board_id", $board_id);
         $result = $builder->update();
 
         $model_result = array();
         $model_result["result"] = $result;
         $model_result["message"] = $message;
+
+        return $model_result;
+    }
+
+    public function getBoardTempInfo(string $board_id, string $member_id)
+    {
+        $file_model = new FileModel();
+
+        $result = true;
+        $message = '임시저장 정보를 가져왔습니다.';
+        $exists = false;
+
+        $db = $this->db;
+        $builder = $db->table('board_temp');
+        $builder->where('board_id', $board_id);
+        $builder->where('ins_id', $member_id);
+        $info = $builder->get()->getRow();
+
+        if ($info) {
+            $exists = true;
+
+            $file_arr = array();
+            if (!empty($info->board_file_json)) {
+                $decoded = json_decode($info->board_file_json, true);
+                if (is_array($decoded)) {
+                    $file_arr = $decoded;
+                }
+            }
+
+            $file_list = array();
+            foreach ($file_arr as $file_id) {
+                if (!$file_id) {
+                    continue;
+                }
+
+                $file_info = $file_model->getFileInfo($file_id);
+                if ($file_info == null) {
+                    continue;
+                }
+
+                $file_info->file_size_kb = number_format($file_info->file_size / 1024, 2);
+                if (isset($file_info->image_width)) {
+                    $file_info->image_width_txt = number_format($file_info->image_width);
+                }
+                if (isset($file_info->image_height)) {
+                    $file_info->image_height_txt = number_format($file_info->image_height);
+                }
+
+                $file_obj = new \stdClass();
+                $file_obj->file_id = $file_id;
+                $file_obj->file_info = $file_info;
+                $file_list[] = $file_obj;
+            }
+
+            $info->file_list = $file_list;
+            $info->reg_date_txt = !empty($info->reg_date) ? convertTextToDate($info->reg_date, 1, 2) : date('Y-m-d H:i:s');
+
+            if ($info->main_image_id) {
+                $info->main_image_info = $file_model->getFileInfo($info->main_image_id);
+                if ($info->main_image_info) {
+                    $info->main_image_info->file_size_kb = number_format($info->main_image_info->file_size / 1024, 2);
+                    $info->main_image_info->image_width_txt = number_format($info->main_image_info->image_width);
+                    $info->main_image_info->image_height_txt = number_format($info->main_image_info->image_height);
+                }
+            } else {
+                $info->main_image_info = null;
+            }
+
+            if ($info->pdf_file_id) {
+                $info->pdf_file_info = $file_model->getFileInfo($info->pdf_file_id);
+                if ($info->pdf_file_info) {
+                    $info->pdf_file_info->file_size_kb = number_format($info->pdf_file_info->file_size / 1024, 2);
+                }
+            } else {
+                $info->pdf_file_info = null;
+            }
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['exists'] = $exists;
+        $proc_result['info'] = $info;
+
+        return $proc_result;
+    }
+
+    public function procBoardTempUpsert(array $data)
+    {
+        $user_id = getUserSessionInfo('member_id');
+        $today = date('YmdHis');
+
+        $result = true;
+        $message = '임시저장 되었습니다.';
+
+        $board_id = $data['board_id'];
+        $board_idx = $data['board_idx'];
+        $board_no = $data['board_no'];
+        $category = $data['category'];
+        $title = $data['title'];
+        $contents = $data['contents'];
+        $main_image_id = $data['main_image_id'];
+        $url_link = $data['url_link'];
+        $pdf_file_id = $data['pdf_file_id'];
+        $youtube_link = $data['youtube_link'];
+        $notice_yn = $data['notice_yn'];
+        $hit_cnt = $data['hit_cnt'];
+        $reg_date = $data['reg_date'];
+        $file_arr = $data['file_arr'];
+
+        $file_arr = array_values(array_filter($file_arr, function ($val) {
+            return !empty($val);
+        }));
+        $board_file_json = json_encode($file_arr, JSON_UNESCAPED_UNICODE);
+
+        $db = $this->db;
+        $builder = $db->table('board_temp');
+        $builder->where('board_id', $board_id);
+        $builder->where('ins_id', $user_id);
+        $existing = $builder->get()->getRow();
+
+        if ($existing) {
+            $builder = $db->table('board_temp');
+            $builder->set('board_idx', $board_idx);
+            $builder->set('board_no', $board_no);
+            $builder->set('category', $category);
+            $builder->set('title', $title);
+            $builder->set('contents', $contents);
+            $builder->set('main_image_id', $main_image_id);
+            $builder->set('url_link', $url_link);
+            $builder->set('pdf_file_id', $pdf_file_id);
+            $builder->set('youtube_link', $youtube_link);
+            $builder->set('notice_yn', $notice_yn);
+            $builder->set('hit_cnt', $hit_cnt);
+            $builder->set('reg_date', $reg_date);
+            $builder->set('board_file_json', $board_file_json);
+            $builder->set('upd_id', $user_id);
+            $builder->set('upd_date', $today);
+            $builder->where('board_id', $board_id);
+            $builder->where('ins_id', $user_id);
+            $result = $builder->update();
+        } else {
+            $builder = $db->table('board_temp');
+            $builder->set('board_idx', $board_idx);
+            $builder->set('board_no', $board_no);
+            $builder->set('board_id', $board_id);
+            $builder->set('category', $category);
+            $builder->set('title', $title);
+            $builder->set('contents', $contents);
+            $builder->set('main_image_id', $main_image_id);
+            $builder->set('url_link', $url_link);
+            $builder->set('pdf_file_id', $pdf_file_id);
+            $builder->set('youtube_link', $youtube_link);
+            $builder->set('notice_yn', $notice_yn);
+            $builder->set('hit_cnt', $hit_cnt);
+            $builder->set('reg_date', $reg_date);
+            $builder->set('board_file_json', $board_file_json);
+            $builder->set('ins_id', $user_id);
+            $builder->set('ins_date', $today);
+            $builder->set('upd_id', $user_id);
+            $builder->set('upd_date', $today);
+            $result = $builder->insert();
+        }
+
+        if (!$result) {
+            $message = '임시저장 중 오류가 발생했습니다.';
+        }
+
+        $model_result = array();
+        $model_result['result'] = $result;
+        $model_result['message'] = $message;
+
+        return $model_result;
+    }
+
+    public function procBoardTempDelete(string $board_id, string $member_id, ?object $db = null)
+    {
+        if ($db == null) {
+            $db = $this->db;
+        }
+
+        $result = true;
+        $message = '임시저장 글이 삭제되었습니다.';
+
+        $builder = $db->table('board_temp');
+        $builder->where('board_id', $board_id);
+        $builder->where('ins_id', $member_id);
+        $result = $builder->delete();
+
+        if (!$result) {
+            $message = '임시저장 글 삭제에 실패했습니다.';
+        }
+
+        $model_result = array();
+        $model_result['result'] = $result;
+        $model_result['message'] = $message;
 
         return $model_result;
     }

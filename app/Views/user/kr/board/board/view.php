@@ -214,7 +214,7 @@
 <?php   } ?>
                     <a href="/board/<?= $info->board_id ?>/list" class="btn btn-secondary">목록</a>
 <?php   if ($authority->edit_authority == "Y") { ?>
-                    <a href="/board/<?= $info->board_id ?>/edit/<?= $info->board_idx ?>" class="btn btn-primary">수정</a>
+                    <a href="/board/<?= $info->board_id ?>/edit/<?= $info->board_no ?>" class="btn btn-primary">수정</a>
 <?php   } ?>
                 </div>
             </div>

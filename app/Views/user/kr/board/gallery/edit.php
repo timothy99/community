@@ -1,7 +1,18 @@
+<?php
+/**
+ * @var object $info
+ * @var object $board_config
+ * @var bool $has_temp
+ * @var object|null $temp_info
+ * @var string $temp_loaded
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="board_idx" name="board_idx" value="<?= $info->board_idx ?>">
 <input type="hidden" id="board_id" name="board_id" value="<?= $info->board_id ?>">
+<input type="hidden" id="board_no" name="board_no" value="<?= $info->board_no ?>">
 <input type="hidden" id="main_image_hidden" name="main_image_hidden" value="<?= $info->main_image_id ?>">
 <input type="hidden" id="pdf_file_hidden" name="pdf_file_hidden" value="<?= $info->pdf_file_id ?>">
 
@@ -16,6 +27,23 @@
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
             <div class="card-body">
+
+<?php if (!empty($has_temp) && $has_temp === true) { ?>
+                <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+                    <div>
+                        임시저장 글이 있습니다.
+<?php if (!empty($temp_info) && !empty($temp_info->upd_date)) { ?>
+                        (최종 저장: <?= convertTextToDate($temp_info->upd_date, 1, 1) ?>)
+<?php } ?>
+<?php if (!empty($temp_loaded) && $temp_loaded === 'Y') { ?>
+                        <span class="ms-2 text-success">불러오기 완료</span>
+<?php } ?>
+                    </div>
+<?php if (empty($temp_loaded) || $temp_loaded !== 'Y') { ?>
+                    <a href="/board/<?= $info->board_id ?>/write?temp_load=Y" class="btn btn-sm btn-outline-dark">임시저장글 불러오기</a>
+<?php } ?>
+                </div>
+<?php } ?>
 
                 <!-- 공지여부 -->
                 <div class="mb-3">
@@ -201,6 +229,7 @@
 <?php } else { ?>
                     <a href="/board/<?= $info->board_id ?>/list" class="btn btn-secondary">취소</a>
 <?php } ?>
+                    <button type="button" class="btn btn-outline-primary" onclick="boardTempSave()">임시저장</button>
                     <button type="button" class="btn btn-primary" onclick="boardUpdate()">저장</button>
                 </div>
             </div>
@@ -269,6 +298,20 @@
 
     function boardUpdate() {
         ajax1('/board/<?= $info->board_id ?>/update', 'frm', 'boardUpdateAfter');
+    }
+
+    function boardTempSave() {
+        ajax1('/board/<?= $info->board_id ?>/temp/save', 'frm', 'boardTempSaveAfter');
+    }
+
+    function boardTempSaveAfter(proc_result) {
+        var result = proc_result.result;
+        var message = proc_result.message;
+        if (result == true) {
+            alert(message);
+        } else {
+            alert(message);
+        }
     }
 
     function boardUpdateAfter(proc_result) {
