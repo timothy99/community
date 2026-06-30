@@ -7,6 +7,7 @@
  * @var string $selected_language
  */
 ?>
+
 <header class="border-bottom mb-4">
     <nav class="navbar navbar-expand-md py-3">
         <div class="container-fluid px-0">

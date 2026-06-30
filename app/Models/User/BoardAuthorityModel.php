@@ -8,7 +8,7 @@ use CodeIgniter\Model;
 class BoardAuthorityModel extends Model
 {
     // 게시판에 대한 통합권한관리 정보 획득
-    public function getAuthorityInfo($data)
+    public function getAuthorityInfo(array $data)
     {
         $auth_group = getUserSessionInfo("auth_group");
         $member_id = getUserSessionInfo("member_id");
@@ -49,7 +49,7 @@ class BoardAuthorityModel extends Model
         return $authority_info;
     }
     // 게시판 관리자인지 확인하기
-    public function getAdminAuthorityInfo($data)
+    public function getAdminAuthorityInfo(array $data)
     {
         $admin_authority = "N";
 
@@ -78,7 +78,7 @@ class BoardAuthorityModel extends Model
     }
 
     // 게시물 목록 접근 정보
-    public function getListAuthorityInfo($data)
+    public function getListAuthorityInfo(array $data)
     {
         $list_authority = "N";
 
@@ -117,7 +117,7 @@ class BoardAuthorityModel extends Model
     }
 
     // 게시물 보기 권한 정보
-    public function getViewAuthorityInfo($data)
+    public function getViewAuthorityInfo(array $data)
     {
         $view_authority = "N";
 
@@ -156,7 +156,7 @@ class BoardAuthorityModel extends Model
     }
 
     // 게시물 쓰기 권한 정보 갖고 오기
-    public function getWriteAuthorityInfo($data)
+    public function getWriteAuthorityInfo(array $data)
     {
         $write_authority = "N";
 
@@ -189,7 +189,7 @@ class BoardAuthorityModel extends Model
     }
 
     // 게시물 수정 권한 정보 갖고 오기
-    public function getEditAuthorityInfo($data)
+    public function getEditAuthorityInfo(array $data)
     {
         $edit_authority = "N";
 
@@ -213,7 +213,7 @@ class BoardAuthorityModel extends Model
     }
 
     // 게시물 삭제 권한 정보 갖고 오기
-    public function getDeleteAuthorityInfo($data)
+    public function getDeleteAuthorityInfo(array $data)
     {
         $delete_authority = "N";
 

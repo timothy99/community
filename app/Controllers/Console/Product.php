@@ -156,6 +156,9 @@ class Product extends BaseController
             $product_category_list1 = array();
         }
 
+        $product_category_list2 = array();
+        $product_category_list3 = array();
+
         $model_result = $language_model->getLanguageUseList();
         $language_list = $model_result['list'];
 
@@ -173,6 +176,9 @@ class Product extends BaseController
         $info->file_list = array();
         $info->reg_date_txt = date('Y-m-d H:i:s');
         $info->hit_cnt = 0;
+        $info->option_list = array();
+        $info->image_list = array();
+        $info->main_image_file_info = null;
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -180,6 +186,8 @@ class Product extends BaseController
         $proc_result['info'] = $info;
         $proc_result['language_list'] = $language_list;
         $proc_result['product_category_list1'] = $product_category_list1;
+        $proc_result['product_category_list2'] = $product_category_list2;
+        $proc_result['product_category_list3'] = $product_category_list3;
 
         return aview('console/product/edit', $proc_result);
     }

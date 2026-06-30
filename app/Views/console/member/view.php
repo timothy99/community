@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var object $info
+ * @var array $list
+ */
+?>
+
 <form id="frm" name="frm" onsubmit="return false;">
 
 <input type="hidden" id="member_idx" name="member_idx" value="<?= $info->member_idx ?>">

@@ -64,7 +64,7 @@ class Comment extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function edit($board_comment_idx)
+    public function edit(int $board_comment_idx)
     {
         $comment_model = new CommentModel();
 

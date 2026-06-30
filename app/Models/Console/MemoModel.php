@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class MemoModel extends Model
 {
-    public function getMemoList($data)
+    public function getMemoList(array $data)
     {
         $result = true;
         $message = "목록 불러오기가 완료되었습니다.";
@@ -35,10 +35,12 @@ class MemoModel extends Model
         return $proc_result;
     }
 
-    public function getMemoInfo($member_memo_idx)
+    public function getMemoInfo(array $data)
     {
         $result = true;
         $message = "목록 불러오기가 완료되었습니다.";
+
+        $member_memo_idx = $data["member_memo_idx"];
 
         $db = $this->db;
         $builder = $db->table("member_memo");
@@ -57,7 +59,7 @@ class MemoModel extends Model
         return $proc_result;
     }
 
-    public function procMemoInsert($data)
+    public function procMemoInsert(array $data)
     {
         $user_id = getUserSessionInfo("member_id");
         $today = date("YmdHis");
@@ -98,7 +100,7 @@ class MemoModel extends Model
         return $model_result;
     }
 
-    public function procMemoUpdate($data)
+    public function procMemoUpdate(array $data)
     {
         // 게시판 입력과 관련된 기본 정보
         $user_id = getUserSessionInfo("member_id");
@@ -135,7 +137,7 @@ class MemoModel extends Model
         return $model_result;
     }
 
-    public function procMemoDelete($data)
+    public function procMemoDelete(array $data)
     {
         $member_id = getUserSessionInfo("member_id");
         $today = date("YmdHis");

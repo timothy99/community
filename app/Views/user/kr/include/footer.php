@@ -7,6 +7,7 @@
  * @var string $autotranslate_yn
 */
 ?>
+
             </div>
         </main>
 

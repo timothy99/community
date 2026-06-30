@@ -53,14 +53,12 @@ class Inquiry extends BaseController
         return aview('/console/inquiry/list', $proc_result);
     }
 
-    public function view()
+    public function view(int $inquiry_idx)
     {
         $inquiry_model = new InquiryModel();
 
         $result = true;
         $message = '정상';
-
-        $inquiry_idx = $this->request->getUri()->getSegment(4);
 
         $data = array();
         $data['inquiry_idx'] = $inquiry_idx;
@@ -116,7 +114,6 @@ class Inquiry extends BaseController
         $spreadsheet_model = new SpreadsheetModel();
 
         $search_page = $this->request->getGet('search_page') ?? 1;
-        // $search_rows = $this->request->getGet('search_rows') ?? 10; // 엑셀다운로드는 줄 수 제한 없음
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'name';
 

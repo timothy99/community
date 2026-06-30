@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var array $data
+ * @var array $list
+ * @var array $paging_info
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="search_page" name="search_page" value="<?= $data['search_page'] ?>">

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var object $config_info
+ */
+?>
+
 <form id="frm" name="frm">
 
 <div class="container">
@@ -32,6 +38,7 @@
                             <a href="/member/find/password" class="text-decoration-none">암호 찾기</a>
                         </div>
 
+<?php   if ($config_info->social_login_yn === 'Y') { ?>
                         <!-- 구분선 -->
                         <hr class="my-4">
 
@@ -40,6 +47,7 @@
                             <p class="text-center text-muted mb-2" style="font-size:0.85rem;">SNS 계정으로 간편 로그인</p>
                             <div class="d-flex justify-content-center gap-3">
 
+<?php       if ($config_info->sns_kakao_use_yn === 'Y') { ?>
                                 <!-- 카카오 -->
                                 <a href="/member/sns/kakao" class="sns-login-btn" title="카카오로 로그인" style="background-color:#FEE500; color:#000;">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +55,9 @@
                                     </svg>
                                     <span>카카오</span>
                                 </a>
+<?php       } ?>
 
+<?php       if ($config_info->sns_naver_use_yn === 'Y') { ?>
                                 <!-- 네이버 -->
                                 <a href="/member/sns/naver" class="sns-login-btn" title="네이버로 로그인" style="background-color:#03C75A; color:#fff;">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +65,9 @@
                                     </svg>
                                     <span>네이버</span>
                                 </a>
+<?php       } ?>
 
+<?php       if ($config_info->sns_google_use_yn === 'Y') { ?>
                                 <!-- 구글 -->
                                 <a href="/member/sns/google" class="sns-login-btn" title="구글로 로그인" style="background-color:#fff; color:#444; border: 1px solid #ddd;">
                                     <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -66,7 +78,9 @@
                                     </svg>
                                     <span>구글</span>
                                 </a>
+<?php       } ?>
 
+<?php       if ($config_info->sns_apple_use_yn === 'Y') { ?>
                                 <!-- 애플 (준비 중) -->
                                 <a href="#" class="sns-login-btn" title="애플로 로그인 (준비 중)" style="background-color:#000; color:#fff; opacity:0.4; cursor:not-allowed;" onclick="alert('애플 로그인은 현재 준비 중입니다.'); return false;">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -74,10 +88,11 @@
                                     </svg>
                                     <span>애플</span>
                                 </a>
+<?php       } ?>
 
                             </div>
                         </div>
-
+<?php   } ?>
                         <!-- 회원가입 버튼 -->
                         <div class="d-grid">
                             <a href="/member/register" class="btn btn-secondary">회원가입</a>

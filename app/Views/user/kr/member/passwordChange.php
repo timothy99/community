@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var object $info
+ */
+?>
+
 <form id="frm" name="frm">
 
 <input type="hidden" id="member_id" name="member_id" value="<?= $info->member_id ?>">

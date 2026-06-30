@@ -36,7 +36,7 @@ class MainModel extends Model
     }
 
     // 팝업 목록 갖고 오기
-    public function getPopupList($is_mobile)
+    public function getPopupList(bool $is_mobile)
     {
         $result = true;
         $message = '팝업 불러오기가 정상적으로 이루어졌습니다.';
@@ -71,7 +71,7 @@ class MainModel extends Model
     }
 
     // 최근 게시물 갖고 오기
-    public function getRecentContentsList($data)
+    public function getRecentContentsList(array $data)
     {
         $result = true;
         $message = '최근 게시물 불러오기가 정상적으로 이루어졌습니다.';

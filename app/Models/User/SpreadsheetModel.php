@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 
 class SpreadsheetModel extends Model
 {
-    public function procExcelWrite($content_list, $filename, $header_list)
+    public function procExcelWrite(array $content_list, string $filename, array $header_list)
     {
         $spreadsheet = new Spreadsheet();
 
@@ -53,7 +53,7 @@ class SpreadsheetModel extends Model
         exit;
     }
 
-    public function procExcelRead($file_info)
+    public function procExcelRead(object $file_info)
     {
         $result = false;
         $message = "엑셀파일을 올려주세요.";

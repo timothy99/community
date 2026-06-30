@@ -4,11 +4,10 @@ namespace App\Models\User;
 
 use CodeIgniter\Model;
 use App\Models\User\MemberModel;
-use PHPUnit\Event\TestSuite\Loaded;
 
 class CommentModel extends Model
 {
-    public function getCommentList($data)
+    public function getCommentList(array $data)
     {
         $member_model = new MemberModel();
 
@@ -39,7 +38,7 @@ class CommentModel extends Model
         return $proc_result;
     }
 
-    public function procCommentInsert($data)
+    public function procCommentInsert(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -94,7 +93,7 @@ class CommentModel extends Model
     }
 
     // 댓글 삭제
-    public function procCommentDelete($data)
+    public function procCommentDelete(array $data)
     {
         // 게시판 입력과 관련된 기본 정보
         $member_id = getUserSessionInfo('member_id');
@@ -148,7 +147,7 @@ class CommentModel extends Model
         return $model_result;
     }
 
-    public function getCommentInfo($board_comment_idx)
+    public function getCommentInfo(int $board_comment_idx)
     {
         $member_model = new MemberModel();
 
@@ -174,7 +173,7 @@ class CommentModel extends Model
         return $proc_result;
     }
 
-    public function procCommentUpdate($data)
+    public function procCommentUpdate(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');

@@ -32,7 +32,7 @@ class MailModel extends Model
         return $proc_result;
     }
 
-    public function procMailSend($data)
+    public function procMailSend(array $data)
     {
         $email = \Config\Services::email(); // 이메일 서비스 로드
 

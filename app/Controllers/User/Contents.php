@@ -12,14 +12,12 @@ class Contents extends BaseController
         return redirect()->to("/home/main");
     }
 
-    public function view()
+    public function view(string $contents_id)
     {
         $contents_model = new ContentsModel();
 
         $result = true;
         $message = "정상처리";
-
-        $contents_id = $this->request->getUri()->getSegment(2);
 
         $data = array();
         $data["contents_id"] = $contents_id;

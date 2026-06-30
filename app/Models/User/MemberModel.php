@@ -7,7 +7,7 @@ use App\Models\Common\DateModel;
 
 class MemberModel extends Model
 {
-    public function checkSigninInfo($data)
+    public function checkSigninInfo(array $data)
     {
         $result = true;
         $message = '회원가입이 완료되었습니다.';
@@ -89,7 +89,7 @@ class MemberModel extends Model
         return $proc_result;
     }
 
-    public function getMemberIdDuplicate($data)
+    public function getMemberIdDuplicate(array $data)
     {
         $result = true;
         $message = '중복된 아이디가 없습니다.';
@@ -138,7 +138,7 @@ class MemberModel extends Model
     }
 
     // 이메일 중복여부 확인
-    public function getEmailDuplicate($data)
+    public function getEmailDuplicate(array $data)
     {
         $result = true;
         $message = '중복된 이메일이 없습니다.';
@@ -166,7 +166,7 @@ class MemberModel extends Model
     }
 
     // 회원정보 입력
-    public function procMemberUpdate($data, $db)
+    public function procMemberUpdate(array $data, object $db = null)
     {
         $result = true;
         $message = '정상처리';
@@ -222,7 +222,7 @@ class MemberModel extends Model
     }
 
     // 회원 로그인 결과
-    public function getMemberLoginInfo($data)
+    public function getMemberLoginInfo(array $data)
     {
         $result = true;
         $message = '정상처리';
@@ -268,7 +268,7 @@ class MemberModel extends Model
     }
 
     // 이름과 이메일을 기준으로 회원 테이블에서 회원 정보찾기
-    public function getMemberInfoByNameAndEmail($data)
+    public function getMemberInfoByNameAndEmail(array $data)
     {
         $result = true;
         $message = '정상처리';
@@ -301,7 +301,7 @@ class MemberModel extends Model
     }
 
     // 아이디와 이메일을 기준으로 회원 테이블에서 회원 정보찾기
-    public function getPasswordInfo($data)
+    public function getPasswordInfo(array $data)
     {
         $result = true;
         $message = '정상처리';
@@ -325,7 +325,7 @@ class MemberModel extends Model
     }
 
     // 기존 리셋정보 삭제
-    public function procResetDelete($data, $db)
+    public function procResetDelete(array $data, object $db)
     {
         $result = true;
         $message = '정상처리';
@@ -346,7 +346,7 @@ class MemberModel extends Model
     }
 
     // 리셋정보 등록
-    public function procResetInsert($data, $db)
+    public function procResetInsert(array $data, object $db)
     {
         $result = true;
         $message = '정상처리';
@@ -375,7 +375,7 @@ class MemberModel extends Model
     }
 
     // 리셋키로 리셋정보 찾기
-    public function getResetInfo($data)
+    public function getResetInfo(array $data)
     {
         $result = true;
         $message = "정상처리";
@@ -395,7 +395,7 @@ class MemberModel extends Model
         return $proc_result;
     }
 
-    public function procPasswordReset($data)
+    public function procPasswordReset(array $data)
     {
         $result = true;
         $message = "암호초기화가 완료되었습니다. 다시 로그인해주세요.";
@@ -432,7 +432,7 @@ class MemberModel extends Model
     }
 
     // 회원 정보 가져오기
-    public function getMemberInfo($data)
+    public function getMemberInfo(array $data)
     {
         $result = true;
         $message = '정상처리';
@@ -460,7 +460,7 @@ class MemberModel extends Model
     }
 
     // 마이페이지 정보 업데이트
-    public function procMypageUpdate($data)
+    public function procMypageUpdate(array $data)
     {
         $today = date('YmdHis');
 
@@ -511,7 +511,7 @@ class MemberModel extends Model
     }
 
     // 암호 변경
-    public function procPasswordChange($data)
+    public function procPasswordChange(array $data)
     {
         $today = date('YmdHis');
 

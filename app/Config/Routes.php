@@ -124,7 +124,7 @@ $routes->get('/csl/contents/view/(:num)', 'Console\Contents::view/$1');
 $routes->post('/csl/contents/delete', 'Console\Contents::delete');
 
 $routes->get('/csl/menu/list', 'Console\Menu::list');
-$routes->get('/csl/menu/write', 'Console\Menu::write');
+$routes->get('/csl/menu/write/(:num)', 'Console\Menu::write/$1');
 $routes->get('/csl/menu/edit/(:num)', 'Console\Menu::edit/$1');
 $routes->post('/csl/menu/update', 'Console\Menu::update');
 $routes->get('/csl/menu/view/(:num)', 'Console\Menu::view/$1');
@@ -161,7 +161,7 @@ $routes->post('/csl/product/delete', 'Console\Product::delete');
 $routes->post('/csl/product/category', 'Console\Product::category');
 
 $routes->get('/csl/category/list', 'Console\Category::list');
-$routes->get('/csl/category/write', 'Console\Category::write');
+$routes->get('/csl/category/write/(:num)', 'Console\Category::write/$1');
 $routes->post('/csl/category/update', 'Console\Category::update');
 $routes->get('/csl/category/view/(:num)', 'Console\Category::view/$1');
 $routes->get('/csl/category/edit/(:num)', 'Console\Category::edit/$1');
@@ -180,19 +180,22 @@ $routes->post('/csl/comment/delete', 'Console\Comment::delete');
 $routes->post('/csl/comment/edit/(:num)', 'Console\Comment::edit');
 $routes->post('/csl/comment/update', 'Console\Comment::update');
 
-$routes->get('/csl/settings/board/list', 'Console\Settings\Board::list');
-$routes->get('/csl/settings/board/write', 'Console\Settings\Board::write');
-$routes->post('/csl/settings/board/update', 'Console\Settings\Board::update');
-$routes->get('/csl/settings/board/edit/(:num)', 'Console\Settings\Board::edit/$1');
-$routes->get('/csl/settings/board/view/(:num)', 'Console\Settings\Board::view/$1');
-$routes->post('/csl/settings/board/delete', 'Console\Settings\Board::delete');
-$routes->get('/csl/settings/board/(:alphanum)/admin/list', 'Console\Settings\Board::adminList/$1');
-$routes->post('/csl/settings/board/(:alphanum)/admin/search', 'Console\Settings\Board::adminSearch');
-$routes->post('/csl/settings/board/(:alphanum)/admin/insert', 'Console\Settings\Board::adminInsert');
-$routes->post('/csl/settings/board/(:alphanum)/admin/delete', 'Console\Settings\Board::adminDelete');
+$routes->get('/csl/settings/board/list', 'Console\Settings::Boardlist');
+$routes->get('/csl/settings/board/write', 'Console\Settings::BoardWrite');
+$routes->post('/csl/settings/board/update', 'Console\Settings::BoardUpdate');
+$routes->get('/csl/settings/board/edit/(:alphanum)', 'Console\Settings::BoardEdit/$1');
+$routes->get('/csl/settings/board/view/(:alphanum)', 'Console\Settings::BoardView/$1');
+$routes->post('/csl/settings/board/delete', 'Console\Settings::BoardDelete');
+$routes->get('/csl/settings/board/(:alphanum)/admin/list', 'Console\Settings::BoardAdminList/$1');
+$routes->post('/csl/settings/board/(:alphanum)/admin/search', 'Console\Settings::BoardAdminSearch');
+$routes->post('/csl/settings/board/(:alphanum)/admin/insert', 'Console\Settings::BoardAdminInsert');
+$routes->post('/csl/settings/board/(:alphanum)/admin/delete', 'Console\Settings::BoardAdminDelete');
 
 $routes->get('/csl/language/edit', 'Console\Language::edit');
 $routes->post('/csl/language/update', 'Console\Language::update');
+
+$routes->get('/csl/social/edit', 'Console\Social::edit');
+$routes->post('/csl/social/update', 'Console\Social::update');
 
 // 다국어 OFF: 언어 코드 없는 URL (/home/main)
 $userGetRoutes($routes);
@@ -222,6 +225,7 @@ $routes->post('/file/upload/original', 'User\File::uploadOriginal');
 $routes->post('/file/upload/dropzone', 'User\File::uploadDropzone');
 
 $routes->post('/board/(:alphanum)/update', 'User\Board::update/$1');
+$routes->post('/board/(:alphanum)/temp/save', 'User\Board::tempSave/$1');
 $routes->post('/board/(:alphanum)/delete', 'User\Board::delete');
 
 $routes->post('/main/popup/block', 'User\Home::popupBlock');

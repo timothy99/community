@@ -106,7 +106,7 @@ class Member extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function view($member_id)
+    public function view(string $member_id)
     {
         $member_model = new MemberModel();
         $memo_model = new MemoModel();
@@ -134,7 +134,7 @@ class Member extends BaseController
         return aview('console/member/view', $proc_result);
     }
 
-    public function edit($member_id)
+    public function edit(string $member_id)
     {
         $member_model = new MemberModel();
 
@@ -179,7 +179,7 @@ class Member extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function password($member_id)
+    public function password(string $member_id)
     {
         $member_model = new MemberModel();
 
@@ -289,7 +289,7 @@ class Member extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function memoView($member_memo_idx)
+    public function memoView(int $member_memo_idx)
     {
         $memo_model = new MemoModel();
 

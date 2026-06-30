@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $list
+ * @var int $cnt
+ */
+?>
+
                     <div class="table-responsive mt-3" id="search_result_table">
                         <table class="table table-bordered table-hover bg-white align-middle text-center mb-0 text-nowrap">
                             <thead class="table-info">

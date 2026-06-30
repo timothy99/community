@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var string $reset_key
+ */
+?>
+
 <form id="frm" name="frm">
 <input type="hidden" name="reset_key" value="<?=$reset_key ?>">
 

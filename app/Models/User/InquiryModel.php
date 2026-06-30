@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class InquiryModel extends Model
 {
-    public function procInquiryInsert($data)
+    public function procInquiryInsert(array $data)
     {
         $today = date('YmdHis');
 

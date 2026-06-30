@@ -30,7 +30,7 @@ class ConfigModel extends Model
         return $proc_result;
     }
 
-    public function procConfigUpdate($data)
+    public function procConfigUpdate(array $data)
     {
         $result = true;
         $message = '입력이 잘 되었습니다';

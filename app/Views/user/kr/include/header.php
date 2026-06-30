@@ -4,7 +4,6 @@
  * @var object $config_info
  * @var string $language
  */
-
 ?>
 
 <!DOCTYPE html>

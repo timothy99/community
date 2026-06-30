@@ -110,14 +110,12 @@ class Ip extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function view()
+    public function view(int $ip_idx)
     {
         $ip_model = new IpModel();
 
         $result = true;
         $message = '정상';
-
-        $ip_idx = $this->request->getUri()->getSegment(4);
 
         $data = array();
         $data['ip_idx'] = $ip_idx;
@@ -135,14 +133,12 @@ class Ip extends BaseController
         return aview('console/ip/view', $proc_result);
     }
 
-    public function edit()
+    public function edit(int $ip_idx)
     {
         $ip_model = new IpModel();
 
         $result = true;
         $message = '정상';
-
-        $ip_idx = $this->request->getUri()->getSegment(4);
 
         $data = array();
         $data['ip_idx'] = $ip_idx;

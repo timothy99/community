@@ -157,4 +157,5 @@ class Batch extends Controller
         $this->log('[완료] ' . date('Y-m-d H:i:s'));
         $this->log('');
     }
+
 }

@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var array $paging
+ * @var string $href_link
+ * @var string $http_query
+ */
+?>
+
 <nav>
     <ul class="pagination pagination-sm mb-0" id="pagination">
         <li class="page-item"><a class="page-link" href="<?=$href_link ?>?search_page=1&<?=$http_query ?>">&laquo;</a></li>

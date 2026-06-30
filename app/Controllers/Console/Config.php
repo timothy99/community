@@ -39,12 +39,7 @@ class Config extends BaseController
         $result = true;
         $message = '정상';
 
-        $config_idx = $this->request->getUri()->getSegment(4);
-
-        $data = array();
-        $data['config_idx'] = $config_idx;
-
-        $model_result = $config_model->getConfigInfo($data);
+        $model_result = $config_model->getConfigInfo();
         $info = $model_result['info'];
 
         $proc_result = array();

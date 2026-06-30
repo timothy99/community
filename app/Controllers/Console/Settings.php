@@ -89,6 +89,7 @@ class Settings extends BaseController
         $info->youtube_yn = 'N';
         $info->url_link_yn = 'N';
         $info->main_image_yn = 'N';
+        $info->new_days = 3;
 
         $authority_list = array();
 
@@ -228,7 +229,7 @@ class Settings extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function boardEdit($board_id)
+    public function boardEdit(string $board_id)
     {
         $settings_model = new SettingsModel();
 
@@ -287,7 +288,7 @@ class Settings extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function boardView($board_id)
+    public function boardView(string $board_id)
     {
         $settings_model = new SettingsModel();
 
@@ -324,7 +325,7 @@ class Settings extends BaseController
         return aview('console/settings/board/view', $proc_result);
     }
 
-    public function boardAdminList($board_id)
+    public function boardAdminList(string $board_id)
     {
         $settings_model = new SettingsModel();
 

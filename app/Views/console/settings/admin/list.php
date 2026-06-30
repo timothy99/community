@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $list
+ * @var string $board_id
+ */
+?>
+
 <form id="frm" name="frm" onsubmit="return false;">
 
 <input type="hidden" id="member_id" name="member_id">

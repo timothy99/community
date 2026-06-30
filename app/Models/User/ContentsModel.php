@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ContentsModel extends Model
 {
-    public function getContentsInfo($data)
+    public function getContentsInfo(array $data)
     {
         $result = true;
         $message = "목록 불러오기가 완료되었습니다.";

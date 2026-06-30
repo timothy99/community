@@ -117,7 +117,7 @@ class Contents extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function view($contents_idx)
+    public function view(int $contents_idx)
     {
         $contents_model = new ContentsModel();
 
@@ -137,11 +137,9 @@ class Contents extends BaseController
         return aview('console/contents/view', $proc_result);
     }
 
-    public function edit()
+    public function edit(int $contents_idx)
     {
         $contents_model = new ContentsModel();
-
-        $contents_idx = $this->request->getUri()->getSegment(4);
 
         $result = true;
         $message = '정상';

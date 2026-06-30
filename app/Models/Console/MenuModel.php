@@ -3,7 +3,6 @@
 namespace App\Models\Console;
 
 use CodeIgniter\Model;
-use App\Models\User\FileModel;
 
 class MenuModel extends Model
 {

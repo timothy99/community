@@ -7,7 +7,7 @@ use App\Models\User\FileModel;
 
 class PopupModel extends Model
 {
-    public function getPopupList($data)
+    public function getPopupList(array $data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
@@ -47,7 +47,7 @@ class PopupModel extends Model
         return $proc_result;
     }
 
-    public function getPopupInfo($data)
+    public function getPopupInfo(array $data)
     {
         $file_model = new FileModel();
 
@@ -83,7 +83,7 @@ class PopupModel extends Model
         return $proc_result;
     }
 
-    public function procPopupInsert($data)
+    public function procPopupInsert(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -136,10 +136,9 @@ class PopupModel extends Model
         return $model_result;
     }
 
-    public function procPopupUpdate($data)
+    public function procPopupUpdate(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
-        $today = date('YmdHis');
 
         $result = true;
         $message = '수정이 완료되었습니다.';
@@ -184,7 +183,7 @@ class PopupModel extends Model
         return $model_result;
     }
 
-    public function procPopupDelete($data)
+    public function procPopupDelete(array $data)
     {
         $member_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');

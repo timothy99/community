@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var object $info
+ */
+?>
+
 <form id="update_form_<?=$info->board_comment_idx ?>">
     <div class="tbl-label"><?= $info->member_info->member_nickname ?></div>
     <div class="tbl-value">

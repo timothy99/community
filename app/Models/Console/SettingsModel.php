@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class SettingsModel extends Model
 {
-    public function getBoardList($data)
+    public function getBoardList(array $data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
@@ -63,7 +63,7 @@ class SettingsModel extends Model
         return $random_board_number;
     }
 
-    public function procBoardInsert($data)
+    public function procBoardInsert(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -183,7 +183,7 @@ class SettingsModel extends Model
         return $model_result;
     }
 
-    public function procBoardUpdate($data)
+    public function procBoardUpdate(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -299,7 +299,7 @@ class SettingsModel extends Model
         return $model_result;
     }
 
-    public function getBoardInfo($data)
+    public function getBoardInfo(array $data)
     {
         $result = true;
         $message = '게시판 정보를 불러왔습니다.';
@@ -325,7 +325,7 @@ class SettingsModel extends Model
         return $proc_result;
     }
 
-    public function procBoardDelete($data)
+    public function procBoardDelete(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -360,7 +360,7 @@ class SettingsModel extends Model
     }
 
     // 게시판 관리자 목록 갖고오기
-    public function getBoardAdminList($data)
+    public function getBoardAdminList(array $data)
     {
         $member_model = new MemberModel();
 
@@ -395,7 +395,7 @@ class SettingsModel extends Model
     }
 
     // 회원목록 갖고 오기
-    public function getMemberList($data)
+    public function getMemberList(array $data)
     {
         $result = true;
         $message = '회원 목록을 불러왔습니다.';
@@ -426,7 +426,7 @@ class SettingsModel extends Model
     }
 
     // 게시판 관리자 등록
-    public function procBoardAdminInsert($data)
+    public function procBoardAdminInsert(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -465,7 +465,7 @@ class SettingsModel extends Model
     }
 
     // 게시판 관리자 삭제
-    public function procBoardAdminDelete($data)
+    public function procBoardAdminDelete(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -499,7 +499,7 @@ class SettingsModel extends Model
     }
 
     // 게시판 권한 목록 불러오기
-    public function getBoardAuthorityList($data)
+    public function getBoardAuthorityList(array $data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';

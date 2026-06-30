@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var object $config_info
+ */
+?>
+
 <form id="frm" name="frm">
 
 <!-- Main Content -->

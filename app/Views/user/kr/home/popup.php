@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array $popup_list
+ */
+?>
+
 <?php   if (!empty($popup_list)) { ?>
 <div id="hd_pop_dim" class="hd_pop_dim"></div>
 <div id="hd_pop_wrap" class="hd_pop_wrap">

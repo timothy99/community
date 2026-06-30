@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class MemberModel extends Model
 {
-    public function getMemberList($data)
+    public function getMemberList(array $data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
@@ -40,7 +40,7 @@ class MemberModel extends Model
         return $proc_result;
     }
 
-    public function getMemberInfo($data)
+    public function getMemberInfo(array $data)
     {
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
@@ -68,7 +68,7 @@ class MemberModel extends Model
         return $proc_result;
     }
 
-    public function procMemberInsert($data)
+    public function procMemberInsert(array $data)
     {
         $user_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -123,7 +123,7 @@ class MemberModel extends Model
         return $model_result;
     }
 
-    public function procMemberUpdate($data)
+    public function procMemberUpdate(array $data)
     {
         // 게시판 입력과 관련된 기본 정보
         $user_id = getUserSessionInfo('member_id');
@@ -178,7 +178,7 @@ class MemberModel extends Model
         return $model_result;
     }
 
-    public function procMemberDelete($data)
+    public function procMemberDelete(array $data)
     {
         $session_member_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');
@@ -212,7 +212,7 @@ class MemberModel extends Model
         return $model_result;
     }
 
-    public function procPasswordUpdate($data)
+    public function procPasswordUpdate(array $data)
     {
         $session_member_id = getUserSessionInfo('member_id');
         $today = date('YmdHis');

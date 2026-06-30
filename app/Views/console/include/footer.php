@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var object $config_info
+ */
+?>
+
+<
         <!-- Sticky Footer -->
         <footer class="footer mt-auto py-3 bg-body-tertiary">
             <div class="container-fluid text-end">

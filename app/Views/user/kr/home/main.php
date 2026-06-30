@@ -1,8 +1,10 @@
 <?php
-/** @var array $slide_list */
-/** @var array $notice_list */
-/** @var array $faq_list */
-/** @var array $gallery_list */
+/** 
+ * @var array $slide_list
+ * @var array $notice_list
+ * @var array $faq_list
+ * @var array $gallery_list
+ */
 ?>
 <?php   include_once 'popup.php'; ?>
 
@@ -51,7 +53,7 @@
                 <ul class="list-group list-group-flush">
 <?php    foreach ($notice_list as $no => $val) { ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
-                        <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="text-decoration-none text-truncate me-2" style="min-width:0">
+                        <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_no ?>" class="text-decoration-none text-truncate me-2" style="min-width:0">
                             <?= $val->title ?>
                         </a>
                         <small class="text-muted flex-shrink-0"><?= $val->ins_date_txt ?></small>
@@ -75,7 +77,7 @@
                 <ul class="list-group list-group-flush">
 <?php    foreach ($faq_list as $no => $val) { ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
-                        <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="text-decoration-none text-truncate me-2" style="min-width:0">
+                        <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_no ?>" class="text-decoration-none text-truncate me-2" style="min-width:0">
                             <?= $val->title ?>
                         </a>
                         <small class="text-muted flex-shrink-0"><?= $val->ins_date_txt ?></small>
@@ -92,12 +94,12 @@
 <?php   foreach ($gallery_list as $no => $val) { ?>
     <div class="col-6 col-md-3 mb-4">
         <div class="card rounded-0 h-100 d-flex flex-column">
-            <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="ratio ratio-1x1 overflow-hidden">
+            <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_no ?>" class="ratio ratio-1x1 overflow-hidden">
                 <img src="/file/view/<?= $val->main_image_id ?>" class="rounded-0 object-fit-cover w-100 h-100" alt="<?= $val->title ?>">
             </a>
             <div class="card-body d-flex flex-column">
                 <p class="card-text flex-grow-1">
-                    <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_idx ?>" class="text-decoration-none text-truncate me-2">
+                    <a href="/board/<?= $val->board_id ?>/view/<?= $val->board_no ?>" class="text-decoration-none text-truncate me-2">
                         <?= $val->title ?>
                     </a>
                 <p class="card-text mb-0 text-end">

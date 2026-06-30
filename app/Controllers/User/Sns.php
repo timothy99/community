@@ -4,12 +4,47 @@ namespace App\Controllers\User;
 
 use App\Controllers\BaseController;
 use App\Libraries\SnsOAuth;
+use App\Models\User\ConfigModel;
 use App\Models\User\SnsModel;
 
 class Sns extends BaseController
 {
     /** 허용된 SNS provider 목록 (apple은 UI만 표시, 미구현) */
-    private const ALLOWED_PROVIDERS = ['naver', 'kakao', 'google'];
+    private const ALLOWED_PROVIDERS = ['naver', 'kakao', 'google', 'apple'];
+
+    private function getConfigInfo(): object
+    {
+        $config_model = new ConfigModel();
+        $model_result = $config_model->getConfigInfo();
+
+        return $model_result['info'];
+    }
+
+    private function isProviderEnabled(string $provider): bool
+    {
+        $config_info = $this->getConfigInfo();
+        $social_login_yn = property_exists($config_info, 'social_login_yn') ? $config_info->social_login_yn : 'N';
+
+        if ($social_login_yn !== 'Y') {
+            return false;
+        }
+
+        $provider_column = [
+            'kakao'  => 'sns_kakao_use_yn',
+            'naver'  => 'sns_naver_use_yn',
+            'google' => 'sns_google_use_yn',
+            'apple'  => 'sns_apple_use_yn',
+        ];
+
+        if (!isset($provider_column[$provider])) {
+            return false;
+        }
+
+        $column = $provider_column[$provider];
+        $use_yn = property_exists($config_info, $column) ? $config_info->{$column} : 'N';
+
+        return $use_yn === 'Y';
+    }
 
     /** CSRF 방지용 state 생성 */
     private function generateState(): string
@@ -23,8 +58,13 @@ class Sns extends BaseController
      */
     public function start(string $provider)
     {
-        if (!in_array($provider, self::ALLOWED_PROVIDERS, true)) {
-            redirect_alert('지원하지 않는 SNS입니다.', '/member/login');
+        if (!in_array($provider, self::ALLOWED_PROVIDERS, true) || !$this->isProviderEnabled($provider)) {
+            redirect_alert('지원하지 않거나 비활성화된 SNS입니다.', '/member/login');
+            exit;
+        }
+
+        if ($provider === 'apple') {
+            redirect_alert('애플 로그인은 현재 준비 중입니다.', '/member/login');
             exit;
         }
 
@@ -50,8 +90,13 @@ class Sns extends BaseController
             return redirect()->to('/member/login');
         }
 
-        if (!in_array($provider, self::ALLOWED_PROVIDERS, true)) {
-            redirect_alert('지원하지 않는 SNS입니다.', '/member/mypage');
+        if (!in_array($provider, self::ALLOWED_PROVIDERS, true) || !$this->isProviderEnabled($provider)) {
+            redirect_alert('지원하지 않거나 비활성화된 SNS입니다.', '/member/mypage');
+            exit;
+        }
+
+        if ($provider === 'apple') {
+            redirect_alert('애플 로그인은 현재 준비 중입니다.', '/member/mypage');
             exit;
         }
 
@@ -72,8 +117,13 @@ class Sns extends BaseController
      */
     public function callback(string $provider)
     {
-        if (!in_array($provider, self::ALLOWED_PROVIDERS, true)) {
-            redirect_alert('지원하지 않는 SNS입니다.', '/member/login');
+        if (!in_array($provider, self::ALLOWED_PROVIDERS, true) || !$this->isProviderEnabled($provider)) {
+            redirect_alert('지원하지 않거나 비활성화된 SNS입니다.', '/member/login');
+            exit;
+        }
+
+        if ($provider === 'apple') {
+            redirect_alert('애플 로그인은 현재 준비 중입니다.', '/member/login');
             exit;
         }
 
@@ -208,7 +258,7 @@ class Sns extends BaseController
 
         $sns_type = $this->request->getPost('sns_type', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if (!in_array($sns_type, self::ALLOWED_PROVIDERS, true)) {
+        if (!in_array($sns_type, self::ALLOWED_PROVIDERS, true) || $sns_type === 'apple') {
             return $this->response->setJSON([
                 'result'  => false,
                 'message' => '지원하지 않는 SNS입니다.',

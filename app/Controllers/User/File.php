@@ -47,7 +47,7 @@ class File extends BaseController
         $data['resize_width'] = 2000; // 이미지일 경우 지정한 해상도보다 높은 경우 줄인다. 반드시 0 이상을 입력해야한다.
         $data['resize_height'] = 0; // 이미지 해상도를 0으로 지정한 경우 리사이징을 하지 않는다. width도 마찬가지
         $data['limit_size'] = 10; // 업로드 제한 사이즈 메가바이트 단위로 입력. 반드시 0 이상을 입력해야한다.
-        $data['board_id'] = $this->request->getPost('board_id'); // 게시판 아이디
+        $data['board_id'] = (string)$this->request->getPost('board_id'); // 게시판 아이디
         $file_idxs = $this->request->getPost('file_idxs');
         $data['file_list'] = ($file_idxs !== '' && $file_idxs !== null) ? explode('||', $file_idxs) : []; // 기존에 업로드 되어 있던 파일 아이디들
         $data['allowed_type'] = 'both';  // 업로드를 허용할 타입을 결정.
@@ -118,7 +118,7 @@ class File extends BaseController
     }
 
     // 파일 보기 모드
-    public function view($file_id)
+    public function view(string $file_id)
     {
         $file_model = new FileModel();
 
@@ -140,7 +140,7 @@ class File extends BaseController
     {
         $file_model = new FileModel();
 
-        $file_id = $this->request->getUri()->getSegment(3);
+        $file_id = (string)$this->request->getUri()->getSegment(3);
 
         $file_info = $file_model->getFileInfo($file_id); // 파일소유권 확인 및 파일 정보 확인
         $file_download = $this->response->download($file_info->file_path, null)->setFileName($file_info->file_name_org); // 파일 다운로드

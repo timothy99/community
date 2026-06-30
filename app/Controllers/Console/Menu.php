@@ -117,8 +117,6 @@ class Menu extends BaseController
             } else {
                 $model_result = $menu_model->procMenuUpdate($data);
             }
-
-
         }
 
         $proc_result = array();
@@ -130,7 +128,7 @@ class Menu extends BaseController
         return $this->response->setJSON($proc_result);
     }
 
-    public function edit()
+    public function edit(int $menu_idx)
     {
         $menu_model = new MenuModel();
         $language_model = new LanguageModel();
@@ -140,8 +138,6 @@ class Menu extends BaseController
 
         $model_result = $language_model->getLanguageList();
         $language_list = $model_result['list'];
-
-        $menu_idx = $this->request->getUri()->getSegment(4);
 
         $data = array();
         $data['menu_idx'] = $menu_idx;
