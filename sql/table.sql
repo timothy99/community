@@ -25,6 +25,18 @@ create table mng_member (
     primary key (member_idx)
 ) comment='회원정보' collate='utf8mb4_unicode_ci';
 
+drop table if exists mng_member_sns;
+create table mng_member_sns (
+    sns_idx int not null auto_increment comment '인덱스',
+    member_idx int not null comment '회원 인덱스',
+    sns_type varchar(20) not null comment 'SNS 타입 (kakao, naver, google, apple)',
+    sns_id varchar(200) not null comment 'SNS 고유 ID',
+    ins_date varchar(14) not null comment '연결일',
+    primary key (sns_idx),
+    unique key sns_index1 (sns_type, sns_id),
+    key sns_index2 (member_idx)
+) comment='SNS 연결 정보' collate='utf8mb4_unicode_ci';
+
 drop table if exists mng_member_reset;
 create table mng_member_reset (
     member_reset_idx int not null auto_increment comment '인덱스',
@@ -89,6 +101,7 @@ drop table if exists mng_board;
 create table mng_board (
     board_idx int not null auto_increment comment '게시물 번호',
     board_idx_desc int not null default 0 comment '게시물 번호 역순',
+    board_no int not null default 0 comment '게시물 번호 8자리 랜덤번호',
     board_id varchar(20) default null comment '게시판 아이디',
     category varchar(20) default null comment '카테고리',
     title varchar(1000) not null comment '제목',
@@ -111,6 +124,7 @@ create table mng_board (
     key board_index2 (board_id, notice_yn, category, board_idx_desc),
     key board_index3 (board_id, notice_yn, category, reg_date),
     key board_index4 (board_id, ins_id, board_idx_desc),
+    key board_index5 (main_image_id),
     primary key (board_idx)
 ) comment='게시판' collate='utf8mb4_unicode_ci';
 
@@ -153,6 +167,32 @@ create table mng_board_file (
     key board_file_index2 (file_id),
     primary key (board_file_idx)
 ) comment='게시판 파일' collate='utf8mb4_unicode_ci';
+
+drop table if exists mng_board_temp;
+create table mng_board_temp (
+    board_temp_idx int not null auto_increment comment '임시저장 인덱스',
+    board_idx int not null default 0 comment '게시물 번호(수정 시 원본 board_idx)',
+    board_no int not null default 0 comment '게시물 번호 8자리 랜덤번호',
+    board_id varchar(20) not null comment '게시판 아이디',
+    category varchar(20) default null comment '카테고리',
+    title varchar(1000) null comment '제목',
+    contents longtext null comment '내용',
+    main_image_id varchar(32) default null comment '대표이미지 id',
+    url_link varchar(500) default null comment '인터넷 링크',
+    pdf_file_id varchar(32) default null comment 'pdf 파일 id',
+    youtube_link varchar(500) default null comment '유튜브 링크',
+    hit_cnt int not null default 0 comment '조회수',
+    reg_date varchar(14) null comment '등록일',
+    notice_yn enum('Y', 'N') not null default 'N' comment '공지 여부',
+    board_file_json longtext null comment '첨부파일 file_id JSON 목록',
+    ins_id varchar(70) not null comment '입력자',
+    ins_date varchar(14) not null comment '입력일',
+    upd_id varchar(70) not null comment '수정자',
+    upd_date varchar(14) not null comment '수정일',
+    unique key board_temp_index1 (board_id, ins_id),
+    key board_temp_index2 (upd_date),
+    primary key (board_temp_idx)
+) comment='게시판 임시저장' collate='utf8mb4_unicode_ci';
 
 drop table if exists mng_board_config;
 create table mng_board_config (
@@ -225,6 +265,7 @@ create table mng_file (
     upd_id varchar(70) not null comment '수정자',
     upd_date varchar(14) not null comment '수정일',
     unique key file_index1 (file_id),
+    key file_index2 (file_name_uploaded),
     primary key (file_idx)
 ) comment='파일 정보' collate='utf8mb4_unicode_ci';
 
@@ -246,7 +287,7 @@ create table mng_contents (
 drop table if exists mng_slide;
 create table mng_slide (
     slide_idx int auto_increment comment '슬라이드 인덱스',
-    language varchar(20) not null default 'kor' comment '언어',
+    language varchar(20) not null default 'kr' comment '언어',
     title varchar(1000) not null comment '제목',
     sub_title varchar(1000) null comment '부제목',
     contents varchar(4000) not null comment '내용-슬라이드에선 실제 내용 출력되지 않으므로 alt내용을 의미함',
@@ -261,12 +302,13 @@ create table mng_slide (
     ins_date varchar(14) not null comment '입력일',
     upd_id varchar(70) not null comment '수정자',
     upd_date varchar(14) not null comment '수정일',
+    key slide_index (slide_file),
     primary key (slide_idx)
 ) comment '슬라이드' collate='utf8mb4_unicode_ci';
 
 drop table if exists mng_popup;
 create table mng_popup (
-    popup_idx int auto_increment comment '팝업 인덱스' primary key,
+    popup_idx int auto_increment comment '팝업 인덱스',
     title varchar(1000) not null comment '제목',
     popup_file varchar(32) null comment '레이어 팝업 이미지',
     url_link varchar(1000) not null comment 'http 링크',
@@ -278,7 +320,10 @@ create table mng_popup (
     ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
     upd_id varchar(70) not null comment '수정자',
-    upd_date varchar(14) not null comment '수정일'
+    upd_date varchar(14) not null comment '수정일',
+    key popup_index1 (display_yn, start_date, end_date, del_yn),
+    key popup_index2 (popup_file),
+    primary key (popup_idx)
 ) comment '레이어 팝업' collate='utf8mb4_unicode_ci';
 
 drop table if exists mng_inquiry;
@@ -312,6 +357,21 @@ create table mng_config (
     biz_no varchar(12) null comment '사업자등록번호',
     company_logo varchar(32) null comment '회사로고',
     program_ver varchar(32) null comment '프로그램 버젼',
+    social_login_yn enum('Y', 'N') default 'N' null comment 'SNS 로그인 기능 사용 여부',
+    sns_kakao_use_yn enum('Y', 'N') default 'N' null comment '카카오 로그인 사용 여부',
+    sns_naver_use_yn enum('Y', 'N') default 'N' null comment '네이버 로그인 사용 여부',
+    sns_google_use_yn enum('Y', 'N') default 'N' null comment '구글 로그인 사용 여부',
+    sns_apple_use_yn enum('Y', 'N') default 'N' null comment '애플 로그인 사용 여부',
+    sns_kakao_client_id varchar(255) null comment '카카오 Client ID',
+    sns_kakao_client_secret varchar(255) null comment '카카오 Client Secret',
+    sns_naver_client_id varchar(255) null comment '네이버 Client ID',
+    sns_naver_client_secret varchar(255) null comment '네이버 Client Secret',
+    sns_google_client_id varchar(255) null comment '구글 Client ID',
+    sns_google_client_secret varchar(255) null comment '구글 Client Secret',
+    sns_apple_client_id varchar(255) null comment '애플 Client ID',
+    sns_apple_team_id varchar(255) null comment '애플 Team ID',
+    sns_apple_key_id varchar(255) null comment '애플 Key ID',
+    sns_apple_private_key text null comment '애플 Private Key',
     smtp_yn varchar(1) default 'N' not null comment '메일발송기능 사용여부',
     smtp_host varchar(200) null comment 'SMTP 호스트',
     smtp_user varchar(200) null comment 'SMTP 사용자아이디',
@@ -331,6 +391,7 @@ create table mng_language (
     language_name varchar(100) null comment '언어 이름',
     language_org varchar(100) null comment '언어 원어',
     use_yn enum('Y', 'N') default 'N' not null comment '사용 여부',
+    autotranslate_yn enum('Y', 'N') default 'N' not null comment '자동 번역 여부',
     ins_id varchar(70) not null comment '입력자',
     ins_date varchar(14) not null comment '입력일',
     upd_id varchar(70) not null comment '수정자',
@@ -358,7 +419,7 @@ drop table if exists mng_product_category;
 create table mng_product_category (
     product_category_idx int not null auto_increment comment '카테고리 번호',
     upper_idx int not null default 0 comment '상위 카테고리 번호 (1단계는 0)',
-    language varchar(20) not null default 'kor' comment '언어 코드',
+    language varchar(20) not null default 'kr' comment '언어 코드',
     idx1 int not null default 0 comment '인덱스1',
     idx2 int not null default 0 comment '인덱스2',
     idx3 int not null default 0 comment '인덱스3',
@@ -377,7 +438,7 @@ create table mng_product_category (
 drop table if exists mng_product;
 create table mng_product (
     product_idx int not null auto_increment comment '제품 번호',
-    language varchar(20) not null default 'kor' comment '언어 코드',
+    language varchar(20) not null default 'kr' comment '언어 코드',
     product_category_idx1 int not null default 0 comment '카테고리1 인덱스',
     product_category_idx2 int not null default 0 comment '카테고리2 인덱스',
     product_category_idx3 int not null default 0 comment '카테고리3 인덱스',
@@ -392,7 +453,8 @@ create table mng_product (
     ins_date varchar(14) not null comment '입력일',
     upd_id varchar(70) not null comment '수정자',
     upd_date varchar(14) not null comment '수정일',
-    key index1 (language, product_category_idx1, product_category_idx2, product_category_idx3, del_yn, reg_date),
+    key product_index1 (language, product_category_idx1, product_category_idx2, product_category_idx3, del_yn, reg_date),
+    key product_index2 (main_image_id),
     primary key (product_idx)
 ) comment='제품' collate='utf8mb4_unicode_ci';
 
@@ -407,7 +469,7 @@ create table mng_product_option (
     ins_date varchar(14) not null comment '입력일',
     upd_id varchar(70) not null comment '수정자',
     upd_date varchar(14) not null comment '수정일',
-    key index1 (product_idx),
+    key product_option_index1 (product_idx),
     primary key (product_option_idx)
 ) comment='제품 옵션' collate='utf8mb4_unicode_ci';
 
@@ -422,5 +484,6 @@ create table mng_product_image (
     upd_id varchar(70) not null comment '수정자',
     upd_date varchar(14) not null comment '수정일',
     key index1 (product_idx),
+    key index2 (file_id),
     primary key (product_image_idx)
 ) comment='제품 이미지' collate='utf8mb4_unicode_ci';
