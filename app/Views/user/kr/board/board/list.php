@@ -102,7 +102,7 @@
                                 <td><?=$val->category ?></td>
 <?php       } ?>
                                 <td class="text-start">
-                                    <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_no ?>">
+                                    <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_no ?><?= !empty($http_query) ? '?'.$http_query : '' ?>">
                                         <?=$val->title ?>
 <?php       if ($val->new_yn == 'Y') { ?>
                                         <span class="badge bg-danger ms-2">N</span>
@@ -129,7 +129,7 @@
                                 <td><?=$val->category ?></td>
 <?php       } ?>
                                 <td class="text-start">
-                                    <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_no ?>">
+                                    <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_no ?><?= !empty($http_query) ? '?'.$http_query : '' ?>">
                                         <?=$val->title ?>
 <?php       if ($val->new_yn == 'Y') { ?>
                                         <span class="badge bg-danger ms-2">N</span>
@@ -162,7 +162,7 @@
                 <div class="d-flex justify-content-between align-items-center">
 <?= $paging_info['paging_view'] ?>
 <?php   if ($authority->write_authority == "Y") { ?>
-                    <a href="/board/<?= $data['board_id'] ?>/write" type="button" class="btn btn-primary">등록</a>
+                    <a href="/board/<?= $data['board_id'] ?>/write<?= !empty($http_query) ? '?'.$http_query : '' ?>" type="button" class="btn btn-primary">등록</a>
 <?php   } ?>
                 </div>
             </div>

@@ -3,6 +3,8 @@
  * @var array $data
  * @var array $list
  * @var array $paging_info
+ * @var array $language_list
+ * @var object $config_info
  */
 ?>
 
@@ -39,6 +41,17 @@
                             <option value="meta_title">메타</option>
                         </select>
                     </div>
+<?php   if (($config_info->language_yn ?? 'N') === 'Y') { ?>
+                    <div class="col-md-4">
+                        <label for="search_language" class="form-label mb-1">언어</label>
+                        <select class="form-select" id="search_language" name="search_language">
+                            <option value="">전체</option>
+<?php       foreach ($language_list as $val) { ?>
+                            <option value="<?= $val->language_code ?>"><?= $val->language_name ?></option>
+<?php       } ?>
+                        </select>
+                    </div>
+<?php   } ?>
                     <div class="col-md-4">
                         <label for="search_text" class="form-label mb-1">검색어</label>
                         <input type="text" class="form-control" id="search_text" name="search_text" placeholder="검색어를 입력하세요" value="<?= $data['search_text'] ?>">
@@ -60,6 +73,9 @@
                         <thead class="table-primary">
                             <tr>
                                 <th>번호</th>
+<?php   if (($config_info->language_yn ?? 'N') === 'Y') { ?>
+                                <th>언어</th>
+<?php   } ?>
                                 <th>제목</th>
                                 <th>아이디</th>
                                 <th>메타</th>
@@ -71,6 +87,9 @@
 <?php   foreach($list as $no => $val) { ?>
                             <tr>
                                 <td><?=$val->list_no ?></td>
+<?php   if (($config_info->language_yn ?? 'N') === 'Y') { ?>
+                                <td><?=$val->language ?></td>
+<?php   } ?>
                                 <td><a href="/csl/contents/view/<?=$val->contents_idx ?>"><?=$val->title ?></a></td>
                                 <td><?=$val->contents_id ?></td>
                                 <td><?=$val->meta_title ?></td>
@@ -80,7 +99,7 @@
 <?php   } ?>
 <?php   if (count($list) == 0) { ?>
                             <tr>
-                                <td colspan="6" class="text-center">데이터가 없습니다.</td>
+                                <td colspan="<?= (($config_info->language_yn ?? 'N') === 'Y') ? 7 : 6 ?>" class="text-center">데이터가 없습니다.</td>
                             </tr>
 <?php   } ?>
                         </tbody>
@@ -116,6 +135,8 @@
         var conditions = savedCondition ? savedCondition.split(',').filter(Boolean) : ['title'];
         $('#search_condition').val(conditions).trigger('change');
 
+        $('#search_language').val('<?= $data['search_language'] ?? "" ?>');
+
         $("#search_rows").val("<?= $data['search_rows'] ?>").prop("selected", true);
     });
 
@@ -132,8 +153,9 @@
         var search_text = $('#search_text').val();
         var selected = $('#search_condition').val();
         var search_condition = (selected && selected.length > 0) ? selected.join(',') : 'title';
+        var search_language = $('#search_language').length > 0 ? $('#search_language').val() : '';
         var search_rows = $('#search_rows').val();
         var search_page = $('#search_page').val();
-        location.href = '/csl/contents/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows;
+        location.href = '/csl/contents/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows+'&search_language='+search_language;
     }
 </script>

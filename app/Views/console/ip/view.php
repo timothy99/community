@@ -50,8 +50,8 @@
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
-                    <a href="/csl/ip/edit/<?= $info->ip_idx ?>" class="btn btn-primary">수정</a>
-                    <a href="/csl/ip/list" class="btn btn-secondary">목록</a>
+                    <a href="/csl/config/ip/edit/<?= $info->ip_idx ?>" class="btn btn-primary">수정</a>
+                    <a href="/csl/config/ip/list" class="btn btn-secondary">목록</a>
                     <a href="javascript:void(0)" class="btn btn-danger" onclick="ipDelete()">삭제</a>
                 </div>
             </div>
@@ -67,12 +67,12 @@
     $(window).on('load', function() {
         $('#li-config').addClass('active-level-1');
         $('#collapse-config').addClass('show').addClass('submenu');
-        $('#a-ip-list').addClass('active-level-2');
+        $('#a-config-ip-list').addClass('active-level-2');
     });
 
     function ipDelete() {
         if (confirm('정말 삭제하시겠습니까?')) {
-            ajax1('/csl/ip/delete', 'frm', 'ipDeleteAfter');
+            ajax1('/csl/config/ip/delete', 'frm', 'ipDeleteAfter');
         }
     }
 

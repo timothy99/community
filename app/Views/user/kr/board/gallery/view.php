@@ -4,13 +4,19 @@
  * @var object $info
  * @var array $comment_list
  * @var object $authority
+ * @var string $http_query
  */
+
+$renderComment = static function ($comment) {
+    return preg_match('/<[^>]+>/', $comment) ? $comment : nl2br($comment);
+};
 ?>
 
 <form id="frm" name="frm">
 
 <input type="hidden" id="board_idx" name="board_idx" value="<?= $info->board_idx ?>">
 <input type="hidden" id="board_id" name="board_id" value="<?= $info->board_id ?>">
+<input type="hidden" id="http_query" name="http_query" value="<?= $http_query ?>">
 
 <!-- Main Content -->
 <main id="main-content">
@@ -197,6 +203,12 @@
                         <div class="tbl-value"><?= number_format($info->hit_cnt) ?></div>
                     </div>
 <?php   } ?>
+<?php   if ($board_config->heart_yn == 'Y') { ?>
+                    <div class="row g-0 border-bottom">
+                        <div class="tbl-label">공감수</div>
+                        <div class="tbl-value"><span id="heart-cnt"><?= number_format($info->heart_cnt) ?></span></div>
+                    </div>
+<?php   } ?>
                     <div class="row g-0 border-bottom">
                         <div class="tbl-label">등록자</div>
                         <div class="tbl-value"><?= $info->ins_id ?></div>
@@ -207,14 +219,19 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer text-end">
+            <div class="card-footer">
                 <div class="d-flex gap-2 justify-content-end">
+<?php   if ($board_config->heart_yn == 'Y') { ?>
+                    <button type="button" id="heart-button" class="btn <?= $info->my_heart_yn == 'Y' ? 'btn-warning' : 'btn-outline-warning' ?>" onclick="boardHeartToggle()">
+                        공감
+                    </button>
+<?php   } ?>
 <?php   if ($authority->delete_authority == "Y") { ?>
                     <button type="button" class="btn btn-danger" onclick="boardDelete()">삭제</button>
 <?php   } ?>
-                    <a href="/board/<?= $info->board_id ?>/list" class="btn btn-secondary">목록</a>
+                    <a href="/board/<?= $info->board_id ?>/list<?= !empty($http_query) ? '?'.$http_query : '' ?>" class="btn btn-secondary">목록</a>
 <?php   if ($authority->edit_authority == "Y") { ?>
-                    <a href="/board/<?= $info->board_id ?>/edit/<?= $info->board_idx ?>" class="btn btn-primary">수정</a>
+                    <a href="/board/<?= $info->board_id ?>/edit/<?= $info->board_idx ?><?= !empty($http_query) ? '?'.$http_query : '' ?>" class="btn btn-primary">수정</a>
 <?php   } ?>
                 </div>
             </div>
@@ -235,43 +252,47 @@
                         </div>
                         <div class="tbl-value">
 <?php           if ($val->secret_yn == 'Y' && $authority->admin_authority != 'Y' && $val->ins_id != getUserSessionInfo('member_id')) { ?>
-                            <span class="badge bg-secondary"><i class="fas fa-lock"></i> 비밀댓글</span>
+                            <div class="comment-display"><span class="badge bg-secondary"><i class="fas fa-lock"></i> 비밀댓글</span></div>
 <?php           } else if ($val->secret_yn == 'Y') { ?>
-                            <span class="badge bg-secondary"><i class="fas fa-lock"></i></span><?= nl2br($val->comment) ?>
+                            <div class="comment-display"><span class="badge bg-secondary"><i class="fas fa-lock"></i></span><?= $renderComment($val->comment) ?></div>
 <?php           } else { ?>
-                            <?= nl2br($val->comment) ?>
+                            <div class="comment-display"><?= $renderComment($val->comment) ?></div>
 <?php           } ?>
+                            <div class="comment-edit-host d-none mt-3"></div>
                         </div>
 <?php           if ($val->ins_id == getUserSessionInfo("member_id") || $authority->admin_authority == "Y") { ?>
                         <div class="tbl-action">
-                            <button type="button" class="btn btn-sm btn-danger" onclick="commentDelete('<?=$val->board_comment_idx ?>')">삭제</button>
-                            <button type="button" class="btn btn-sm btn-success" onclick="commentEdit('<?=$val->board_comment_idx ?>')">수정</button>
+                            <button type="button" class="btn btn-sm btn-danger comment-row-action" onclick="commentDelete('<?=$val->board_comment_idx ?>')">삭제</button>
+                            <button type="button" class="btn btn-sm btn-success comment-row-action" onclick="commentEdit('<?=$val->board_comment_idx ?>')">수정</button>
                         </div>
 <?php           } ?>
                     </div>
 <?php       } ?>
                 </div>
 
-<?php       if ($authority->write_authority == 'Y') { ?>
-                <!-- 댓글 작성 -->
-                <div class="mt-4">
-                    <h5 class="mb-3">댓글 작성</h5>
-                    <div class="mb-3">
-                        <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="댓글을 입력하세요"></textarea>
-                    </div>
+                <div class="mt-4" id="comment-editor-root"<?= $authority->write_authority == 'Y' ? '' : ' style="display:none;"' ?>>
+                    <div id="comment-editor-panel">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="mb-0" id="comment-editor-title">댓글 작성</h5>
+                            <span class="badge bg-warning text-dark" id="comment-editor-mode" style="display:none;">수정 중</span>
+                        </div>
+                        <div class="mb-3">
+                            <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="댓글을 입력하세요"></textarea>
+                        </div>
 <?php           if ($board_config->secret_comment_yn == 'Y') { ?>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="secret_yn" name="secret_yn" value="Y">
-                            <label class="form-check-label" for="secret_yn"><i class="fas fa-lock"></i> 비밀 댓글</label>
+                        <div class="mb-3" id="comment-secret-wrap">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="secret_yn" name="secret_yn" value="Y">
+                                <label class="form-check-label" for="secret_yn"><i class="fas fa-lock"></i> 비밀 댓글</label>
+                            </div>
+                        </div>
+<?php           } ?>
+                        <div class="text-end d-flex gap-2 justify-content-end">
+                            <button type="button" class="btn btn-secondary" id="comment-cancel-btn" onclick="commentCancel()" style="display:none;">취소</button>
+                            <button type="button" class="btn btn-primary" id="comment-submit-btn" onclick="submitCommentEditor()">댓글 등록</button>
                         </div>
                     </div>
-<?php           } ?>
-                    <div class="text-end">
-                        <button type="button" class="btn btn-primary" onclick="commentInsert()">댓글 등록</button>
-                    </div>
                 </div>
-<?php       } ?>
             </div>
         </div>
 <?php   } ?>
@@ -285,11 +306,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <script>
+    const commentEditorState = {
+        mode: 'create',
+        board_comment_idx: null
+    };
+    const canCreateComment = <?= $authority->write_authority == 'Y' ? 'true' : 'false' ?>;
+
     // 메뉴강조
     $(window).on('load', function() {
         $('#a-board-top').addClass('active-level-1').attr({'data-bs-toggle': 'collapse', 'aria-expanded': 'true'});
         $('#collapse-board-top').addClass('show').addClass('submenu');
         $('#a-board-<?= $info->board_id ?>').addClass('active-level-2');
+
+        if ($('#comment').length > 0) {
+            initSummernote('#comment', { focus: false, height: 220 });
+            resetCommentEditor();
+        }
     });
 
     function boardDelete() {
@@ -313,40 +345,47 @@
         var update_form = new FormData();
         update_form.append('board_id', $('#board_id').val());
         update_form.append('board_idx', $('#board_idx').val());
-        update_form.append('comment', $('#comment').val());
-        var secret_yn = $('#secret_yn').is(':checked') ? 'Y' : 'N';
-        update_form.append('secret_yn', secret_yn);
+        update_form.append('comment', getCommentEditorCode());
+        update_form.append('secret_yn', getCommentSecretYn());
         ajax1('/comment/insert', update_form, 'commentAfter');
     }
 
     function commentEdit(board_comment_idx) {
-        console.log(board_comment_idx);
-        var update_form = new FormData();
-        update_form.append('board_comment_idx', board_comment_idx);
+        if (commentEditorState.mode === 'edit') {
+            alert('현재 댓글 수정이 진행 중입니다. 먼저 저장하거나 취소해주세요.');
+            return;
+        }
+
         ajax1('/comment/edit/'+board_comment_idx, 'frm', 'commentEditAfter');
     }
 
     function commentEditAfter(proc_result) {
-        var board_comment_idx = proc_result.board_comment_idx;
-        var return_html = proc_result.return_html;
-        $('#board_comment_idx_'+board_comment_idx).html(return_html);
+        if (proc_result.result !== true) {
+            alert(proc_result.message);
+            return;
+        }
+
+        activateCommentEditMode(proc_result.board_comment_idx, proc_result.comment || '', proc_result.secret_yn || 'N');
     }
 
     function commentUpdate(board_comment_idx) {
         var update_form = new FormData();
-        var comment = $('#comment_'+board_comment_idx).val();
-        var secret_yn = $('#secret_yn_'+board_comment_idx).val() || 'N';
         update_form.append('board_comment_idx', board_comment_idx);
-        update_form.append('comment', comment);
-        update_form.append('secret_yn', secret_yn);
+        update_form.append('comment', getCommentEditorCode());
+        update_form.append('secret_yn', getCommentSecretYn());
         ajax1('/comment/update', update_form, 'commentAfter');
     }
 
-    function commentCancel(board_comment_idx) {
-        location.reload();
+    function commentCancel() {
+        resetCommentEditor();
     }
 
     function commentDelete(board_comment_idx) {
+        if (commentEditorState.mode === 'edit') {
+            alert('현재 댓글 수정이 진행 중입니다. 먼저 저장하거나 취소해주세요.');
+            return;
+        }
+
         if(confirm('댓글을 삭제하나요? 삭제하면 복구가 불가능합니다.')) {
             var update_form = new FormData();
             update_form.append('board_comment_idx', board_comment_idx);
@@ -354,9 +393,138 @@
         }
     }
 
+    function submitCommentEditor() {
+        if (commentEditorState.mode === 'edit') {
+            commentUpdate(commentEditorState.board_comment_idx);
+            return;
+        }
+
+        commentInsert();
+    }
+
     function commentAfter() {
         location.reload();
     }
+
+    function getCommentEditorCode() {
+        if ($('#comment').length === 0) {
+            return '';
+        }
+
+        return $('#comment').summernote('code');
+    }
+
+    function setCommentEditorCode(comment) {
+        if ($('#comment').length === 0) {
+            return;
+        }
+
+        $('#comment').summernote('code', normalizeCommentForEditor(comment));
+    }
+
+    function normalizeCommentForEditor(comment) {
+        if (!comment) {
+            return '';
+        }
+
+        if (/<[^>]+>/.test(comment)) {
+            return comment;
+        }
+
+        return comment.replace(/\r\n|\r|\n/g, '<br>');
+    }
+
+    function activateCommentEditMode(board_comment_idx, comment, secret_yn) {
+        var $row = $('#board_comment_idx_' + board_comment_idx);
+        var $host = $row.find('.comment-edit-host');
+
+        $('.comment-display').show();
+        $('.comment-edit-host').addClass('d-none').empty();
+        $('.tbl-action').show();
+
+        $('#comment-editor-root').hide();
+        $row.find('.comment-display').hide();
+        $row.find('.tbl-action').hide();
+        $host.removeClass('d-none').append($('#comment-editor-panel'));
+
+        $('#comment-editor-title').text('댓글 수정');
+        $('#comment-editor-mode').show();
+        $('#comment-cancel-btn').show();
+        $('#comment-submit-btn').text('댓글 저장');
+
+        setCommentEditorCode(comment);
+        setCommentSecretYn(secret_yn);
+        setCommentActionLock(true);
+
+        commentEditorState.mode = 'edit';
+        commentEditorState.board_comment_idx = board_comment_idx;
+    }
+
+    function resetCommentEditor() {
+        $('#comment-editor-root').append($('#comment-editor-panel'));
+        $('.comment-display').show();
+        $('.comment-edit-host').addClass('d-none').empty();
+        $('.tbl-action').show();
+        $('#comment-editor-title').text('댓글 작성');
+        $('#comment-editor-mode').hide();
+        $('#comment-cancel-btn').hide();
+        $('#comment-submit-btn').text('댓글 등록');
+        setCommentEditorCode('');
+        setCommentSecretYn('N');
+        setCommentActionLock(false);
+
+        if (canCreateComment) {
+            $('#comment-editor-root').show();
+        } else {
+            $('#comment-editor-root').hide();
+        }
+
+        commentEditorState.mode = 'create';
+        commentEditorState.board_comment_idx = null;
+    }
+
+    function getCommentSecretYn() {
+        if ($('#secret_yn').length === 0) {
+            return 'N';
+        }
+
+        return $('#secret_yn').is(':checked') ? 'Y' : 'N';
+    }
+
+    function setCommentSecretYn(secret_yn) {
+        if ($('#secret_yn').length === 0) {
+            return;
+        }
+
+        $('#secret_yn').prop('checked', secret_yn === 'Y');
+    }
+
+    function setCommentActionLock(isLocked) {
+        $('.comment-row-action').prop('disabled', isLocked);
+    }
+
+<?php if ($board_config->heart_yn == 'Y') { ?>
+    function boardHeartToggle() {
+        var update_form = new FormData();
+        update_form.append('board_idx', $('#board_idx').val());
+        ajax1('/board/<?= $info->board_id ?>/heart/toggle', update_form, 'boardHeartToggleAfter');
+    }
+
+    function boardHeartToggleAfter(proc_result) {
+        var result = proc_result.result;
+        var message = proc_result.message;
+        if (result == true) {
+            if (proc_result.heart_yn == 'Y') {
+                $('#heart-button').removeClass('btn-outline-warning').addClass('btn-warning');
+            } else {
+                $('#heart-button').removeClass('btn-warning').addClass('btn-outline-warning');
+            }
+            $('#heart-cnt').text(Number(proc_result.heart_cnt).toLocaleString());
+        } else {
+            alert(message);
+        }
+    }
+<?php } ?>
 
 <?php if ($board_config->pdf_yn == 'Y' && $info->pdf_file_info != null) { ?>
     // PDF.js 초기화

@@ -19,9 +19,8 @@ function nl2br_rn($string)
 // html 헤드의 메타정보 데이터 생성
 function create_meta($title, $description = '')
 {
-    $config_model = new \App\Models\User\ConfigModel();
-    $model_result = $config_model->getConfigInfo();
-    $config_info = $model_result['info'];
+    helper('config');
+    $config_info = getConfigInfoCached();
 
     $title_arr = explode(' > ', $title);
     $nav_title = $title_arr[count($title_arr)-1];
@@ -33,10 +32,10 @@ function create_meta($title, $description = '')
     $html_meta['og']['type'] = 'website';
     $html_meta['og']['title'] = $html_meta['meta']['title'];
     $html_meta['og']['description'] = $html_meta['meta']['description'];
-    $html_meta['og']['image'] = env('app.baseURL').'/file/view/'.$config_info->company_logo;
+    $html_meta['og']['image'] = env('app.baseURL').'/file/view/'.($config_info?->company_logo ?? '');
     $html_meta['og']['url'] = current_url();
-    $html_meta['og']['site_name'] = $config_info->title;
-    $html_meta['og']['locale'] = code_replace('locale', getUserSessionInfo('language'));
+    $html_meta['og']['site_name'] = $config_info?->title ?? '';
+    $html_meta['og']['locale'] = code_replace('locale', getRequestLanguageFromUri());
     $html_meta['canonical'] = current_url();
     $html_meta['favicon'] = env('app.baseURL').'/favicon.ico';
 

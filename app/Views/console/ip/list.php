@@ -48,7 +48,7 @@
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
                     <button type="button" class="btn btn-success" onclick="search()">검색</button>
-                    <a href="/csl/ip/list" class="btn btn-secondary">초기화</a>
+                    <a href="/csl/config/ip/list" class="btn btn-secondary">초기화</a>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
 <?php   foreach($list as $no => $val) { ?>
                             <tr>
                                 <td><?=$val->list_no ?></td>
-                                <td><a href="/csl/ip/view/<?=$val->ip_idx ?>"><?=$val->ip ?></a></td>
+                                <td><a href="/csl/config/ip/view/<?=$val->ip_idx ?>"><?=$val->ip ?></a></td>
                                 <td><?=$val->environment_mode ?></td>
                                 <td><?=$val->memo ?></td>
                                 <td><?=$val->ins_id ?></td>
@@ -90,7 +90,7 @@
             <div class="card-footer">
                 <div class="d-flex justify-content-between align-items-center">
 <?= $paging_info['paging_view'] ?>
-                    <a href="/csl/ip/write" type="button" class="btn btn-primary">등록</a>
+                    <a href="/csl/config/ip/write" type="button" class="btn btn-primary">등록</a>
                 </div>
             </div>
         </div>
@@ -104,7 +104,7 @@
     $(window).on('load', function() {
         $('#li-config').addClass('active-level-1');
         $('#collapse-config').addClass('show').addClass('submenu');
-        $('#a-ip-list').addClass('active-level-2');
+        $('#a-config-ip-list').addClass('active-level-2');
 
         $("#search_condition").val("<?= $data['search_condition'] ?>").prop("selected", true);
         $("#search_rows").val("<?= $data['search_rows'] ?>").prop("selected", true);
@@ -124,6 +124,6 @@
         var search_condition = $('#search_condition').val();
         var search_rows = $('#search_rows').val();
         var search_page = $('#search_page').val();
-        location.href = '/csl/ip/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows;
+        location.href = '/csl/config/ip/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows;
     }
 </script>

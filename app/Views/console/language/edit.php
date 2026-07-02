@@ -81,13 +81,13 @@
     $(window).on('load', function() {
         $('#li-config').addClass('active-level-1');
         $('#collapse-config').addClass('show').addClass('submenu');
-        $('#a-language-edit').addClass('active-level-2');
+        $('#a-config-language').addClass('active-level-2');
         $('input[name="language_yn"][value="<?= $info->language_yn ?>"]').prop('checked', true);
     });
 
     function languageUpdate() {
         if (confirm('수정하시겠습니까?')) {
-            ajax1('/csl/language/update', 'frm', 'languageUpdateAfter');
+            ajax1('/csl/config/language/update', 'frm', 'languageUpdateAfter');
         }
     }
 

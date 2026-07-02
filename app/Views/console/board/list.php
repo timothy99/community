@@ -105,7 +105,7 @@
                                 <td><?=$val->category ?></td>
 <?php       } ?>
                                 <td class="text-start">
-                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_no ?>">
+                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_no ?><?= !empty($http_query) ? '?'.$http_query : '' ?>">
                                         <?=$val->title ?>
 <?php       if ($val->new_yn == 'Y') { ?>
                                         <span class="badge bg-danger ms-2">N</span>
@@ -134,7 +134,7 @@
                                 <td><?=$val->category ?></td>
 <?php       } ?>
                                 <td class="text-start">
-                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_no ?>">
+                                    <a href="/csl/board/<?=$val->board_id ?>/view/<?=$val->board_no ?><?= !empty($http_query) ? '?'.$http_query : '' ?>">
                                         <?=$val->title ?>
 <?php       if ($val->new_yn == 'Y') { ?>
                                         <span class="badge bg-danger ms-2">N</span>
@@ -169,7 +169,7 @@
 <?= $paging_info['paging_view'] ?>
                     </div>
                     <div class="d-flex gap-2 justify-content-end align-self-end">
-                        <a href="/csl/board/<?= $data['board_id'] ?>/write" type="button" class="btn btn-primary">등록</a>
+                        <a href="/csl/board/<?= $data['board_id'] ?>/write<?= !empty($http_query) ? '?'.$http_query : '' ?>" type="button" class="btn btn-primary">등록</a>
                         <button type="button" class="btn btn-danger" onclick="batchDelete()">일괄삭제</button>
                     </div>
                 </div>

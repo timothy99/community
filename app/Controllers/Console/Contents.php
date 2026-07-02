@@ -4,6 +4,8 @@ namespace App\Controllers\Console;
 
 use App\Controllers\BaseController;
 use App\Models\Console\ContentsModel;
+use App\Models\Console\ConfigModel;
+use App\Models\Console\LanguageModel;
 
 class Contents extends BaseController
 {
@@ -15,17 +17,32 @@ class Contents extends BaseController
     public function list()
     {
         $contents_model = new ContentsModel();
+        $config_model = new ConfigModel();
+        $language_model = new LanguageModel();
+
+        $model_result = $config_model->getConfigInfo();
+        $config_info = $model_result['info'];
+
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
 
         $search_page = $this->request->getGet('search_page') ?? 1;
         $search_rows = $this->request->getGet('search_rows') ?? 10;
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
+        $search_language = $this->request->getGet('search_language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
+
+        $language_yn = $config_info->language_yn ?? 'N';
+        if ($language_yn === 'N') {
+            $search_language = 'kr';
+        }
 
         $data = array();
         $data['search_page'] = $search_page;
         $data['search_rows'] = $search_rows;
         $data['search_text'] = $search_text;
         $data['search_condition'] = $search_condition;
+        $data['search_language'] = $search_language;
 
         $model_result = $contents_model->getContentsList($data);
         $result = $model_result['result'];
@@ -48,14 +65,32 @@ class Contents extends BaseController
         $proc_result['cnt'] = $cnt;
         $proc_result['paging_info'] = $paging_info;
         $proc_result['data'] = $data;
+        $proc_result['config_info'] = $config_info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/contents/list', $proc_result);
     }
 
     public function write()
     {
+        $config_model = new ConfigModel();
+        $language_model = new LanguageModel();
+
         $result = true;
         $message = '정상';
+
+        $model_result = $config_model->getConfigInfo();
+        $config_info = $model_result['info'];
+
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
+
+        $language_yn = $config_info->language_yn ?? 'N';
+        if ($language_yn === 'N') {
+            $language = 'kr';
+        } else {
+            $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
+        }
 
         $info = new \stdClass();
         $info->contents_idx = 0;
@@ -63,11 +98,14 @@ class Contents extends BaseController
         $info->title = '';
         $info->meta_title = '';
         $info->contents = '';
+        $info->language = $language;
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['config_info'] = $config_info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/contents/edit', $proc_result);
     }
@@ -75,6 +113,7 @@ class Contents extends BaseController
     public function update()
     {
         $contents_model = new ContentsModel();
+        $config_model = new ConfigModel();
 
         $result = true;
         $message = '정상처리 되었습니다.';
@@ -84,6 +123,14 @@ class Contents extends BaseController
         $contents = (string)$this->request->getPost('contents');
         $meta_title = $this->request->getPost('meta_title');
         $contents_id = $this->request->getPost('contents_id', FILTER_SANITIZE_SPECIAL_CHARS);
+        $language = $this->request->getPost('language', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'kr';
+
+        $model_result = $config_model->getConfigInfo();
+        $config_info = $model_result['info'];
+        $language_yn = $config_info->language_yn ?? 'N';
+        if ($language_yn === 'N') {
+            $language = 'kr';
+        }
 
         if ($title == null) {
             $result = false;
@@ -96,6 +143,7 @@ class Contents extends BaseController
         $data['contents'] = $contents;
         $data['meta_title'] = $meta_title;
         $data['contents_id'] = $contents_id;
+        $data['language'] = $language;
 
         if ($result == true) {
             if ($contents_idx == 0) {
@@ -120,6 +168,7 @@ class Contents extends BaseController
     public function view(int $contents_idx)
     {
         $contents_model = new ContentsModel();
+        $language_model = new LanguageModel();
 
         $result = true;
         $message = '정상';
@@ -129,10 +178,14 @@ class Contents extends BaseController
         $message = $model_result['message'];
         $info = $model_result['info'];
 
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/contents/view', $proc_result);
     }
@@ -140,6 +193,7 @@ class Contents extends BaseController
     public function edit(int $contents_idx)
     {
         $contents_model = new ContentsModel();
+        $language_model = new LanguageModel();
 
         $result = true;
         $message = '정상';
@@ -147,10 +201,14 @@ class Contents extends BaseController
         $model_result = $contents_model->getContentsInfo($contents_idx);
         $info = $model_result['info'];
 
+        $model_result = $language_model->getLanguageUseList();
+        $language_list = $model_result['list'];
+
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
+        $proc_result['language_list'] = $language_list;
 
         return aview('console/contents/edit', $proc_result);
     }

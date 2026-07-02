@@ -423,7 +423,7 @@
         <div class="card">
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
-                    <a href="/csl/settings/board/list" class="btn btn-secondary">취소</a>
+                    <a href="/csl/config/board/list" class="btn btn-secondary">취소</a>
                     <button type="button" class="btn btn-primary" onclick="boardConfigUpdate()">저장</button>
                 </div>
             </div>
@@ -437,7 +437,7 @@
 <script>
     // 메뉴강조 및 초기화
     $(window).on('load', function() {
-        $('#li-settings-board-list').addClass('active-level-1');
+        $('#li-config-board-list').addClass('active-level-1');
 
         // 썸머노트 초기화 (포커스 자동 이동 비활성화)
         initSummernote('#form_style', { focus: false });
@@ -474,7 +474,7 @@
     // 게시판 설정 업데이트
     function boardConfigUpdate() {
         $("#summer_code").val($("#form_style").summernote("code"));
-        ajax1('/csl/settings/board/update', 'frm', 'boardConfigUpdateAfter');
+        ajax1('/csl/config/board/update', 'frm', 'boardConfigUpdateAfter');
     }
 
     // 업데이트 후 처리

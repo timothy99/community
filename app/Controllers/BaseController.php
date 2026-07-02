@@ -41,6 +41,7 @@ abstract class BaseController extends Controller
         $this->helpers[] = "array";
         $this->helpers[] = "authority";
         $this->helpers[] = "board";
+        $this->helpers[] = "config";
         $this->helpers[] = "curl";
         $this->helpers[] = "date";
         $this->helpers[] = "logging";
@@ -53,6 +54,10 @@ abstract class BaseController extends Controller
 
         // Caution: Do not edit this line.
         parent::initController($request, $response, $logger);
+
+        // 최초 로딩 시 환경설정 캐시를 미리 워밍해 이후 반복 조회 비용을 줄인다.
+        getConfigInfoCached();
+        getLanguageListCached(true);
 
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');

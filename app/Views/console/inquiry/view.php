@@ -40,6 +40,21 @@
                                 <td><?= nl2br_only($info->contents) ?></td>
                             </tr>
                             <tr>
+                                <th class="align-middle bg-light">첨부파일</th>
+                                <td>
+<?php if (!empty($info->file_list)) { ?>
+<?php   foreach ($info->file_list as $file_info) { ?>
+                                    <div class="mb-2">
+                                        <a href="/file/download/<?= $file_info->file_id ?>"><?= $file_info->file_name_org ?></a>
+                                        <span class="text-muted">(<?= $file_info->file_size_kb ?>KB)</span>
+                                    </div>
+<?php   } ?>
+<?php } else { ?>
+                                    -
+<?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th class="align-middle bg-light">등록일</th>
                                 <td><?= $info->ins_date_txt ?></td>
                             </tr>

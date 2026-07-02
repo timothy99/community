@@ -10,10 +10,10 @@ class Social extends BaseController
 {
     public function index()
     {
-        return redirect()->to('/csl/social/edit');
+        return redirect()->to('/csl/config/sns');
     }
 
-    public function edit()
+    public function configSns()
     {
         $config_model = new ConfigModel();
 
@@ -31,7 +31,7 @@ class Social extends BaseController
         return aview('console/social/edit', $proc_result);
     }
 
-    public function update()
+    public function configSnsUpdate()
     {
         $social_model = new SocialModel();
 
@@ -76,18 +76,12 @@ class Social extends BaseController
             $model_result = $social_model->procSocialUpdate($data);
             $result = $model_result['result'];
             $message = $model_result['message'];
-
-            // 소셜 로그인 설정 변경 직후에는 기존 페이지 캐시가 남아
-            // 리다이렉트 규칙이 즉시 반영되지 않을 수 있어 전체 캐시를 비운다.
-            if ($result === true) {
-                \Config\Services::cache()->clean();
-            }
         }
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/social/edit';
+        $proc_result['return_url'] = '/csl/config/sns';
 
         return $this->response->setJSON($proc_result);
     }

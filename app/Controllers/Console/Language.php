@@ -10,10 +10,10 @@ class Language extends BaseController
 {
     public function index()
     {
-        return redirect()->to('/csl/language/edit');
+        return redirect()->to('/csl/config/language');
     }
 
-    public function edit()
+    public function configLanguage()
     {
         $language_model = new LanguageModel();
         $config_model = new ConfigModel();
@@ -36,7 +36,7 @@ class Language extends BaseController
         return aview('console/language/edit', $proc_result);
     }
 
-    public function update()
+    public function configLanguageUpdate()
     {
         $language_model = new LanguageModel();
 
@@ -56,18 +56,12 @@ class Language extends BaseController
             $model_result = $language_model->procLanguageUpdate($data);
             $result = $model_result['result'];
             $message = $model_result['message'];
-
-            // 언어 사용 여부 변경 직후에는 기존 페이지 캐시가 남아
-            // 리다이렉트 규칙이 즉시 반영되지 않을 수 있어 전체 캐시를 비운다.
-            if ($result === true) {
-                \Config\Services::cache()->clean();
-            }
         }
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/language/edit';
+        $proc_result['return_url'] = '/csl/config/language';
 
         return $this->response->setJSON($proc_result);
     }

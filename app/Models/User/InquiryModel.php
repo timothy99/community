@@ -18,6 +18,7 @@ class InquiryModel extends Model
         $contents = $data['contents'];
         $phone = $data['phone'];
         $email = $data['email'];
+        $file_idxs = $data['file_idxs'] ?? '';
 
         $db = $this->db;
         $db->transStart();
@@ -27,6 +28,7 @@ class InquiryModel extends Model
         $builder->set('contents', $contents);
         $builder->set('phone', $phone);
         $builder->set('email', $email);
+        $builder->set('file_idxs', $file_idxs);
         $builder->set('del_yn', 'N');
         $builder->set('ins_date', $today);
         $builder->set('upd_date', $today);

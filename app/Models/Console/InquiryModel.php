@@ -3,6 +3,7 @@
 namespace App\Models\Console;
 
 use CodeIgniter\Model;
+use App\Models\User\FileModel;
 
 class InquiryModel extends Model
 {
@@ -54,6 +55,23 @@ class InquiryModel extends Model
         $info = $builder->get()->getRow();
 
         $info->ins_date_txt = convertTextToDate($info->ins_date, 1, 1);
+        $info->file_list = [];
+
+        if (!empty($info->file_idxs)) {
+            $file_model = new FileModel();
+            $file_idxs = explode('||', $info->file_idxs);
+
+            foreach ($file_idxs as $file_id) {
+                if ($file_id == '') {
+                    continue;
+                }
+
+                $file_info = $file_model->getFileInfo($file_id);
+                if ($file_info != null) {
+                    $info->file_list[] = $file_info;
+                }
+            }
+        }
 
         $proc_result = array();
         $proc_result['result'] = $result;

@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User\MenuModel;
-use App\Models\User\ConfigModel;
 use App\Models\Console\SettingsModel;
 use App\Models\User\LanguageModel;
 
@@ -9,11 +8,10 @@ use App\Models\User\LanguageModel;
 function uview(string $view_file, array $proc_result = array())
 {
     $menu_model = new MenuModel();
-    $config_model = new ConfigModel();
     $language_model = new LanguageModel();
+    helper('config');
 
-    $model_result = $config_model->getConfigInfo();
-    $config_info = $model_result['info'];
+    $config_info = getConfigInfoCached();
     $proc_result['config_info'] = $config_info;
 
     $model_result = $menu_model->getMenuList();
@@ -70,11 +68,10 @@ function uview(string $view_file, array $proc_result = array())
 // 관리자(admin) 뷰 - 메뉴바가 좌측에 있음
 function aview(string $view_file, array $proc_result = array())
 {
-    $config_model = new ConfigModel();
     $settings_model = new SettingsModel();
+    helper('config');
 
-    $model_result = $config_model->getConfigInfo();
-    $config_info = $model_result['info'];
+    $config_info = getConfigInfoCached();
     $proc_result['config_info'] = $config_info;
 
     $data = array();

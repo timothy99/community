@@ -122,7 +122,7 @@
     $(window).on('load', function() {
         $('#li-config').addClass('active-level-1');
         $('#collapse-config').addClass('show').addClass('submenu');
-        $('#a-social-edit').addClass('active-level-2');
+        $('#a-config-sns').addClass('active-level-2');
         $('input[name="social_login_yn"][value="<?= $info->social_login_yn ?>"]').prop('checked', true);
         $('input[name="sns_kakao_use_yn"]').prop('checked', "<?= $info->sns_kakao_use_yn ?>" === 'Y');
         $('input[name="sns_naver_use_yn"]').prop('checked', "<?= $info->sns_naver_use_yn ?>" === 'Y');
@@ -132,7 +132,7 @@
 
     function socialUpdate() {
         if (confirm('수정하시겠습니까?')) {
-            ajax1('/csl/social/update', 'frm', 'socialUpdateAfter');
+            ajax1('/csl/config/sns/update', 'frm', 'socialUpdateAfter');
         }
     }
 

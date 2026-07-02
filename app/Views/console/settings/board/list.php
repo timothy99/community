@@ -13,7 +13,7 @@
 <!-- Main Content -->
 <main id="main-content">
     <div class="container-fluid py-4">
-        <h3>게시판 설정</h3>
+        <h3>게시판 환경설정</h3>
 
         <!-- 검색 -->
         <div class="card mb-4">
@@ -48,7 +48,7 @@
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
                     <button type="button" class="btn btn-success" onclick="search()">검색</button>
-                    <a href="/csl/settings/board/list" class="btn btn-secondary">초기화</a>
+                    <a href="/csl/config/board/list" class="btn btn-secondary">초기화</a>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@
                                 <td><?=$val->list_no ?></td>
                                 <td><?=$val->board_id ?></td>
                                 <td><?=$val->type ?></td>
-                                <td><a href="/csl/settings/board/view/<?=$val->board_id ?>"><?=$val->title ?></a></td>
+                                <td><a href="/csl/config/board/view/<?=$val->board_id ?>"><?=$val->title ?></a></td>
                                 <td><?=$val->meta_title ?></td>
                                 <td><?=$val->ins_date_txt ?></td>
                             </tr>
@@ -90,7 +90,7 @@
             <div class="card-footer">
                 <div class="d-flex justify-content-between align-items-center">
 <?= $paging_info['paging_view'] ?>
-                    <a href="/csl/settings/board/write" type="button" class="btn btn-primary">등록</a>
+                    <a href="/csl/config/board/write" type="button" class="btn btn-primary">등록</a>
                 </div>
             </div>
         </div>
@@ -102,7 +102,7 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
-        $('#li-settings-board-list').addClass('active-level-1');
+        $('#li-config-board-list').addClass('active-level-1');
 
         $("#search_condition").val("<?= $data['search_condition'] ?>").prop("selected", true);
         $("#search_rows").val("<?= $data['search_rows'] ?>").prop("selected", true);
@@ -122,6 +122,6 @@
         var search_condition = $('#search_condition').val();
         var search_rows = $('#search_rows').val();
         var search_page = $('#search_page').val();
-        location.href = '/csl/settings/board/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows;
+        location.href = '/csl/config/board/list?search_page='+search_page+'&search_text='+search_text+'&search_condition='+search_condition+'&search_rows='+search_rows;
     }
 </script>

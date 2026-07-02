@@ -2,6 +2,7 @@
 /**
  * @var object $board_config
  * @var object $info
+ * @var string $http_query
  */
 ?>
 
@@ -12,6 +13,7 @@
 <input type="hidden" id="main_image_hidden" name="main_image_hidden" value="<?= $info->main_image_id ?>">
 <input type="hidden" id="pdf_file_hidden" name="pdf_file_hidden" value="<?= $info->pdf_file_id ?>">
 <input type="hidden" id="board_no" name="board_no" value="<?= $info->board_no ?>">
+<input type="hidden" id="http_query" name="http_query" value="<?= $http_query ?>">
 
 <input type="hidden" id="contents_code" name="contents_code" value='<?=base64_encode($info->contents) ?>'>
 <input type="hidden" id="summer_code" name="summer_code">
@@ -207,9 +209,9 @@
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
 <?php if ($info->board_idx > 0) { ?>
-                    <a href="/csl/board/<?= $info->board_id ?>/view/<?= $info->board_idx ?>" class="btn btn-secondary">취소</a>
+                    <a href="/csl/board/<?= $info->board_id ?>/view/<?= $info->board_idx ?><?= !empty($http_query) ? '?'.$http_query : '' ?>" class="btn btn-secondary">취소</a>
 <?php } else { ?>
-                    <a href="/csl/board/<?= $info->board_id ?>/list" class="btn btn-secondary">취소</a>
+                    <a href="/csl/board/<?= $info->board_id ?>/list<?= !empty($http_query) ? '?'.$http_query : '' ?>" class="btn btn-secondary">취소</a>
 <?php } ?>
                     <button type="button" class="btn btn-primary" onclick="boardUpdate()">저장</button>
                 </div>

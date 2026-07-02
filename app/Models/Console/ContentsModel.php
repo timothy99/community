@@ -15,12 +15,16 @@ class ContentsModel extends Model
         $rows = $data['search_rows'];
         $search_condition = $data['search_condition'];
         $search_text = $data['search_text'];
+        $search_language = $data['search_language'];
 
         $db = $this->db;
         $builder = $db->table('contents');
         $builder->where('del_yn', 'N');
+        if ($search_language != null && $search_language !== '') {
+            $builder->where('language', $search_language);
+        }
         if ($search_text != null && $search_text !== '') {
-            $allowed = ['title', 'contents'];
+            $allowed = ['title', 'meta_title'];
             $conditions = array_filter(explode(',', $search_condition), fn($c) => in_array(trim($c), $allowed));
             if (empty($conditions)) {
                 $conditions = ['title'];
@@ -82,6 +86,7 @@ class ContentsModel extends Model
         $title = $data['title'];
         $meta_title = $data['meta_title'];
         $contents_id = $data['contents_id'];
+        $language = $data['language'];
 
         $db = $this->db;
         $db->transStart();
@@ -89,6 +94,7 @@ class ContentsModel extends Model
         $builder->set('title', $title);
         $builder->set('meta_title', $meta_title);
         $builder->set('contents_id', $contents_id);
+        $builder->set('language', $language);
         $builder->set('del_yn', 'N');
         $builder->set('ins_id', $user_id);
         $builder->set('ins_date', $today);
@@ -125,6 +131,7 @@ class ContentsModel extends Model
         $title = $data['title'];
         $meta_title = $data['meta_title'];
         $contents_id = $data['contents_id'];
+        $language = $data['language'];
 
         $db = $this->db;
         $db->transStart();
@@ -132,6 +139,7 @@ class ContentsModel extends Model
         $builder->set('title', $title);
         $builder->set('meta_title', $meta_title);
         $builder->set('contents_id', $contents_id);
+        $builder->set('language', $language);
         $builder->set('upd_id', $user_id);
         $builder->set('upd_date', $today);
         $builder->where('contents_idx', $contents_idx);

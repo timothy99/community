@@ -1,6 +1,106 @@
 <?php
 
 /**
+ * 프록시/로드밸런서 환경에서 실제 클라이언트 IPv4를 우선 추출한다.
+ */
+function getClientIpAddress(): string
+{
+    $request = \Config\Services::request();
+
+    $headerKeys = array(
+        'HTTP_CF_CONNECTING_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_REAL_IP',
+        'HTTP_X_CLIENT_IP',
+        'HTTP_CLIENT_IP',
+        'HTTP_FORWARDED',
+        'REMOTE_ADDR',
+    );
+
+    $candidates = array();
+    foreach ($headerKeys as $headerKey) {
+        $headerValue = $request->getServer($headerKey);
+        if (! is_string($headerValue) || $headerValue === '') {
+            continue;
+        }
+
+        if ($headerKey === 'HTTP_FORWARDED') {
+            if (preg_match_all('/for=\\s*"?\\[?([^;,\\]"\\s]+)\\]?/i', $headerValue, $matches)) {
+                foreach ($matches[1] as $forwardedIp) {
+                    $candidates[] = $forwardedIp;
+                }
+            }
+            continue;
+        }
+
+        if ($headerKey === 'HTTP_X_FORWARDED_FOR') {
+            $parts = explode(',', $headerValue);
+            foreach ($parts as $part) {
+                $candidates[] = trim($part);
+            }
+            continue;
+        }
+
+        $candidates[] = trim($headerValue);
+    }
+
+    $requestIp = $request->getIPAddress();
+    if (is_string($requestIp) && $requestIp !== '') {
+        $candidates[] = $requestIp;
+    }
+
+    $normalized = array();
+    foreach ($candidates as $candidate) {
+        $ip = normalizeClientIpAddress($candidate);
+        if ($ip !== '' && filter_var($ip, FILTER_VALIDATE_IP)) {
+            $normalized[] = $ip;
+        }
+    }
+
+    foreach ($normalized as $ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return $ip;
+        }
+    }
+
+    foreach ($normalized as $ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return $ip;
+        }
+    }
+
+    return '';
+}
+
+function normalizeClientIpAddress(string $ip): string
+{
+    $ip = trim($ip);
+    if ($ip === '' || strtolower($ip) === 'unknown') {
+        return '';
+    }
+
+    // IPv6-mapped IPv4 (::ffff:1.2.3.4) 는 IPv4로 정규화
+    if (strpos($ip, '::ffff:') === 0) {
+        $ip = substr($ip, 7);
+    }
+
+    // [IPv6]:port 패턴 처리
+    if (strpos($ip, '[') === 0) {
+        $closing = strpos($ip, ']');
+        if ($closing !== false) {
+            $ip = substr($ip, 1, $closing - 1);
+        }
+    }
+
+    // IPv4:port 패턴 처리
+    if (preg_match('/^\\d{1,3}(?:\\.\\d{1,3}){3}:\\d+$/', $ip) === 1) {
+        $ip = explode(':', $ip)[0];
+    }
+
+    return trim($ip);
+}
+
+/**
  * @author 배진모
  * @see 원하는 요청에 따른 랜덤 문자열 생성
  * @param string $method - 랜덤문자열 생성 방식

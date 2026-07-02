@@ -20,13 +20,21 @@ class Comment extends BaseController
         $message = '정상처리';
 
         $board_idx = $this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS);
-        $comment = $this->request->getPost('comment', FILTER_SANITIZE_SPECIAL_CHARS);
+        $comment = sanitizeHtml($this->request->getPost('comment'));
         $secret_yn = $this->request->getPost('secret_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
+        $file_idxs = $this->request->getPost('file_idxs', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($file_idxs == '' || $file_idxs == null) {
+            $file_arr = array();
+        } else {
+            $file_arr = array_values(array_filter(explode('||', $file_idxs)));
+        }
 
         $data = array();
         $data['board_idx'] = $board_idx;
         $data['comment'] = $comment;
         $data['secret_yn'] = $secret_yn;
+        $data['file_arr'] = $file_arr;
 
         $model_result = $comment_model->procCommentInsert($data);
         $result = $model_result['result'];
@@ -75,13 +83,16 @@ class Comment extends BaseController
         $result = $model_result['result'];
         $message = $model_result['message'];
 
-        $language = service('request')->getCookie('language') ?? 'kr';
+        $language = getRequestLanguageFromUri();
         $comment_edit_html = view('/user/'.$language.'/comment/edit', $model_result);
 
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
         $proc_result['board_comment_idx'] = $board_comment_idx;
+        $proc_result['comment'] = $model_result['info']->comment ?? '';
+        $proc_result['secret_yn'] = $model_result['info']->secret_yn ?? 'N';
+        $proc_result['file_list'] = $model_result['info']->file_list ?? array();
         $proc_result['return_html'] = $comment_edit_html;
 
         return $this->response->setJSON($proc_result);
@@ -95,13 +106,21 @@ class Comment extends BaseController
         $message = '정상처리';
 
         $board_comment_idx = $this->request->getPost('board_comment_idx', FILTER_SANITIZE_SPECIAL_CHARS);
-        $comment = $this->request->getPost('comment', FILTER_SANITIZE_SPECIAL_CHARS);
+        $comment = sanitizeHtml($this->request->getPost('comment'));
         $secret_yn = $this->request->getPost('secret_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
+        $file_idxs = $this->request->getPost('file_idxs', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($file_idxs == '' || $file_idxs == null) {
+            $file_arr = array();
+        } else {
+            $file_arr = array_values(array_filter(explode('||', $file_idxs)));
+        }
 
         $data = array();
         $data['board_comment_idx'] = $board_comment_idx;
         $data['comment'] = $comment;
         $data['secret_yn'] = $secret_yn;
+        $data['file_arr'] = $file_arr;
 
         $model_result = $comment_model->procCommentUpdate($data);
         $result = $model_result['result'];

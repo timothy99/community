@@ -42,11 +42,6 @@
         var translationLang = langMap[targetLang];
         if (!translationLang) return;
 
-        // googtrans 쿠키 설정 - Google Translate가 로드될 때 이 쿠키를 읽어 자동번역
-        var cookieValue = '/ko/' + translationLang;
-        document.cookie = 'googtrans=' + cookieValue + '; path=/';
-        document.cookie = 'googtrans=' + cookieValue + '; path=/; domain=' + window.location.hostname;
-
         // Google Translate 위젯 로드
         var s = document.createElement('script');
         s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';

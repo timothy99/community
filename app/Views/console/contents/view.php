@@ -1,6 +1,7 @@
 <?php
 /**
  * @var object $info
+ * @var object $config_info
  */
 ?>
 
@@ -31,6 +32,12 @@
                                 <th class="align-middle bg-light">아이디</th>
                                 <td><?= $info->contents_id ?></td>
                             </tr>
+<?php   if (($config_info->language_yn ?? 'N') === 'Y') { ?>
+                            <tr>
+                                <th class="align-middle bg-light">언어</th>
+                                <td><?= $info->language ?></td>
+                            </tr>
+<?php   } ?>
                             <tr>
                                 <th class="align-middle bg-light">메타 제목</th>
                                 <td><?= $info->meta_title ?></td>

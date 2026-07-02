@@ -11,7 +11,7 @@
 <!-- Main Content -->
 <main id="main-content">
     <div class="container-fluid py-4">
-        <h3>슬라이드</h3>
+        <h3>IP 관리</h3>
 
         <div class="card mb-4">
             <div class="card-header bg-success bg-opacity-75 text-white">기본정보</div>
@@ -39,7 +39,7 @@
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
-                    <a href="/csl/ip/view/<?= $info->ip_idx ?>" class="btn btn-secondary">취소</a>
+                    <a href="/csl/config/ip/view/<?= $info->ip_idx ?>" class="btn btn-secondary">취소</a>
                     <button type="button" class="btn btn-primary" onclick="ipUpdate()">저장</button>
                 </div>
             </div>
@@ -55,13 +55,13 @@
     $(window).on('load', function() {
         $('#li-config').addClass('active-level-1');
         $('#collapse-config').addClass('show').addClass('submenu');
-        $('#a-ip-list').addClass('active-level-2');
+        $('#a-config-ip-list').addClass('active-level-2');
 
         $("#environment_mode").val("<?=$info->environment_mode ?>");
     });
 
     function ipUpdate() {
-        ajax1('/csl/ip/update', 'frm', 'ipUpdateAfter');
+        ajax1('/csl/config/ip/update', 'frm', 'ipUpdateAfter');
     }
 
     function ipUpdateAfter(proc_result) {

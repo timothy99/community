@@ -24,6 +24,7 @@ class HousekeepingModel extends Model
      * 아래 7개 테이블에서 file_id 참조 여부 확인
      *  - board.main_image_id
      *  - board_file.file_id
+    *  - board_comment_file.file_id
      *  - config.company_logo
      *  - popup.popup_file
      *  - product.main_image_id
@@ -47,6 +48,14 @@ class HousekeepingModel extends Model
 
         // board_file.file_id (board_file 테이블은 del_yn 없음 - 전체 확인)
         $builder = $db->table('board_file');
+        $builder->where('file_id', $file_id);
+        $cnt = $builder->countAllResults();
+        if ($cnt > 0) {
+            return true;
+        }
+
+        // board_comment_file.file_id (board_comment_file 테이블은 del_yn 없음 - 전체 확인)
+        $builder = $db->table('board_comment_file');
         $builder->where('file_id', $file_id);
         $cnt = $builder->countAllResults();
         if ($cnt > 0) {

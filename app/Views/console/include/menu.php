@@ -58,23 +58,29 @@
             <a href="/csl/member/list" class="nav-link link-body-emphasis" id="li-member">회원 관리</a>
         </li>
         <li class="nav-item">
-            <a href="/csl/config/view" class="nav-link link-body-emphasis" id="li-config">
+            <a href="/csl/config/environment/list" class="nav-link link-body-emphasis" id="li-config">
                 <span>환경설정</span>
                 <span class="nav-arrow">›</span>
             </a>
             <div class="collapse" id="collapse-config">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a id="a-config" href="/csl/config/view" class="nav-link link-body-emphasis">일반환경</a>
+                        <a id="a-config-environment" href="/csl/config/environment/list" class="nav-link link-body-emphasis">일반환경</a>
                     </li>
                     <li class="nav-item">
-                        <a id="a-ip-list" href="/csl/ip/list" class="nav-link link-body-emphasis">IP 관리</a>
+                        <a id="a-config-security" href="/csl/config/security" class="nav-link link-body-emphasis">보안설정</a>
                     </li>
                     <li class="nav-item">
-                        <a id="a-language-edit" href="/csl/language/edit" class="nav-link link-body-emphasis">다국어 설정</a>
+                        <a id="a-config-email" href="/csl/config/email" class="nav-link link-body-emphasis">이메일 설정</a>
                     </li>
                     <li class="nav-item">
-                        <a id="a-social-edit" href="/csl/social/edit" class="nav-link link-body-emphasis">SNS 설정</a>
+                        <a id="a-config-ip-list" href="/csl/config/ip/list" class="nav-link link-body-emphasis">IP 관리</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="a-config-language" href="/csl/config/language" class="nav-link link-body-emphasis">다국어 설정</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="a-config-sns" href="/csl/config/sns" class="nav-link link-body-emphasis">SNS 설정</a>
                     </li>
                 </ul>
             </div>
@@ -86,7 +92,7 @@
             <a href="/csl/contents/list" class="nav-link link-body-emphasis" id="li-contents">콘텐츠</a>
         </li>
         <li class="nav-item">
-            <a href="/csl/settings/board/list" class="nav-link link-body-emphasis" id="li-settings-board-list">게시판 설정</a>
+            <a href="/csl/config/board/list" class="nav-link link-body-emphasis" id="li-config-board-list">게시판 환경설정</a>
         </li>
 <?php   } ?>
     </ul>

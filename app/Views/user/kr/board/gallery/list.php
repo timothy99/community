@@ -81,7 +81,7 @@
 <?php       foreach($notice_list as $no => $val) { ?>
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="card h-100 shadow-sm">
-                            <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>" class="text-decoration-none">
+                            <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?><?= !empty($http_query) ? '?'.$http_query : '' ?>" class="text-decoration-none">
                                 <div class="position-relative" style="padding-top: 75%; overflow: hidden;">
 <?php           if (!empty($val->main_image_id)) { ?>
                                     <img src="/file/download/<?=$val->main_image_id ?>" class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover;" alt="<?=$val->title ?>">
@@ -121,7 +121,7 @@
 <?php       foreach($list as $no => $val) { ?>
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="card h-100 shadow-sm">
-                            <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?>" class="text-decoration-none">
+                            <a href="/board/<?=$val->board_id ?>/view/<?=$val->board_idx ?><?= !empty($http_query) ? '?'.$http_query : '' ?>" class="text-decoration-none">
                                 <div class="position-relative" style="padding-top: 75%; overflow: hidden;">
 <?php           if (!empty($val->main_image_id)) { ?>
                                     <img src="/file/view/<?=$val->main_image_id ?>" class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover;" alt="<?=$val->title ?>">
@@ -167,7 +167,7 @@
                 <div class="d-flex justify-content-between align-items-center">
 <?= $paging_info['paging_view'] ?>
 <?php   if ($authority->write_authority == "Y") { ?>
-                    <a href="/board/<?= $data['board_id'] ?>/write" type="button" class="btn btn-primary">등록</a>
+                    <a href="/board/<?= $data['board_id'] ?>/write<?= !empty($http_query) ? '?'.$http_query : '' ?>" type="button" class="btn btn-primary">등록</a>
 <?php   } ?>
                 </div>
             </div>

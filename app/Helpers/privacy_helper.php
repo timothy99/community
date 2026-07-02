@@ -6,8 +6,9 @@ use Config\Database;
 function privacyInsert($memo)
 {
     $request = \Config\Services::request();
+    helper('security');
 
-    $ip = $request->getIPAddress(); // 접속IP
+    $ip = getClientIpAddress(); // 접속IP
     $uri = $_SERVER["app.baseURL"].$_SERVER["REQUEST_URI"]; // 접근한 페이지
     $today = date("YmdHis");
     $member_id = getUserSessionInfo("member_id");

@@ -12,17 +12,13 @@ use CodeIgniter\Router\RouteCollection;
 // CI4 Router가 {locale} 플레이스홀더를 올바른 정규식으로 변환한다.
 // ─────────────────────────────────────────────────────────
 try {
-    $_db = \Config\Database::connect();
-    $_config = $_db->table('config')->select('language_yn')->get()->getRow();
-    $language_yn = $_config->language_yn ?? 'N';
+    helper('config');
+
+    $_config = getConfigInfoCached();
+    $language_yn = $_config?->language_yn ?? 'N';
 
     if ($language_yn === 'Y') {
-        $builder = $_db->table('language');
-        $builder->select('language_code');
-        $builder->where('use_yn', 'Y');
-        $builder->orderBy('language_idx', 'asc');
-        $_localeRows = $builder->get()->getResultArray();
-        $_localeCodes = array_column($_localeRows, 'language_code');
+        $_localeCodes = getLanguageLocaleCodesCached(true);
 
         if (! empty($_localeCodes)) {
             /** @var \Config\App $appConfig */
@@ -32,7 +28,7 @@ try {
         }
     }
 
-    unset($_db, $_config, $_localeRows, $_localeCodes);
+    unset($_config, $_localeCodes);
 } catch (\Throwable $e) {
     // DB 미준비(마이그레이션 등) 상태에서는 기본값 유지
 }
@@ -98,9 +94,15 @@ $routes->get('/csl/slide/view/(:num)', 'Console\Slide::view/$1');
 $routes->get('/csl/slide/edit/(:num)', 'Console\Slide::edit/$1');
 $routes->post('/csl/slide/delete', 'Console\Slide::delete');
 
-$routes->get('/csl/config/view', 'Console\Config::view');
-$routes->get('/csl/config/edit', 'Console\Config::edit');
-$routes->post('/csl/config/update', 'Console\Config::update');
+$routes->get('/csl/config/environment', 'Console\Config::environment');
+$routes->get('/csl/config/environment/list', 'Console\Config::environmentList');
+$routes->get('/csl/config/environment/edit/(:alphanum)', 'Console\Config::environmentEdit/$1');
+$routes->post('/csl/config/environment/update', 'Console\Config::environmentUpdate');
+$routes->post('/csl/config/environment/language/update', 'Console\Config::environmentLanguageUpdate');
+$routes->get('/csl/config/security', 'Console\Config::security');
+$routes->post('/csl/config/security/update', 'Console\Config::securityUpdate');
+$routes->get('/csl/config/email', 'Console\Config::email');
+$routes->post('/csl/config/email/update', 'Console\Config::emailUpdate');
 
 $routes->get('/csl/member', 'Console\Member::index');
 $routes->get('/csl/member/list', 'Console\Member::list');
@@ -130,12 +132,12 @@ $routes->post('/csl/menu/update', 'Console\Menu::update');
 $routes->get('/csl/menu/view/(:num)', 'Console\Menu::view/$1');
 $routes->post('/csl/menu/delete', 'Console\Menu::delete');
 
-$routes->get('/csl/ip/list', 'Console\Ip::list');
-$routes->get('/csl/ip/write', 'Console\Ip::write');
-$routes->post('/csl/ip/update', 'Console\Ip::update');
-$routes->get('/csl/ip/view/(:num)', 'Console\Ip::view/$1');
-$routes->get('/csl/ip/edit/(:num)', 'Console\Ip::edit/$1');
-$routes->post('/csl/ip/delete', 'Console\Ip::delete');
+$routes->get('/csl/config/ip/list', 'Console\Config::configIpList');
+$routes->get('/csl/config/ip/write', 'Console\Config::configIpWrite');
+$routes->post('/csl/config/ip/update', 'Console\Config::configIpUpdate');
+$routes->get('/csl/config/ip/view/(:num)', 'Console\Config::configIpView/$1');
+$routes->get('/csl/config/ip/edit/(:num)', 'Console\Config::configIpEdit/$1');
+$routes->post('/csl/config/ip/delete', 'Console\Config::configIpDelete');
 
 $routes->get('/csl/popup/list', 'Console\Popup::list');
 $routes->get('/csl/popup/write', 'Console\Popup::write');
@@ -180,22 +182,28 @@ $routes->post('/csl/comment/delete', 'Console\Comment::delete');
 $routes->post('/csl/comment/edit/(:num)', 'Console\Comment::edit');
 $routes->post('/csl/comment/update', 'Console\Comment::update');
 
-$routes->get('/csl/settings/board/list', 'Console\Settings::Boardlist');
-$routes->get('/csl/settings/board/write', 'Console\Settings::BoardWrite');
-$routes->post('/csl/settings/board/update', 'Console\Settings::BoardUpdate');
-$routes->get('/csl/settings/board/edit/(:alphanum)', 'Console\Settings::BoardEdit/$1');
-$routes->get('/csl/settings/board/view/(:alphanum)', 'Console\Settings::BoardView/$1');
-$routes->post('/csl/settings/board/delete', 'Console\Settings::BoardDelete');
-$routes->get('/csl/settings/board/(:alphanum)/admin/list', 'Console\Settings::BoardAdminList/$1');
-$routes->post('/csl/settings/board/(:alphanum)/admin/search', 'Console\Settings::BoardAdminSearch');
-$routes->post('/csl/settings/board/(:alphanum)/admin/insert', 'Console\Settings::BoardAdminInsert');
-$routes->post('/csl/settings/board/(:alphanum)/admin/delete', 'Console\Settings::BoardAdminDelete');
+$routes->get('/csl/config/board/list', 'Console\Config::configBoardList');
+$routes->get('/csl/config/board/write', 'Console\Config::configBoardWrite');
+$routes->post('/csl/config/board/update', 'Console\Config::configBoardUpdate');
+$routes->get('/csl/config/board/edit/(:alphanum)', 'Console\Config::configBoardEdit/$1');
+$routes->get('/csl/config/board/view/(:alphanum)', 'Console\Config::configBoardView/$1');
+$routes->post('/csl/config/board/delete', 'Console\Config::configBoardDelete');
+$routes->get('/csl/config/board/admin/(:alphanum)', 'Console\Config::configBoardAdmin/$1');
+$routes->post('/csl/config/board/admin/(:alphanum)/search', 'Console\Config::configBoardAdminSearch/$1');
+$routes->post('/csl/config/board/admin/(:alphanum)/insert', 'Console\Config::configBoardAdminInsert/$1');
+$routes->post('/csl/config/board/admin/(:alphanum)/delete', 'Console\Config::configBoardAdminDelete/$1');
 
-$routes->get('/csl/language/edit', 'Console\Language::edit');
-$routes->post('/csl/language/update', 'Console\Language::update');
+$routes->get('/csl/language/edit', 'Console\Language::configLanguage');
+$routes->post('/csl/language/update', 'Console\Language::configLanguageUpdate');
 
-$routes->get('/csl/social/edit', 'Console\Social::edit');
-$routes->post('/csl/social/update', 'Console\Social::update');
+$routes->get('/csl/config/language', 'Console\Language::configLanguage');
+$routes->post('/csl/config/language/update', 'Console\Language::configLanguageUpdate');
+
+$routes->get('/csl/social/edit', 'Console\Social::configSns');
+$routes->post('/csl/social/update', 'Console\Social::configSnsUpdate');
+
+$routes->get('/csl/config/sns', 'Console\Social::configSns');
+$routes->post('/csl/config/sns/update', 'Console\Social::configSnsUpdate');
 
 // 다국어 OFF: 언어 코드 없는 URL (/home/main)
 $userGetRoutes($routes);
@@ -226,6 +234,7 @@ $routes->post('/file/upload/dropzone', 'User\File::uploadDropzone');
 
 $routes->post('/board/(:alphanum)/update', 'User\Board::update/$1');
 $routes->post('/board/(:alphanum)/temp/save', 'User\Board::tempSave/$1');
+$routes->post('/board/(:alphanum)/heart/toggle', 'User\Board::heartToggle/$1');
 $routes->post('/board/(:alphanum)/delete', 'User\Board::delete');
 
 $routes->post('/main/popup/block', 'User\Home::popupBlock');

@@ -14,6 +14,20 @@ class Board extends BaseController
         return redirect()->to('/usr/board/list');
     }
 
+    private function getHttpQuery(): string
+    {
+        $search_arr = array();
+        $search_arr['search_page'] = $this->request->getGet('search_page') ?? 1;
+        $search_arr['search_rows'] = $this->request->getGet('search_rows') ?? 10;
+        $search_arr['search_text'] = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $search_arr['search_condition'] = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
+        $search_arr['category'] = $this->request->getGet('category', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        return http_build_query(array_filter($search_arr, function ($value) {
+            return $value !== null && $value !== '' && $value !== 'undefined';
+        }));
+    }
+
     public function list(string $board_id)
     {
         $board_model = new BoardModel();
@@ -23,7 +37,11 @@ class Board extends BaseController
         $search_rows = $this->request->getGet('search_rows') ?? 10;
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
-        $category = $this->request->getGet('category', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $category = $this->request->getGet('category', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($category == '' || $category == null || $category == 'undefined') {
+            $category = null;
+        }
 
         $data = array();
         $data['board_id'] = $board_id;
@@ -74,7 +92,7 @@ class Board extends BaseController
         $search_arr['category'] = $category;
         $search_arr['cnt'] = $cnt;
         $search_arr['active_class'] = 'active';
-        $search_arr['paging_file'] = '/user/'.getUserSessionInfo('language').'/paging/general';
+        $search_arr['paging_file'] = '/user/'.getRequestLanguageFromUri().'/paging/general';
         $paging_info = getPagingInfo($search_arr);
 
         $proc_result = array();
@@ -87,6 +105,7 @@ class Board extends BaseController
         $proc_result['data'] = $data;
         $proc_result['board_config'] = $board_config;
         $proc_result['authority'] = $authority;
+        $proc_result['http_query'] = $this->getHttpQuery();
         $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 목록');
 
         return uview('/user/board/'.$board_config->type.'/list', $proc_result);
@@ -160,6 +179,7 @@ class Board extends BaseController
         $proc_result['has_temp'] = $has_temp;
         $proc_result['temp_info'] = $temp_info;
         $proc_result['temp_loaded'] = $temp_loaded;
+        $proc_result['http_query'] = $this->getHttpQuery();
         $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 작성');
 
         return uview('/user/board/'.$board_config->type.'/edit', $proc_result);
@@ -305,7 +325,8 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/board/'.$board_id.'/view/'.$board_no;
+        $http_query = $this->request->getPost('http_query', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $proc_result['return_url'] = '/board/'.$board_id.'/view/'.$board_no.(!empty($http_query) ? '?'.$http_query : '');
         $proc_result['board_idx'] = $board_idx;
 
         return $this->response->setJSON($proc_result);
@@ -346,6 +367,13 @@ class Board extends BaseController
         $board_idx = $info->board_idx;
         $data['board_idx'] = $board_idx;
 
+        // 공감 여부 조회
+        $info->my_heart_yn = 'N';
+        if ($board_config->heart_yn == 'Y') {
+            $heart_result = $board_model->getBoardHeartInfo($board_id, (int) $board_idx, getUserSessionInfo('member_id'));
+            $info->my_heart_yn = $heart_result['heart_yn'];
+        }
+
         // 조회수 증가
         if ($result == true) {
             $board_model->procBoardHitUpdate($data);
@@ -362,9 +390,55 @@ class Board extends BaseController
         $proc_result['comment_list'] = $comment_list;
         $proc_result['board_config'] = $board_config;
         $proc_result['authority'] = $authority;
+        $proc_result['http_query'] = $this->getHttpQuery();
         $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 보기 > '.$info->title);
 
         return uview('/user/board/'.$board_config->type.'/view', $proc_result);
+    }
+
+    public function heartToggle(string $board_id)
+    {
+        $board_model = new BoardModel();
+
+        $result = true;
+        $message = '정상처리 되었습니다.';
+
+        $board_idx = (int) ($this->request->getPost('board_idx', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0);
+        $member_id = getUserSessionInfo('member_id');
+
+        if ($board_idx <= 0) {
+            $result = false;
+            $message = '게시물 정보가 올바르지 않습니다.';
+        }
+
+        if (empty($member_id)) {
+            $result = false;
+            $message = '로그인 후 이용해주세요.';
+        }
+
+        $heart_yn = 'N';
+        $heart_cnt = 0;
+
+        if ($result == true) {
+            $data = array();
+            $data['board_id'] = $board_id;
+            $data['board_idx'] = $board_idx;
+            $data['member_id'] = $member_id;
+
+            $model_result = $board_model->procBoardHeartToggle($data);
+            $result = $model_result['result'];
+            $message = $model_result['message'];
+            $heart_yn = $model_result['heart_yn'];
+            $heart_cnt = $model_result['heart_cnt'];
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['heart_yn'] = $heart_yn;
+        $proc_result['heart_cnt'] = $heart_cnt;
+
+        return $this->response->setJSON($proc_result);
     }
 
     public function edit(string $board_id, int $board_no)
@@ -406,6 +480,7 @@ class Board extends BaseController
         $proc_result['has_temp'] = false;
         $proc_result['temp_info'] = null;
         $proc_result['temp_loaded'] = 'N';
+        $proc_result['http_query'] = $this->getHttpQuery();
         $proc_result['html_meta'] = create_meta($board_config->meta_title.'> '.$board_config->title.' > 수정 > '.$info->title);
 
         return uview('/user/board/'.$board_config->type.'/edit', $proc_result);
@@ -432,7 +507,8 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/board/'.$board_id.'/list';
+        $http_query = $this->request->getPost('http_query', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $proc_result['return_url'] = '/board/'.$board_id.'/list'.(!empty($http_query) ? '?'.$http_query : '');
 
         return $this->response->setJSON($proc_result);
     }

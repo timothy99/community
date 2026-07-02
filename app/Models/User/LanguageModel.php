@@ -8,14 +8,12 @@ class LanguageModel extends Model
 {
     public function getLanguageList()
     {
+        helper('config');
+
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
 
-        $db = $this->db;
-        $builder = $db->table('language');
-        $builder->where('use_yn', 'Y');
-        $builder->orderBy('language_idx', 'asc');
-        $list = $builder->get()->getResult();
+        $list = getLanguageListCached(true);
 
         $proc_result = array();
         $proc_result['result'] = $result;

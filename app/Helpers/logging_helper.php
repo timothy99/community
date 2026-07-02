@@ -8,13 +8,14 @@ function headerInfo()
 {
     $user_agent = new UserAgent();
     $request = \Config\Services::request();
+    helper('security');
 
     $device = $user_agent->isMobile() == false ? 'PC' : $user_agent->getMobile(); // 모바일 접속여부
     $browser = $user_agent->getBrowser(); // 브라우저
     $version = $user_agent->getVersion(); // 브라우저의 버전
     $referrer = $user_agent->getReferrer(); // 레퍼러
     $platform = $user_agent->getPlatform(); // 플랫폼(윈도우 버전등)
-    $ip = $request->getIPAddress(); // 접속IP
+    $ip = \getClientIpAddress(); // 접속IP
     $uri = $request->getUri()->getPath(); // 접근한 페이지
 
     $header_string = $device.'|'.$browser.'|'.$version.'|'.$referrer.'|'.$platform.'|'.$ip.'|'.$uri; // 풀버전

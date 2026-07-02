@@ -3,14 +3,21 @@
  * @var object $info
  * @var object $board_config
  * @var array $comment_list
+ * @var string $http_query
  */
-?>
 
+$renderComment = static function ($comment) {
+    return preg_match('/<[^>]+>/', $comment) ? $comment : nl2br($comment);
+};
+?>
 
 <form id="frm" name="frm">
 
 <input type="hidden" id="board_idx" name="board_idx" value="<?= $info->board_idx ?>">
 <input type="hidden" id="board_id" name="board_id" value="<?= $info->board_id ?>">
+<input type="hidden" id="board_no" name="board_no" value="<?= $info->board_no ?>">
+<input type="hidden" id="http_query" name="http_query" value="<?= $http_query ?>">
+<input type="hidden" id="comment_file_idxs" name="comment_file_idxs" value="">
 
 <!-- Main Content -->
 <main id="main-content">
@@ -224,8 +231,8 @@
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
                     <button type="button" class="btn btn-danger" onclick="boardDelete()">삭제</button>
-                    <a href="/csl/board/<?= $info->board_id ?>/list" class="btn btn-secondary">목록</a>
-                    <a href="/csl/board/<?= $info->board_id ?>/edit/<?= $info->board_no ?>" class="btn btn-primary">수정</a>
+                    <a href="/csl/board/<?= $info->board_id ?>/list<?= !empty($http_query) ? '?'.$http_query : '' ?>" class="btn btn-secondary">목록</a>
+                    <a href="/csl/board/<?= $info->board_id ?>/edit/<?= $info->board_no ?><?= !empty($http_query) ? '?'.$http_query : '' ?>" class="btn btn-primary">수정</a>
                 </div>
             </div>
         </div>
@@ -243,23 +250,47 @@
                             <br><span class="badge bg-secondary"><i class="fas fa-lock"></i> 비밀댓글</span>
 <?php           } ?>
                         </div>
-                        <div class="tbl-value"><?= nl2br($val->comment) ?></div>
+                        <div class="tbl-value">
+                            <div class="comment-display"><?= $renderComment($val->comment) ?></div>
+<?php           if (!empty($val->file_list)) { ?>
+                            <div class="comment-display mt-2">
+<?php               foreach ($val->file_list as $file) { ?>
+                                <div class="mb-1">
+                                    <a href="/file/download/<?= $file->file_id ?>"><i class="<?= $file->file_info->icon_class ?>"></i> <?= $file->file_info->file_name_org ?></a>
+                                    <small class="text-muted">(<?= $file->file_info->file_size_kb ?>KB)</small>
+                                </div>
+<?php               } ?>
+                            </div>
+<?php           } ?>
+                            <div class="comment-edit-host d-none mt-3"></div>
+                        </div>
                         <div class="tbl-action">
-                            <button type="button" class="btn btn-sm btn-danger" onclick="commentDelete('<?=$val->board_comment_idx ?>')">삭제</button>
-                            <button type="button" class="btn btn-sm btn-success" onclick="commentEdit('<?=$val->board_comment_idx ?>')">수정</button>
+                            <button type="button" class="btn btn-sm btn-danger comment-row-action" onclick="commentDelete('<?=$val->board_comment_idx ?>')">삭제</button>
+                            <button type="button" class="btn btn-sm btn-success comment-row-action" onclick="commentEdit('<?=$val->board_comment_idx ?>')">수정</button>
                         </div>
                     </div>
 <?php       } ?>
                 </div>
 
                 <!-- 댓글 작성 -->
-                <div class="mt-4">
-                    <h5 class="mb-3">댓글 작성</h5>
-                    <div class="mb-3">
-                        <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="댓글을 입력하세요"></textarea>
-                    </div>
-                    <div class="text-end">
-                        <button type="button" class="btn btn-primary" onclick="commentInsert()">댓글 등록</button>
+                <div class="mt-4" id="comment-editor-root">
+                    <div id="comment-editor-panel">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="mb-0" id="comment-editor-title">댓글 작성</h5>
+                            <span class="badge bg-warning text-dark" id="comment-editor-mode" style="display:none;">수정 중</span>
+                        </div>
+                        <div class="mb-3">
+                            <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="댓글을 입력하세요"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment_file" class="form-label">첨부파일</label>
+                            <input type="file" class="form-control" id="comment_file" name="comment_file" onchange="uploadFile(this.id, 'board', 'commentUploadFileAfter')">
+                            <div class="mb-2 mt-2 p-3 border rounded" id="comment_file_list" style="display:none;"></div>
+                        </div>
+                        <div class="text-end d-flex gap-2 justify-content-end">
+                            <button type="button" class="btn btn-secondary" id="comment-cancel-btn" onclick="commentCancel()" style="display:none;">취소</button>
+                            <button type="button" class="btn btn-primary" id="comment-submit-btn" onclick="submitCommentEditor()">댓글 등록</button>
+                        </div>
                     </div>
                 </div>
 
@@ -275,11 +306,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <script>
+    const commentEditorState = {
+        mode: 'create',
+        board_comment_idx: null
+    };
+
     // 메뉴강조
     $(window).on('load', function() {
         $('#a-board-top').addClass('active-level-1').attr({'data-bs-toggle': 'collapse', 'aria-expanded': 'true'});
         $('#collapse-board-top').addClass('show').addClass('submenu');
         $('#a-board-<?= $info->board_id ?>').addClass('active-level-2');
+
+        if ($('#comment').length > 0) {
+            initSummernote('#comment', { focus: false, height: 220 });
+            resetCommentEditor();
+        }
     });
 
     function boardDelete() {
@@ -303,35 +344,50 @@
         var update_form = new FormData();
         update_form.append('board_id', $('#board_id').val());
         update_form.append('board_idx', $('#board_idx').val());
-        update_form.append('comment', $('#comment').val());
+        update_form.append('comment', getCommentEditorCode());
+        update_form.append('file_idxs', getCommentFileIds());
         ajax1('/csl/comment/insert', update_form, 'commentAfter');
     }
 
     function commentEdit(board_comment_idx) {
-        var update_form = new FormData();
-        update_form.append('board_comment_idx', board_comment_idx);
+        if (commentEditorState.mode === 'edit') {
+            alert('현재 댓글 수정이 진행 중입니다. 먼저 저장하거나 취소해주세요.');
+            return;
+        }
         ajax1('/csl/comment/edit/'+board_comment_idx, 'frm', 'commentEditAfter');
     }
 
     function commentEditAfter(proc_result) {
+        if (proc_result.result !== true) {
+            alert(proc_result.message);
+            return;
+        }
+
         var board_comment_idx = proc_result.board_comment_idx;
-        var return_html = proc_result.return_html;
-        $('#board_comment_idx_'+board_comment_idx).html(return_html);
+        var comment = proc_result.comment || '';
+        var file_list = proc_result.file_list || [];
+        activateCommentEditMode(board_comment_idx, comment, file_list);
     }
 
     function commentUpdate(board_comment_idx) {
         var update_form = new FormData();
-        var comment = $('#comment_'+board_comment_idx).val();
+        var comment = getCommentEditorCode();
         update_form.append('board_comment_idx', board_comment_idx);
         update_form.append('comment', comment);
+        update_form.append('file_idxs', getCommentFileIds());
         ajax1('/csl/comment/update', update_form, 'commentAfter');
     }
 
-    function commentCancel(board_comment_idx) {
-        location.reload();
+    function commentCancel() {
+        resetCommentEditor();
     }
 
     function commentDelete(board_comment_idx) {
+        if (commentEditorState.mode === 'edit') {
+            alert('현재 댓글 수정이 진행 중입니다. 먼저 저장하거나 취소해주세요.');
+            return;
+        }
+
         if(confirm('댓글을 삭제하나요? 삭제하면 복구가 불가능합니다.')) {
             var update_form = new FormData();
             update_form.append('board_comment_idx', board_comment_idx);
@@ -339,8 +395,201 @@
         }
     }
 
+    function submitCommentEditor() {
+        if (commentEditorState.mode === 'edit') {
+            commentUpdate(commentEditorState.board_comment_idx);
+            return;
+        }
+
+        commentInsert();
+    }
+
     function commentAfter() {
         location.reload();
+    }
+
+    function getCommentEditorCode() {
+        if ($('#comment').length === 0) {
+            return '';
+        }
+
+        return $('#comment').summernote('code');
+    }
+
+    function setCommentEditorCode(comment) {
+        if ($('#comment').length === 0) {
+            return;
+        }
+
+        $('#comment').summernote('code', normalizeCommentForEditor(comment));
+    }
+
+    function normalizeCommentForEditor(comment) {
+        if (!comment) {
+            return '';
+        }
+
+        if (/<[^>]+>/.test(comment)) {
+            return comment;
+        }
+
+        return comment.replace(/\r\n|\r|\n/g, '<br>');
+    }
+
+    function activateCommentEditMode(board_comment_idx, comment, file_list) {
+        var $row = $('#board_comment_idx_' + board_comment_idx);
+        var $host = $row.find('.comment-edit-host');
+
+        $('.comment-display').show();
+        $('.comment-edit-host').addClass('d-none').empty();
+        $('.tbl-action').show();
+
+        $('#comment-editor-root').hide();
+        $row.find('.comment-display').hide();
+        $row.find('.tbl-action').hide();
+        $host.removeClass('d-none').append($('#comment-editor-panel'));
+
+        $('#comment-editor-title').text('댓글 수정');
+        $('#comment-editor-mode').show();
+        $('#comment-cancel-btn').show();
+        $('#comment-submit-btn').text('댓글 저장');
+
+        setCommentEditorCode(comment);
+    setCommentFiles(file_list || []);
+        setCommentActionLock(true);
+
+        commentEditorState.mode = 'edit';
+        commentEditorState.board_comment_idx = board_comment_idx;
+    }
+
+    function resetCommentEditor() {
+        $('#comment-editor-root').show().append($('#comment-editor-panel'));
+        $('.comment-display').show();
+        $('.comment-edit-host').addClass('d-none').empty();
+        $('.tbl-action').show();
+        $('#comment-editor-title').text('댓글 작성');
+        $('#comment-editor-mode').hide();
+        $('#comment-cancel-btn').hide();
+        $('#comment-submit-btn').text('댓글 등록');
+        setCommentEditorCode('');
+        clearCommentFiles();
+        setCommentActionLock(false);
+
+        commentEditorState.mode = 'create';
+        commentEditorState.board_comment_idx = null;
+    }
+
+    function setCommentActionLock(isLocked) {
+        $('.comment-row-action').prop('disabled', isLocked);
+    }
+
+    function commentUploadFileAfter(proc_result) {
+        var result = proc_result.result;
+        var message = proc_result.message;
+        var info = proc_result.info;
+
+        if (result !== true) {
+            alert(message);
+            return;
+        }
+
+        addCommentFileItem(info.file_id, info.file_name_org, info.file_size_kb, getFileIcon(info.file_ext));
+    }
+
+    function addCommentFileItem(fileId, fileNameOrg, fileSizeKb, iconClass) {
+        var fileIds = getCommentFileIdsArray();
+        if (fileIds.indexOf(fileId) === -1) {
+            fileIds.push(fileId);
+        }
+        setCommentFileIds(fileIds);
+
+        if ($('#comment_file_item_' + fileId).length > 0) {
+            $('#comment_file_list').show();
+            return;
+        }
+
+        var html = '';
+        html += '<div class="d-flex justify-content-between align-items-center mb-2" id="comment_file_item_' + fileId + '">';
+        html += '<div><i class="' + iconClass + '"></i> <a href="/file/download/' + fileId + '">' + escapeHtml(fileNameOrg) + '</a> <small class="text-muted">(' + fileSizeKb + 'KB)</small></div>';
+        html += '<button type="button" class="btn btn-sm btn-danger" onclick="removeCommentFile(\'' + fileId + '\')">삭제</button>';
+        html += '</div>';
+
+        $('#comment_file_list').append(html).show();
+    }
+
+    function removeCommentFile(fileId) {
+        $('#comment_file_item_' + fileId).remove();
+
+        var fileIds = getCommentFileIdsArray().filter(function(id) {
+            return id !== fileId;
+        });
+        setCommentFileIds(fileIds);
+
+        if ($('#comment_file_list').children().length === 0) {
+            $('#comment_file_list').hide();
+        }
+    }
+
+    function clearCommentFiles() {
+        setCommentFileIds([]);
+        $('#comment_file_list').empty().hide();
+        $('#comment_file').val('');
+    }
+
+    function setCommentFiles(fileList) {
+        clearCommentFiles();
+
+        fileList.forEach(function(file) {
+            var iconClass = 'fas fa-file text-secondary';
+            if (file.file_info && file.file_info.icon_class) {
+                iconClass = file.file_info.icon_class;
+            }
+
+            var fileNameOrg = file.file_info ? file.file_info.file_name_org : file.file_id;
+            var fileSizeKb = file.file_info ? file.file_info.file_size_kb : '-';
+            addCommentFileItem(file.file_id, fileNameOrg, fileSizeKb, iconClass);
+        });
+    }
+
+    function getCommentFileIds() {
+        return $('#comment_file_idxs').val() || '';
+    }
+
+    function getCommentFileIdsArray() {
+        var fileIds = getCommentFileIds();
+        if (!fileIds) {
+            return [];
+        }
+
+        return fileIds.split('||').filter(function(id) {
+            return id !== '';
+        });
+    }
+
+    function setCommentFileIds(fileIds) {
+        $('#comment_file_idxs').val(fileIds.join('||'));
+    }
+
+    function getFileIcon(fileExt) {
+        var iconMap = {
+            'pdf': 'fas fa-file-pdf text-danger',
+            'doc': 'fas fa-file-word text-primary',
+            'docx': 'fas fa-file-word text-primary',
+            'xls': 'fas fa-file-excel text-success',
+            'xlsx': 'fas fa-file-excel text-success',
+            'ppt': 'fas fa-file-powerpoint text-warning',
+            'pptx': 'fas fa-file-powerpoint text-warning',
+            'zip': 'fas fa-file-archive text-secondary',
+            'rar': 'fas fa-file-archive text-secondary',
+            'txt': 'fas fa-file-alt text-muted',
+            'csv': 'fas fa-file-csv text-success'
+        };
+
+        return iconMap[fileExt] || 'fas fa-file text-secondary';
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
     }
 
 <?php if ($board_config->pdf_yn == 'Y' && $info->pdf_file_info != null) { ?>

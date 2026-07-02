@@ -16,7 +16,7 @@ var summernote_settings = {
         },
         onImageUpload : function(files) { // 파일 업로드(다중업로드를 위해 반복문 사용)
             for (var i = files.length-1; i >= 0; i--) {
-                uploadSummernoteFile(files[i]);
+                uploadSummernoteFile(files[i], this);
             }
         }
     },
@@ -46,8 +46,8 @@ function initSummernote(selector, options) {
 }
 
 // 썸머노트 파일 첨부 로직
-function uploadSummernoteFile(file) {
-    formData = new FormData();
+function uploadSummernoteFile(file, editor) {
+    var formData = new FormData();
     formData.append('attach', file);
     formData.append('file_id', 'attach');
     $.ajax({
@@ -72,7 +72,7 @@ function uploadSummernoteFile(file) {
                 } else {
                     var file_html = '<br><a href="/file/download/'+file_id+'">'+file_name_org+'</a><br>';
                 }
-                $('#contents').summernote('pasteHTML', file_html);
+                $(editor || '#contents').summernote('pasteHTML', file_html);
             }
         }
     });

@@ -13,7 +13,7 @@
 <!-- Main Content -->
 <main id="main-content">
     <div class="container-fluid py-4">
-        <h3>게시판 설정</h3>
+        <h3>게시판 환경설정</h3>
 
         <div class="card mb-4">
             <div class="card-body">
@@ -182,8 +182,8 @@
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
                     <button type="button" class="btn btn-danger" onclick="boardConfigDelete()">삭제</button>
-                    <a href="/csl/settings/board/list" class="btn btn-secondary">목록</a>
-                    <a href="/csl/settings/board/edit/<?= $info->board_id ?>" class="btn btn-primary">수정</a>
+                    <a href="/csl/config/board/list" class="btn btn-secondary">목록</a>
+                    <a href="/csl/config/board/edit/<?= $info->board_id ?>" class="btn btn-primary">수정</a>
                 </div>
             </div>
         </div>
@@ -227,7 +227,7 @@
             </div>
             <div class="card-footer text-end">
                 <div class="d-flex gap-2 justify-content-end">
-                    <a href="/csl/settings/board/<?= $info->board_id ?>/admin/list" class="btn btn-primary">관리</a>
+                    <a href="/csl/config/board/admin/<?= $info->board_id ?>" class="btn btn-primary">관리</a>
                 </div>
             </div>
         </div>
@@ -239,13 +239,13 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
-        $('#li-settings-board-list').addClass('active-level-1');
+        $('#li-config-board-list').addClass('active-level-1');
     });
 
     // 게시판 설정 삭제
     function boardConfigDelete() {
         if (confirm('정말 삭제하시겠습니까?')) {
-            ajax1('/csl/settings/board/delete', 'frm', 'boardConfigDeleteAfter');
+            ajax1('/csl/config/board/delete', 'frm', 'boardConfigDeleteAfter');
         }
     }
 
@@ -256,7 +256,7 @@
         
         if (result == true) {
             alert('삭제되었습니다.');
-            location.href = '/csl/settings/board/list';
+            location.href = '/csl/config/board/list';
         } else {
             alert(message);
         }

@@ -34,13 +34,14 @@ class Member extends BaseController
     {
         $member_model = new MemberModel();
         $config_model = new ConfigModel();
+        helper('security');
 
         $result = true;
         $message = '정상처리';
 
         $member_id = $this->request->getPost('member_id', FILTER_SANITIZE_SPECIAL_CHARS);
         $member_password = $this->request->getPost('member_password', FILTER_SANITIZE_SPECIAL_CHARS);
-        $ip_address = $this->request->getIPAddress();
+        $ip_address = \getClientIpAddress();
         $return_url = getUserSessionInfo('previous_url');
 
         if ($member_id == null) {

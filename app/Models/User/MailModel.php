@@ -9,20 +9,20 @@ class MailModel extends Model
 {
     public function getMailConfig()
     {
+        helper('config');
+
         $result = true;
         $message = '메일설정 불러오기가 정상적으로 이루어졌습니다.';
 
-        $db = $this->db;
-        $builder = $db->table('config');
-        $info = $builder->get()->getRow();
+        $info = getConfigInfoCached();
 
         $mail_config = array();
-        $mail_config['smtp_host'] = $info->smtp_host;
-        $mail_config['smtp_user'] = $info->smtp_user;
-        $mail_config['smtp_mail'] = $info->smtp_mail;
-        $mail_config['smtp_pass'] = $info->smtp_pass;
-        $mail_config['smtp_port'] = $info->smtp_port;
-        $mail_config['smtp_name'] = $info->smtp_name;
+        $mail_config['smtp_host'] = $info?->smtp_host ?? '';
+        $mail_config['smtp_user'] = $info?->smtp_user ?? '';
+        $mail_config['smtp_mail'] = $info?->smtp_mail ?? '';
+        $mail_config['smtp_pass'] = $info?->smtp_pass ?? '';
+        $mail_config['smtp_port'] = $info?->smtp_port ?? '';
+        $mail_config['smtp_name'] = $info?->smtp_name ?? '';
 
         $proc_result = array();
         $proc_result['result'] = $result;

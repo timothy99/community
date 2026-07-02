@@ -3,24 +3,17 @@
 namespace App\Models\User;
 
 use CodeIgniter\Model;
-use App\Models\User\FileModel;
 
 class ConfigModel extends Model
 {
     public function getConfigInfo()
     {
-        $file_model = new FileModel();
+        helper('config');
 
         $result = true;
         $message = '목록 불러오기가 완료되었습니다.';
 
-        $db = $this->db;
-        $builder = $db->table('config');
-        $info = $builder->get()->getRow();
-
-        if ($info->company_logo != null) {
-            $info->company_logo_info = $file_model->getFileInfo($info->company_logo);
-        }
+        $info = getConfigInfoCached();
 
         $proc_result = array();
         $proc_result['result'] = $result;

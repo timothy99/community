@@ -4,6 +4,7 @@
  * @var object $config_info
  * @var array $menu_list
  * @var array $language_list
+ * @var string $selected_language
  */
 ?>
 <header class="border-bottom mb-4">
@@ -137,13 +138,12 @@
 
 <script>
     $(window).on('load', function() {
-        var lang = document.cookie.replace(/(?:(?:^|.*;\s*)language\s*=\s*([^;]*).*$)|^.*$/, "$1");
+        var lang = '<?= $selected_language ?? 'kr' ?>';
         $('#select-language').val(lang);
         $('#select-language-mobile').val(lang);
     });
 
     function change_language(lang) {
-        document.cookie = "language=" + lang + "; path=/; max-age=" + (60 * 60 * 24 * 30);
         location.href="/"+lang;
     }
 </script>

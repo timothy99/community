@@ -4,9 +4,30 @@ namespace App\Models\User;
 
 use CodeIgniter\Model;
 use App\Models\User\MemberModel;
+use App\Models\User\FileModel;
 
 class CommentModel extends Model
 {
+    private function getCommentFileList(int $board_comment_idx): array
+    {
+        $file_model = new FileModel();
+
+        $db = $this->db;
+        $builder = $db->table('board_comment_file');
+        $builder->where('board_comment_idx', $board_comment_idx);
+        $builder->orderBy('board_comment_file_idx', 'asc');
+        $file_list = $builder->get()->getResult();
+
+        foreach ($file_list as $key => $val) {
+            $file_list[$key]->file_info = $file_model->getFileInfo($val->file_id);
+            if ($file_list[$key]->file_info != null) {
+                $file_list[$key]->file_info->file_size_kb = number_format($file_list[$key]->file_info->file_size / 1024, 2);
+            }
+        }
+
+        return $file_list;
+    }
+
     public function getCommentList(array $data)
     {
         $member_model = new MemberModel();
@@ -28,6 +49,7 @@ class CommentModel extends Model
             $list[$no]->comment = str_replace('&#13;&#10;', '<br>', $val->comment);
             $data['member_id'] = $val->ins_id;
             $list[$no]->member_info = $member_model->getMemberInfo($data)['info'];
+            $list[$no]->file_list = $this->getCommentFileList((int)$val->board_comment_idx);
         }
 
         $proc_result = array();
@@ -49,6 +71,7 @@ class CommentModel extends Model
         $board_idx = $data['board_idx'];
         $comment = $data['comment'];
         $secret_yn = $data['secret_yn'];
+        $file_arr = $data['file_arr'] ?? array();
 
         $db = $this->db;
         $db->transStart();
@@ -63,6 +86,19 @@ class CommentModel extends Model
         $builder->set('upd_date', $today);
         $result = $builder->insert();
         $insert_id = $db->insertID();
+
+        if ($result) {
+            foreach ($file_arr as $file_id) {
+                $builder = $db->table('board_comment_file');
+                $builder->set('board_comment_idx', $insert_id);
+                $builder->set('file_id', $file_id);
+                if (!$builder->insert()) {
+                    $result = false;
+                    $message = '댓글 파일 등록에 오류가 발생했습니다.';
+                    break;
+                }
+            }
+        }
 
         // board_comment 코멘트 숫자 구하기
         $builder = $db->table('board_comment');
@@ -112,6 +148,13 @@ class CommentModel extends Model
         $builder->set('upd_date', $today);
         $builder->where('board_comment_idx', $board_comment_idx);
         $result = $builder->update();
+
+        // 댓글 파일 삭제
+        if ($result) {
+            $builder = $db->table('board_comment_file');
+            $builder->where('board_comment_idx', $board_comment_idx);
+            $builder->delete();
+        }
 
         // 삭제된 댓글의 board_idx 조회
         $builder = $db->table('board_comment');
@@ -164,6 +207,7 @@ class CommentModel extends Model
         $data['member_id'] = $info->ins_id;
 
         $info->member_info = $member_model->getMemberInfo($data)['info'];
+        $info->file_list = $this->getCommentFileList((int)$board_comment_idx);
 
         $proc_result = array();
         $proc_result['result'] = $result;
@@ -184,8 +228,10 @@ class CommentModel extends Model
         $board_comment_idx = $data['board_comment_idx'];
         $comment = $data['comment'];
         $secret_yn = $data['secret_yn'];
+        $file_arr = $data['file_arr'] ?? array();
 
         $db = $this->db;
+        $db->transStart();
         $builder = $db->table('board_comment');
         $builder->set('comment', $comment);
         $builder->set('secret_yn', $secret_yn);
@@ -193,6 +239,27 @@ class CommentModel extends Model
         $builder->set('upd_date', $today);
         $builder->where('board_comment_idx', $board_comment_idx);
         $result = $builder->update();
+
+        // board_comment_file 삭제
+        if ($result) {
+            $builder = $db->table('board_comment_file');
+            $builder->where('board_comment_idx', $board_comment_idx);
+            $builder->delete();
+        }
+
+        // board_comment_file 삽입
+        if ($result) {
+            foreach ($file_arr as $file_id) {
+                $builder = $db->table('board_comment_file');
+                $builder->set('board_comment_idx', $board_comment_idx);
+                $builder->set('file_id', $file_id);
+                if (!$builder->insert()) {
+                    $result = false;
+                    $message = '댓글 파일 수정에 오류가 발생했습니다.';
+                    break;
+                }
+            }
+        }
 
         // 삭제된 댓글의 board_idx 조회
         $builder = $db->table('board_comment');

@@ -14,7 +14,7 @@
 <!-- Main Content -->
 <main id="main-content">
     <div class="container-fluid py-4">
-        <h3>관리자 설정</h3>
+        <h3>게시판 관리자 추가</h3>
 
         <!-- 목록 -->
         <div class="card mb-4">
@@ -53,7 +53,7 @@
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-end align-items-center">
-                    <a href="/csl/settings/board/view/<?= $board_id ?>" type="button" class="btn btn-secondary">돌아가기</a>
+                    <a href="/csl/config/board/view/<?= $board_id ?>" type="button" class="btn btn-secondary">돌아가기</a>
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
 <script>
     // 메뉴강조
     $(window).on('load', function() {
-        $('#li-settings-board-list').addClass('active-level-1');
+        $('#li-config-board-list').addClass('active-level-1');
     });
 
     $(function() {
@@ -95,7 +95,7 @@
     });
 
     function search() {
-        ajax1("/csl/settings/board/gallery/admin/search", "frm", "searchAfter");
+        ajax1("/csl/config/board/admin/<?= $board_id ?>/search", "frm", "searchAfter");
     }
 
     function searchAfter(proc_result) {
@@ -117,7 +117,7 @@
         }
 
         $("#member_id").val(member_id);
-        ajax1("/csl/settings/board/gallery/admin/insert", "frm", "adminAddAfter");
+        ajax1("/csl/config/board/admin/<?= $board_id ?>/insert", "frm", "adminAddAfter");
     }
 
     function adminAddAfter(proc_result) {
@@ -136,6 +136,6 @@
         }
 
         $("#board_admin_idx").val(board_admin_idx);
-        ajax1("/csl/settings/board/gallery/admin/delete", "frm", "adminAddAfter");
+        ajax1("/csl/config/board/admin/<?= $board_id ?>/delete", "frm", "adminAddAfter");
     }
 </script>

@@ -8,6 +8,8 @@ class SocialModel extends Model
 {
     public function procSocialUpdate($data)
     {
+        helper('config');
+
         $result = true;
         $message = '입력이 잘 되었습니다';
 
@@ -50,6 +52,10 @@ class SocialModel extends Model
         if ($db->transStatus() === false) {
             $result = false;
             $message = '입력에 오류가 발생했습니다.';
+        }
+
+        if ($result === true) {
+            clearConfigInfoCache();
         }
 
         $model_result = array();

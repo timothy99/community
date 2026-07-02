@@ -70,7 +70,7 @@ class BoardModel extends Model
             $builder->like($search_condition, $search_text);
         }
         $builder->where('notice_yn', $notice_yn);
-        $builder->orderBy('board_idx_desc', 'asc');
+        $builder->orderBy('board_idx', 'desc');
         $builder->limit($rows, getOffset($page, $rows));
         $cnt = $builder->countAllResults(false);
         $list = $builder->get()->getResult();
@@ -264,17 +264,6 @@ class BoardModel extends Model
             $message = '게시물 등록에 오류가 발생했습니다.';
         }
 
-        // board_idx_desc 에 $insert_id 의 음수 업데이트
-        if ($result) {
-            $builder = $db->table('board');
-            $builder->set('board_idx_desc', -$insert_id);
-            $builder->where('board_idx', $insert_id);
-            if (!$builder->update()) {
-                $result = false;
-                $message = 'board_idx_desc 업데이트에 오류가 발생했습니다.';
-            }
-        }
-
         // board_file 삭제
         if ($result) {
             $builder = $db->table('board_file');
@@ -434,6 +423,176 @@ class BoardModel extends Model
         $model_result["message"] = $message;
 
         return $model_result;
+    }
+
+    public function getBoardHeartInfo(string $board_id, int $board_idx, string $member_id)
+    {
+        $result = true;
+        $message = '공감 정보를 가져왔습니다.';
+
+        $heart_yn = 'N';
+
+        if (empty($member_id) || $board_idx <= 0) {
+            $proc_result = array();
+            $proc_result['result'] = $result;
+            $proc_result['message'] = $message;
+            $proc_result['heart_yn'] = $heart_yn;
+
+            return $proc_result;
+        }
+
+        $db = $this->db;
+        $builder = $db->table('board_heart');
+        $builder->where('board_id', $board_id);
+        $builder->where('board_idx', $board_idx);
+        $builder->where('ins_id', $member_id);
+        $builder->where('del_yn', 'N');
+        $info = $builder->get()->getRow();
+
+        if ($info != null) {
+            $heart_yn = 'Y';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['heart_yn'] = $heart_yn;
+
+        return $proc_result;
+    }
+
+    public function procBoardHeartToggle(array $data)
+    {
+        $member_id = $data['member_id'];
+        $board_id = $data['board_id'];
+        $board_idx = $data['board_idx'];
+        $today = date('YmdHis');
+
+        $result = true;
+        $message = '정상처리 되었습니다.';
+        $heart_yn = 'N';
+        $heart_cnt = 0;
+
+        $db = $this->db;
+        $db->transStart();
+
+        $builder = $db->table('board');
+        $builder->where('board_id', $board_id);
+        $builder->where('board_idx', $board_idx);
+        $builder->where('del_yn', 'N');
+        $board_info = $builder->get()->getRow();
+
+        if ($board_info == null) {
+            $result = false;
+            $message = '존재하지 않는 게시물입니다.';
+        }
+
+        if ($result == true) {
+            $builder = $db->table('board_heart');
+            $builder->where('board_id', $board_id);
+            $builder->where('board_idx', $board_idx);
+            $builder->where('ins_id', $member_id);
+            $builder->where('del_yn', 'N');
+            $heart_info = $builder->get()->getRow();
+
+            if ($heart_info != null) {
+                $builder = $db->table('board_heart');
+                $builder->set('del_yn', 'Y');
+                $builder->set('upd_id', $member_id);
+                $builder->set('upd_date', $today);
+                $builder->where('board_heart_idx', $heart_info->board_heart_idx);
+                $result = $builder->update();
+
+                if ($result == true) {
+                    $builder = $db->table('board');
+                    $builder->set('heart_cnt', 'if(heart_cnt > 0, heart_cnt - 1, 0)', false);
+                    $builder->set('upd_id', $member_id);
+                    $builder->set('upd_date', $today);
+                    $builder->where('board_id', $board_id);
+                    $builder->where('board_idx', $board_idx);
+                    $result = $builder->update();
+                }
+
+                $heart_yn = 'N';
+                $message = '공감이 취소되었습니다.';
+            } else {
+                $builder = $db->table('board_heart');
+                $builder->where('board_id', $board_id);
+                $builder->where('board_idx', $board_idx);
+                $builder->where('ins_id', $member_id);
+                $heart_info = $builder->get()->getRow();
+
+                if ($heart_info != null) {
+                    $builder = $db->table('board_heart');
+                    $builder->set('del_yn', 'N');
+                    $builder->set('upd_id', $member_id);
+                    $builder->set('upd_date', $today);
+                    $builder->where('board_heart_idx', $heart_info->board_heart_idx);
+                    $result = $builder->update();
+
+                    if ($result == true) {
+                        $builder = $db->table('board');
+                        $builder->set('heart_cnt', 'heart_cnt + 1', false);
+                        $builder->set('upd_id', $member_id);
+                        $builder->set('upd_date', $today);
+                        $builder->where('board_id', $board_id);
+                        $builder->where('board_idx', $board_idx);
+                        $result = $builder->update();
+                    }
+
+                    $heart_yn = 'Y';
+                    $message = '공감이 등록되었습니다.';
+                } else {
+                    $builder = $db->table('board_heart');
+                    $builder->set('board_id', $board_id);
+                    $builder->set('board_idx', $board_idx);
+                    $builder->set('del_yn', 'N');
+                    $builder->set('ins_id', $member_id);
+                    $builder->set('ins_date', $today);
+                    $builder->set('upd_id', $member_id);
+                    $builder->set('upd_date', $today);
+                    $result = $builder->insert();
+
+                    if ($result == true) {
+                        $builder = $db->table('board');
+                        $builder->set('heart_cnt', 'heart_cnt + 1', false);
+                        $builder->set('upd_id', $member_id);
+                        $builder->set('upd_date', $today);
+                        $builder->where('board_id', $board_id);
+                        $builder->where('board_idx', $board_idx);
+                        $result = $builder->update();
+                    }
+                }
+
+                $heart_yn = 'Y';
+                $message = '공감이 등록되었습니다.';
+            }
+        }
+
+        $builder = $db->table('board');
+        $builder->select('heart_cnt');
+        $builder->where('board_id', $board_id);
+        $builder->where('board_idx', $board_idx);
+        $board_info = $builder->get()->getRow();
+
+        if ($board_info != null) {
+            $heart_cnt = (int) $board_info->heart_cnt;
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false || $result == false) {
+            $result = false;
+            $message = '공감 처리 중 오류가 발생했습니다.';
+        }
+
+        $proc_result = array();
+        $proc_result['result'] = $result;
+        $proc_result['message'] = $message;
+        $proc_result['heart_yn'] = $heart_yn;
+        $proc_result['heart_cnt'] = $heart_cnt;
+
+        return $proc_result;
     }
 
     public function getBoardTempInfo(string $board_id, string $member_id)

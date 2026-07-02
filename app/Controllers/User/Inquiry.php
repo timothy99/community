@@ -35,6 +35,7 @@ class Inquiry extends BaseController
         $contents = $this->request->getPost('contents', FILTER_SANITIZE_SPECIAL_CHARS);
         $phone = $this->request->getPost('phone', FILTER_SANITIZE_SPECIAL_CHARS);
         $email = $this->request->getPost('email', FILTER_SANITIZE_SPECIAL_CHARS);
+        $file_idxs = $this->request->getPost('file_idxs', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $send_to_me_yn = $this->request->getPost('send_to_me_yn', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N';
 
         if ($name == null || trim($name) == '') {
@@ -62,6 +63,7 @@ class Inquiry extends BaseController
         $data['contents'] = $contents;
         $data['phone'] = $phone;
         $data['email'] = $email;
+        $data['file_idxs'] = $file_idxs;
 
         if ($result == true) {
             $model_result = $inquiry_model->procInquiryInsert($data);

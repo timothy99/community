@@ -57,11 +57,29 @@ function setBaseSession()
     $session_info->member_nickname = "손님"; // 별명
     $session_info->auth_group = "guest"; // 권한 그룹
     $session_info->layer_closed = array(); // 레이어 닫은거 먼저 빈 정보 생성
-    $session_info->language = "kr"; // 언어
     setUserSession($session_info); // 세션 넣기
 
-    // 쿠키에 기본 언어 설정을 한국어로 넣기
-    setcookie("language", "kr", time() + (86400 * 30), "/"); // 30일 동안 유지
-
     return true; // 세션정보 반환
+}
+
+// 현재 요청 URL의 첫 번째 세그먼트를 기준으로 사용자 언어를 판별
+function getRequestLanguageFromUri()
+{
+    helper('config');
+
+    $language = 'kr';
+    $request = service('request');
+    $firstSegment = $request->getUri()->getSegment(1);
+
+    $config = getConfigInfoCached();
+    $isMultilingual = (($config?->language_yn ?? 'N') === 'Y');
+
+    if ($isMultilingual) {
+        $validLocales = getLanguageLocaleCodesCached(true);
+        if (in_array($firstSegment, $validLocales, true)) {
+            $language = $firstSegment;
+        }
+    }
+
+    return $language;
 }

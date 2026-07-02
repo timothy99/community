@@ -17,6 +17,10 @@ function checkAuthority(array $segments)
     $segment0 = $segments[0] ?? null;
     $segment1 = $segments[1] ?? null;
 
+    helper('config');
+    $config = getConfigInfoCached();
+    $login_required_yn = $config?->login_required_yn ?? 'N';
+
     $auth_group_arr = ["관리자", "최고관리자"];
     // 관리자 페이지인데, 로그인을 안했다면 로그인 페이지로 보낸다. 
     if ($segment0 == "csl" && in_array($auth_group, $auth_group_arr) == false) {
@@ -30,6 +34,53 @@ function checkAuthority(array $segments)
             header("Location: /member/login");
         }
         exit;
+    }
+
+    // 폐쇄몰 모드(로그인 필수)에서는 비로그인(guest) 사용자의 접근을 제한한다.
+    if ($login_required_yn === 'Y' && $auth_group === 'guest') {
+        $uri = $segment0 . "/" . $segment1;
+        $segment2 = $segments[2] ?? null;
+        $allowedLoginUris = array(
+            'member/login',
+            'member/signin',
+            'member/find',
+            'member/reset',
+            'member/sns',
+            'construction/',
+            'file/view',
+        );
+
+        $isAllowed = false;
+        foreach ($allowedLoginUris as $allowedUri) {
+            if (strpos($uri, $allowedUri) === 0) {
+                $isAllowed = true;
+                break;
+            }
+        }
+
+        // /member/find/id, /member/find/password 허용
+        if ($segment0 === 'member' && $segment1 === 'find') {
+            $isAllowed = true;
+        }
+
+        // /member/reset/password/{token} 허용
+        if ($segment0 === 'member' && $segment1 === 'reset' && $segment2 === 'password') {
+            $isAllowed = true;
+        }
+
+        if ($isAllowed === false) {
+            if ($method == "POST") {
+                $proc_result = array();
+                $proc_result["result"] = false;
+                $proc_result["message"] = "로그인이 필요한 서비스입니다. 로그인 후 다시 시도해주세요.";
+                $proc_result["return_url"] = "/member/login";
+                echo json_encode($proc_result, JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            header("Location: /member/login");
+            exit;
+        }
     }
 
     // 반드시 로그인이 필요한 페이지
@@ -124,12 +175,15 @@ function checkConstruction()
         return;
     }
 
-    $db = \Config\Database::connect();
-    $builder = $db->table('config');
-    $info = $builder->get()->getRow();
-    $construction_yn = $info->construction_yn;
+    helper('config');
+    helper('security');
 
-    $ip_addr = $_SERVER['REMOTE_ADDR'] ?? '';
+    $info = getConfigInfoCached();
+    $construction_yn = $info?->construction_yn ?? 'N';
+
+    $db = \Config\Database::connect();
+
+    $ip_addr = \getClientIpAddress();
     $builder = $db->table('ip');
     $builder->where('ip', $ip_addr);
     $ip_info = $builder->get()->getRow();
@@ -151,13 +205,16 @@ function checkAdminIp()
 {
     $current_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
     if (strpos($current_path, '/csl') === 0) {
+        helper('config');
+        helper('security');
+
+        $info = getConfigInfoCached();
+        $admin_ip_check_yn = $info?->admin_ip_check_yn ?? 'N';
+
         $db = \Config\Database::connect();
-        $builder = $db->table('config');
-        $info = $builder->get()->getRow();
-        $admin_ip_check_yn = $info->admin_ip_check_yn;
 
         if ($admin_ip_check_yn == "Y") {
-            $ip_addr = $_SERVER['REMOTE_ADDR'] ?? '';
+            $ip_addr = \getClientIpAddress();
             $builder = $db->table('ip');
             $builder->where('ip', $ip_addr);
             $ip_info = $builder->get()->getRow();

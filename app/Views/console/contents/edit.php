@@ -1,6 +1,8 @@
 <?php
 /**
  * @var object $info
+ * @var array $language_list
+ * @var object $config_info
  */
 ?>
 
@@ -28,6 +30,18 @@
                     <input type="text" class="form-control" id="contents_id" name="contents_id" placeholder="아이디를 입력하세요" value="<?= $info->contents_id ?>">
                 </div>
 
+<?php   if (($config_info->language_yn ?? 'N') === 'Y') { ?>
+                <!-- 언어 -->
+                <div class="mb-3">
+                    <label for="language" class="form-label">언어</label>
+                    <select class="form-select w-25" id="language" name="language">
+<?php       foreach ($language_list as $val) { ?>
+                        <option value="<?= $val->language_code ?>"><?= $val->language_name ?></option>
+<?php       } ?>
+                    </select>
+                </div>
+<?php   } ?>
+
                 <!-- 메타용 제목 -->
                 <div class="mb-3">
                     <label for="meta_title" class="form-label">메타 제목</label>
@@ -50,6 +64,7 @@
     // 메뉴강조
     $(window).on('load', function() {
         $('#li-contents').addClass('active-level-1');
+        $('#language').val('<?= $info->language ?? "kr" ?>');
     });
 
     function contentsUpdate() {

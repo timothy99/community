@@ -22,7 +22,7 @@ class Product extends BaseController
         $search_rows = $this->request->getGet('search_rows') ?? 10;
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
-        $search_language = getUserSessionInfo('language');
+        $search_language = getRequestLanguageFromUri();
         $product_category_idx1 = $this->request->getGet('product_category_idx1', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
         $product_category_idx2 = $this->request->getGet('product_category_idx2', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;
         $product_category_idx3 = $this->request->getGet('product_category_idx3', FILTER_SANITIZE_SPECIAL_CHARS) ?? 0;

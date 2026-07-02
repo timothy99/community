@@ -13,6 +13,20 @@ class Board extends BaseController
         return redirect()->to('/csl/board/list');
     }
 
+    private function getHttpQuery(): string
+    {
+        $search_arr = array();
+        $search_arr['search_page'] = $this->request->getGet('search_page') ?? 1;
+        $search_arr['search_rows'] = $this->request->getGet('search_rows') ?? 10;
+        $search_arr['search_text'] = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $search_arr['search_condition'] = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
+        $search_arr['category'] = $this->request->getGet('category', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        return http_build_query(array_filter($search_arr, function ($value) {
+            return $value !== null && $value !== '' && $value !== 'undefined';
+        }));
+    }
+
     public function list(string $board_id)
     {
         $board_model = new BoardModel();
@@ -21,7 +35,11 @@ class Board extends BaseController
         $search_rows = $this->request->getGet('search_rows') ?? 10;
         $search_text = $this->request->getGet('search_text', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $search_condition = $this->request->getGet('search_condition', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'title';
-        $category = $this->request->getGet('category', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $category = $this->request->getGet('category', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($category == '' || $category == null || $category == 'undefined') {
+            $category = null;
+        }
 
         $data = array();
         $data['board_id'] = $board_id;
@@ -73,6 +91,7 @@ class Board extends BaseController
         $proc_result['paging_info'] = $paging_info;
         $proc_result['data'] = $data;
         $proc_result['board_config'] = $board_config;
+        $proc_result['http_query'] = $this->getHttpQuery();
 
         return aview('/console/board/list', $proc_result);
     }
@@ -118,6 +137,7 @@ class Board extends BaseController
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
         $proc_result['board_config'] = $board_config;
+        $proc_result['http_query'] = $this->getHttpQuery();
 
         return aview('console/board/edit', $proc_result);
     }
@@ -198,7 +218,8 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/board/'.$board_id.'/view/'.$board_no;
+        $http_query = $this->request->getPost('http_query', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $proc_result['return_url'] = '/csl/board/'.$board_id.'/view/'.$board_no.(!empty($http_query) ? '?'.$http_query : '');
         $proc_result['board_no'] = $board_no;
 
         return $this->response->setJSON($proc_result);
@@ -239,6 +260,7 @@ class Board extends BaseController
         $proc_result['info'] = $info;
         $proc_result['comment_list'] = $comment_list;
         $proc_result['board_config'] = $board_config;
+        $proc_result['http_query'] = $this->getHttpQuery();
 
         return aview('console/board/view', $proc_result);
     }
@@ -268,6 +290,7 @@ class Board extends BaseController
         $proc_result['message'] = $message;
         $proc_result['info'] = $info;
         $proc_result['board_config'] = $board_config;
+        $proc_result['http_query'] = $this->getHttpQuery();
 
         return aview('console/board/edit', $proc_result);
     }
@@ -293,7 +316,8 @@ class Board extends BaseController
         $proc_result = array();
         $proc_result['result'] = $result;
         $proc_result['message'] = $message;
-        $proc_result['return_url'] = '/csl/board/'.$board_id.'/list';
+        $http_query = $this->request->getPost('http_query', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $proc_result['return_url'] = '/csl/board/'.$board_id.'/list'.(!empty($http_query) ? '?'.$http_query : '');
 
         return $this->response->setJSON($proc_result);
     }

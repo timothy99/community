@@ -70,7 +70,7 @@ class BoardModel extends Model
             $builder->like($search_condition, $search_text);
         }
         $builder->where('notice_yn', $notice_yn);
-        $builder->orderBy('board_idx_desc', 'asc');
+        $builder->orderBy('board_idx', 'desc');
         $builder->limit($rows, getOffset($page, $rows));
         $cnt = $builder->countAllResults(false);
         $list = $builder->get()->getResult();
@@ -256,17 +256,6 @@ class BoardModel extends Model
 
         if (!$result) {
             $message = '게시물 등록에 오류가 발생했습니다.';
-        }
-
-        // board_idx_desc 에 $insert_id 의 음수 업데이트
-        if ($result) {
-            $builder = $db->table('board');
-            $builder->set('board_idx_desc', -$insert_id);
-            $builder->where('board_idx', $insert_id);
-            if (!$builder->update()) {
-                $result = false;
-                $message = 'board_idx_desc 업데이트에 오류가 발생했습니다.';
-            }
         }
 
         // board_file 삭제

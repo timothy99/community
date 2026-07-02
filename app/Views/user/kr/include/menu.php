@@ -145,7 +145,6 @@
     });
 
     function change_language(lang) {
-        document.cookie = "language=" + lang + "; path=/; max-age=" + (60 * 60 * 24 * 30);
         location.href="/"+lang;
     }
 </script>
